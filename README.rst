@@ -14,7 +14,7 @@ Requirements
 Installation
 ------------
 
-``interrogate`` available on PyPI. The recommended installation method is `pip <https://pip.pypa.io/en/stable/>`_-installing into a `virtualenv <https://hynek.me/articles/virtualenv-lives/>`_:
+``interrogate`` available on `PyPI <https://pypi.org/project/interrogate/>`_ and `GitHub <https://github.com/econchick/interrogate>`_. The recommended installation method is `pip <https://pip.pypa.io/en/stable/>`_-installing into a `virtualenv <https://hynek.me/articles/virtualenv-lives/>`_:
 
 .. code-block:: console
 
@@ -23,7 +23,7 @@ Installation
 Usage
 -----
 
-Try it out on a Python project
+Try it out on a Python project:
 
 .. code-block:: console
 
@@ -139,6 +139,9 @@ Add even *more* verbosity:
     | TOTAL                         |     53 |     0 |     53 |  100.0% |
     ---------- RESULT: PASSED (minumum: 80.0%, actual: 100.0%) ----------
 
+
+Other Usage
+-----------
 
 Add it to your ``tox.ini`` file to enforce a level of coverage:
 

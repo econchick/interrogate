@@ -66,7 +66,7 @@ html_theme = "alabaster"
 html_theme_options = {
     "font_size": "18px",
     "page_width": "1020px",
-    "github_button": False,
+    "github_button": True,
     "github_user": "econchick",
     "github_repo": "interrogate",
     "link": "#de78a0",
