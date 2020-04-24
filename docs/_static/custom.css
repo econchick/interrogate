@@ -3,3 +3,28 @@
 .smol {
   font-size: 10px;
 }
+
+/* hacks to render the sidebar toc in a cleaner way*/
+div.sphinxsidebar ul ul, div.sphinxsidebar ul.want-points {
+  margin-left: 0px;
+  list-style: none;
+}
+
+div.body li {
+  list-style: none;
+}
+
+div.sphinxsidebar ul li.toctree-l1 > a {
+  display: none;
+  margin-bottom: 20px;
+
+}
+
+div.sphinxsidebarwrapper p.blurb {
+  margin-bottom: 30px;
+}
+
+/* hacks to remove the toc in main layout */
+div.toctree-wrapper.compound {
+  display:none;
+}

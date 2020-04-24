@@ -66,11 +66,12 @@ html_theme = "alabaster"
 html_theme_options = {
     "font_size": "18px",
     "page_width": "1020px",
-    "github_button": True,
+    "github_button": False,
     "github_user": "econchick",
     "github_repo": "interrogate",
     "link": "#de78a0",
     "link_hover": "#de78a0",
+    "description": "interrogate: measure docstring coverage",
     "fixed_sidebar": True,
     "sidebar_collapse": False,
     "logo": "logo_pink.png",
@@ -87,3 +88,4 @@ html_favicon = "_static/favicon.png"
 html_css_files = [
     "custom.css",
 ]
+templates_path = ["_templates"]
