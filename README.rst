@@ -260,12 +260,7 @@ Credits
 The cute |sloth| logo is by `JustineW <https://thenounproject.com/wojcik.justine/>`_ purchased via `the Noun Project <https://thenounproject.com/>`_ (but also available under the `Creative Commons License <https://creativecommons.org/licenses/by/3.0/us/legalcode>`_ with attribution).
 
 
-
-
-.. |sloth| image:: https://interrogate.readthedocs.io/en/latest/_static/logo_pink.png
-    :width: 20px
-    :alt: Pink Sloth Logo
-
+.. |sloth| image:: https://interrogate.readthedocs.io/en/latest/_static/logo_smol.png
 
 .. |docstr-coverage| replace:: ``docstr-coverage``
 .. _docstr-coverage: https://pypi.org/project/docstr-coverage
