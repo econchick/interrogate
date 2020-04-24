@@ -1,6 +1,7 @@
 .. image:: https://interrogate.readthedocs.io/en/latest/_static/logo_pink.png
     :alt: Pink Sloth Logo
 
+=================================
 ``interrogate``: explain yourself
 =================================
 
@@ -9,13 +10,13 @@ Interrogate a codebase for docstring coverage.
 .. start-readme
 
 Requirements
-------------
+============
 
 ``interrogate`` supports Python 3.5 and above.
 
 
 Installation
-------------
+============
 
 ``interrogate`` available on `PyPI <https://pypi.org/project/interrogate/>`_ and `GitHub <https://github.com/econchick/interrogate>`_. The recommended installation method is `pip <https://pip.pypa.io/en/stable/>`_-installing into a `virtualenv <https://hynek.me/articles/virtualenv-lives/>`_:
 
@@ -24,7 +25,7 @@ Installation
     $ pip install interrogate
 
 Usage
------
+=====
 
 Try it out on a Python project:
 
@@ -144,7 +145,7 @@ Add even *more* verbosity:
 
 
 Other Usage
------------
+===========
 
 Add it to your ``tox.ini`` file to enforce a level of coverage:
 
@@ -251,7 +252,7 @@ To view all options available, run ``interrogate --help``:
 .. start-credits
 
 Credits
--------
+=======
 
 .. role:: smol
 

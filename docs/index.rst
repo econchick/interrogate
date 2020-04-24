@@ -1,3 +1,4 @@
+=================================
 ``interrogate``: explain yourself
 =================================
 
@@ -15,7 +16,7 @@ Interrogate a codebase for docstring coverage.
 
 
 Command Line Options
---------------------
+====================
 
 .. program:: interrogate [OPTIONS] [PATHS]...
 
