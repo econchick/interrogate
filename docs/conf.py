@@ -37,6 +37,7 @@ author = "Lynn Root"
 release = find_version("../src/interrogate/__init__.py")
 version = release.rsplit(u".", 1)[0]
 
+master_doc = "index"
 
 # -- General configuration ---------------------------------------------------
 
