@@ -14,7 +14,7 @@ Requirements
 Installation
 ------------
 
-``interrogate`` available on PyPI. The recommended installation method is `pip`_-installing into a `virtualenv`_:
+``interrogate`` available on PyPI. The recommended installation method is `pip <https://pip.pypa.io/en/stable/>`_-installing into a `virtualenv <https://hynek.me/articles/virtualenv-lives/>`_:
 
 .. code-block:: console
 
@@ -183,71 +183,60 @@ Configure within your ``pyproject.toml``:
     quiet = false
 
 
+.. end-readme
 
+To view all options available, run ``interrogate --help``:
 
-Command Line Options
---------------------
+.. code-block:: console
 
+    interrogate -h
+    Usage: interrogate [OPTIONS] [PATHS]...
 
-.. program:: interrogate [OPTIONS] [PATHS]...
+      Measure and report on documentation coverage in Python modules.
 
-.. option:: --version
+    Options:
+      --version                     Show the version and exit.
+      -v, --verbose                 Level of verbosity  [default: 0]
+      -q, --quiet                   Do not print output  [default: False]
+      -f, --fail-under INT | FLOAT  Fail when coverage % is less than a given
+                                    amount.  [default: 80.0]
 
-    Show the version and exit.
+      -e, --exclude PATH            Exclude PATHs of files and/or directories.
+                                    Multiple `-e/--exclude` invocations supported.
 
-.. option:: -v, --verbose
+      -i, --ignore-init-method      Ignore `__init__` method of classes.
+                                    [default: False]
 
-    Level of verbosity  [default: ``0``]
+      -I, --ignore-init-module      Ignore `__init__.py` modules.  [default:
+                                    False]
 
-.. option:: -q, --quiet
+      -m, --ignore-magic            Ignore all magic methods of classes.
+                                    [default: False]
 
-    Do not print output  [default: ``False``]
+                                    NOTE: This does not include the `__init__`
+                                    method. To ignore `__init__` methods, use
+                                    `--ignore-init-method`.
 
-.. option:: -f, --fail-under INT | FLOAT
+      -M, --ignore-module           Ignore module-level docstrings.  [default:
+                                    False]
 
-    Fail when coverage % is less than a given amount.  [default: ``80.0``]
+      -p, --ignore-private          Ignore private classes, methods, and functions
+                                    starting with two underscores.
+                                    [default:False]
 
-.. option:: -e, --exclude PATH
+                                    NOTE: This does not include magic methods; use
+                                    `--ignore-magic` and/or `--ignore-init-method`
+                                    instead.
 
-    Exclude PATHs of files and/or directories. Multiple ``-e/--exclude`` invocations supported.
+      -s, --ignore-semiprivate      Ignore semiprivate classes, methods, and
+                                    functions starting with a single underscore.
+                                    [default: False]
 
-.. option:: -i, --ignore-init-method
+      -r, --ignore-regex STR        Regex identifying class, method, and function
+                                    names to ignore.
 
-    Ignore ``__init__`` method of classes. [default: ``False``]
+      -o, --output FILE             Write output to a given FILE.  [default:
+                                    stdout]
 
-.. option:: -I, --ignore-init-module
-
-    Ignore ``__init__.py`` modules.  [default: ``False``]
-
-.. option:: -m, --ignore-magic
-
-    Ignore all magic methods of classes.  [default: ``False``]
-
-    NOTE: This does not include the ``__init__`` method. To ignore ``__init__`` methods, use ``--ignore-init-method``.
-
-.. option:: -M, --ignore-module
-
-    Ignore module-level docstrings.  [default: ``False``]
-
-.. option:: -p, --ignore-private
-
-    Ignore private classes, methods, and functions starting with two underscores.  [default: ``False``]
-
-    NOTE: This does not include magic methods; use ``--ignore-magic`` and/or ``--ignore-init-method`` instead.
-
-.. option:: -s, --ignore-semiprivate
-
-    Ignore semiprivate classes, methods, and functions starting with a single underscore. [default: ``False``]
-
-.. option:: -r, --ignore-regex STR
-
-    Regex identifying class, method, and function names to ignore.
-
-.. option:: -o, --output FILE
-
-    Write output to a given ``FILE``.  [default: ``stdout``]
-
-.. option:: -c, --config FILE
-
-    Read configuration from ``pyproject.toml``.
-
+      -c, --config FILE             Read configuration from `pyproject.toml`.
+      -h, --help                    Show this message and exit.

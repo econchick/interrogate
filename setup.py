@@ -80,12 +80,15 @@ EXTRAS_REQUIRE = {
 EXTRAS_REQUIRE["dev"] = (
     EXTRAS_REQUIRE["docs"] + EXTRAS_REQUIRE["tests"] + ["wheel"]
 )
+LONG = read("README.rst")
 
 
 setup(
     name=NAME,
     version=find_meta("version"),
     description=find_meta("description"),
+    long_description=LONG,
+    long_description_content_type="text/x-rst",
     url=find_meta("uri"),
     author=find_meta("author"),
     author_email=find_meta("email"),

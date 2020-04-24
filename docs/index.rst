@@ -15,6 +15,74 @@ Interrogate a codebase for docstring coverage.
 
 .. include:: ../README.rst
    :start-after: start-readme
+   :end-before: end-readme
+
+
+Command Line Options
+--------------------
+
+.. program:: interrogate [OPTIONS] [PATHS]...
+
+.. option:: --version
+
+    Show the version and exit.
+
+.. option:: -v, --verbose
+
+    Level of verbosity  [default: ``0``]
+
+.. option:: -q, --quiet
+
+    Do not print output  [default: ``False``]
+
+.. option:: -f, --fail-under INT | FLOAT
+
+    Fail when coverage % is less than a given amount.  [default: ``80.0``]
+
+.. option:: -e, --exclude PATH
+
+    Exclude PATHs of files and/or directories. Multiple ``-e/--exclude`` invocations supported.
+
+.. option:: -i, --ignore-init-method
+
+    Ignore ``__init__`` method of classes. [default: ``False``]
+
+.. option:: -I, --ignore-init-module
+
+    Ignore ``__init__.py`` modules.  [default: ``False``]
+
+.. option:: -m, --ignore-magic
+
+    Ignore all magic methods of classes.  [default: ``False``]
+
+    NOTE: This does not include the ``__init__`` method. To ignore ``__init__`` methods, use ``--ignore-init-method``.
+
+.. option:: -M, --ignore-module
+
+    Ignore module-level docstrings.  [default: ``False``]
+
+.. option:: -p, --ignore-private
+
+    Ignore private classes, methods, and functions starting with two underscores.  [default: ``False``]
+
+    NOTE: This does not include magic methods; use ``--ignore-magic`` and/or ``--ignore-init-method`` instead.
+
+.. option:: -s, --ignore-semiprivate
+
+    Ignore semiprivate classes, methods, and functions starting with a single underscore. [default: ``False``]
+
+.. option:: -r, --ignore-regex STR
+
+    Regex identifying class, method, and function names to ignore.
+
+.. option:: -o, --output FILE
+
+    Write output to a given ``FILE``.  [default: ``stdout``]
+
+.. option:: -c, --config FILE
+
+    Read configuration from ``pyproject.toml``.
+
 
 
 Indices and tables
