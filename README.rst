@@ -5,6 +5,18 @@
 ``interrogate``: explain yourself
 =================================
 
+.. image:: https://img.shields.io/badge/interrogate-98.1%25-brightgreen
+   :target: https://github.com/econchick/interrogate
+   :alt: Documentation Coverage
+
+.. image:: https://readthedocs.org/projects/interrogate/badge/?version=latest&style=flat
+   :target: https://interrogate.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
+
+.. image:: https://github.com/econchick/interrogate/workflows/CI/badge.svg?branch=master
+   :target: https://github.com/econchick/interrogate/actions?workflow=CI
+   :alt: CI Status
+
 Interrogate a codebase for docstring coverage.
 
 .. start-readme
