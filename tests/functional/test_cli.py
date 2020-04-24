@@ -11,6 +11,7 @@ from interrogate import cli
 
 HERE = os.path.abspath(os.path.join(os.path.abspath(__file__), os.path.pardir))
 SAMPLE_DIR = os.path.join(HERE, "sample")
+FIXTURES = os.path.join(HERE, "fixtures")
 
 
 @pytest.fixture
@@ -94,3 +95,29 @@ def test_run_multiple_flags(flags, exp_result, exp_exit_code, runner):
     exp_partial_output = "actual: {:.1f}%".format(exp_result)
     assert exp_partial_output in result.output
     assert exp_exit_code == result.exit_code
+
+
+def test_generate_badge(runner):
+    """Test expected SVG output when creating a status badge."""
+    expected_output_path = os.path.join(FIXTURES, "expected_badge.svg")
+    with open(expected_output_path, "r") as f:
+        expected_output = f.read()
+
+    with runner.isolated_filesystem() as tmpdir:
+        expected_path = os.path.join(tmpdir, "interrogate_badge.svg")
+        cli_inputs = [
+            "--fail-under",
+            0,
+            "--generate-badge",
+            tmpdir,
+            SAMPLE_DIR,
+        ]
+
+        result = runner.invoke(cli.main, cli_inputs)
+        assert 0 == result.exit_code
+        assert expected_path in result.output
+
+        with open(expected_path, "r") as f:
+            actual_output = f.read()
+
+        assert expected_output == actual_output

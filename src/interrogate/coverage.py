@@ -171,6 +171,7 @@ class InterrogateCoverage:
         return results
 
     def get_coverage(self):
+        """Get coverage results from files."""
         filenames = self.get_filenames_from_paths()
         return self._get_coverage(filenames)
 

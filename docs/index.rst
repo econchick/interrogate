@@ -80,6 +80,10 @@ Command Line Options
 
     Read configuration from ``pyproject.toml``.
 
+.. option:: -g, --generate-badge PATH
+
+    Generate a `shields.io <https://shields.io/>`_ status badge (an SVG image) in at a given file or directory.
+
 
 .. include:: ../README.rst
    :start-after: start-credits
