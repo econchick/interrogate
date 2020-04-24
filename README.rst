@@ -1,3 +1,6 @@
+.. image:: https://interrogate.readthedocs.io/en/latest/_static/logo_pink.png
+    :alt: Pink Sloth Logo
+
 ``interrogate``: explain yourself
 =================================
 
@@ -243,3 +246,30 @@ To view all options available, run ``interrogate --help``:
 
       -c, --config FILE             Read configuration from `pyproject.toml`.
       -h, --help                    Show this message and exit.
+
+
+.. start-credits
+
+Credits
+-------
+
+.. role:: smol
+
+``interrogate`` was inspired by |docstr-coverage|_, which was forked from Alexey "DataGreed" Strelkov's |docstring-coverage|_, which was inspired by a 2004 `recipe from James Harlow <http://code.activestate.com/recipes/355731/>`_ :smol:`(turtles...)`.
+
+The cute |sloth| logo is by `JustineW <https://thenounproject.com/wojcik.justine/>`_ purchased via `the Noun Project <https://thenounproject.com/>`_ (but also available under the `Creative Commons License <https://creativecommons.org/licenses/by/3.0/us/legalcode>`_ with attribution).
+
+
+
+
+.. |sloth| image:: https://interrogate.readthedocs.io/en/latest/_static/logo_pink.png
+    :width: 20px
+    :alt: Pink Sloth Logo
+
+
+.. |docstr-coverage| replace:: ``docstr-coverage``
+.. _docstr-coverage: https://pypi.org/project/docstr-coverage
+.. |docstring-coverage| replace:: ``docstring-coverage``
+.. _docstring-coverage: https://bitbucket.org/DataGreed/docstring-coverage
+
+.. end-credits
