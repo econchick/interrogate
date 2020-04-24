@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=40.6.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.coverage.run]
+parallel = true
+branch = true
+source = ["interrogate"]
+
+[tool.coverage.paths]
+source = ["src", ".tox/*/site-packages"]
+
+[tool.coverage.report]
+show_missing = true
+
+[tool.black]
+line-length = 79
+
+[tool.interrogate]
+ignore-init-method = true
+ignore-init-module = false
+ignore-magic = false
+ignore-semiprivate = false
+ignore-private = false
+ignore-module = false
+fail-under = 95
+exclude = ["tests/functional/sample", "setup.py", "tests/functional/__init__.py", "docs"]
+verbose = 0
+quiet = false
+

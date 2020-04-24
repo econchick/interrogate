@@ -1,0 +1,183 @@
+# Copyright 2020 Lynn Root
+"""CLI entrypoint into `interrogate`."""
+
+import os
+import sys
+
+import click
+
+from interrogate import __version__ as version
+from interrogate import config
+from interrogate import coverage
+from interrogate import utils
+
+
+@click.command()
+@click.version_option(version, prog_name="interrogate")
+@click.option(
+    "-v",
+    "--verbose",
+    default=0,
+    count=True,
+    show_default=True,
+    help="Level of verbosity",
+)
+@click.option(
+    "-q",
+    "--quiet",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help="Do not print output",
+)
+@click.option(
+    "-f",
+    "--fail-under",
+    type=float,
+    metavar="INT | FLOAT",
+    default=80.0,
+    show_default=True,
+    help="Fail when coverage % is less than a given amount.",
+)
+@click.option(
+    "-e",
+    "--exclude",
+    multiple=True,
+    type=click.Path(
+        exists=True,
+        file_okay=True,
+        dir_okay=True,
+        writable=False,
+        readable=True,
+        resolve_path=True,
+    ),
+    default=(),
+    help=(
+        "Exclude PATHs of files and/or directories. Multiple `-e/--exclude` "
+        "invocations supported."
+    ),
+)
+@click.option(
+    "-i",
+    "--ignore-init-method",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help="Ignore `__init__` method of classes.",
+)
+@click.option(
+    "-I",
+    "--ignore-init-module",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help="Ignore `__init__.py` modules.",
+)
+@click.option(
+    "-m",
+    "--ignore-magic",
+    is_flag=True,
+    default=False,
+    show_default=False,
+    help=(
+        "Ignore all magic methods of classes.  [default: False]\n\nNOTE: This "
+        "does not include the `__init__` method. To ignore `__init__` methods, "
+        "use `--ignore-init-method`."
+    ),
+)
+@click.option(
+    "-M",
+    "--ignore-module",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help="Ignore module-level docstrings.",
+)
+@click.option(
+    "-p",
+    "--ignore-private",
+    is_flag=True,
+    default=False,
+    show_default=False,
+    help=(
+        "Ignore private classes, methods, and functions starting with two "
+        "underscores.  [default:False]"
+        "\n\nNOTE: This does not include magic methods; use `--ignore-magic` "
+        "and/or `--ignore-init-method` instead."
+    ),
+)
+@click.option(
+    "-s",
+    "--ignore-semiprivate",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help="Ignore semiprivate classes, methods, and functions starting with a "
+    "single underscore.",
+)
+@click.option(
+    "-r",
+    "--ignore-regex",
+    type=str,
+    default=None,
+    show_default=True,
+    metavar="STR",
+    callback=utils.parse_regex,
+    help="Regex identifying class, method, and function names to ignore.",
+)
+@click.option(
+    "-o",
+    "--output",
+    default=None,
+    metavar="FILE",
+    help="Write output to a given FILE.  [default: stdout]",
+)
+@click.option(
+    "-c",
+    "--config",
+    type=click.Path(
+        exists=False, file_okay=True, dir_okay=False, readable=True
+    ),
+    is_eager=True,
+    callback=config.read_pyproject_toml,
+    help="Read configuration from `pyproject.toml`.",
+)
+@click.help_option("-h", "--help")
+@click.argument(
+    "paths",
+    type=click.Path(
+        exists=True,
+        file_okay=True,
+        dir_okay=True,
+        writable=False,
+        readable=True,
+        resolve_path=True,
+    ),
+    nargs=-1,
+)
+def main(paths, **kwargs):
+    """Measure and report on documentation coverage in Python modules."""
+    if not paths:
+        paths = (os.path.abspath(os.getcwd()),)
+
+    conf = config.InterrogateConfig(
+        ignore_init_method=kwargs["ignore_init_method"],
+        ignore_init_module=kwargs["ignore_init_module"],
+        ignore_magic=kwargs["ignore_magic"],
+        ignore_module=kwargs["ignore_module"],
+        ignore_private=kwargs["ignore_private"],
+        ignore_regex=kwargs["ignore_regex"],
+        ignore_semiprivate=kwargs["ignore_semiprivate"],
+        fail_under=kwargs["fail_under"],
+    )
+    interrogate_coverage = coverage.InterrogateCoverage(
+        paths=paths, conf=conf, excluded=kwargs["exclude"],
+    )
+    results = interrogate_coverage.get_coverage()
+
+    if not kwargs["quiet"]:
+        interrogate_coverage.print_results(
+            results, kwargs["output"], kwargs["verbose"]
+        )
+
+    sys.exit(results.ret_code)
