@@ -89,6 +89,8 @@ Command Line Options
    :start-after: start-credits
    :end-before: end-credits
 
+.. include:: changelog.rst
+
 
 Indices and tables
 ==================

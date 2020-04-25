@@ -10,10 +10,6 @@ div.sphinxsidebar ul ul, div.sphinxsidebar ul.want-points {
   list-style: none;
 }
 
-div.body li {
-  list-style: none;
-}
-
 div.sphinxsidebar ul li.toctree-l1 > a {
   display: none;
   margin-bottom: 20px;
