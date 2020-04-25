@@ -5,7 +5,7 @@
 ``interrogate``: explain yourself
 =================================
 
-.. image:: https://img.shields.io/badge/interrogate-98.1%25-brightgreen
+.. image:: https://interrogate.readthedocs.io/en/latest/_static/interrogate_badge.svg
    :target: https://github.com/econchick/interrogate
    :alt: Documentation Coverage
 
@@ -159,6 +159,14 @@ Add even *more* verbosity:
 Other Usage
 ===========
 
+Generate a `shields.io <https://shields.io/>`_ badge (like this one! |interrogate-badge| ):
+
+.. code-block:: console
+
+    $ interrogate --generate-badge PATH
+    RESULT: PASSED (minumum: 80.0%, actual: 100.0%)
+    Generated badge to /Users/lynn/dev/interrogate/docs/_static/interrogate_badge.svg
+
 Add it to your ``tox.ini`` file to enforce a level of coverage:
 
 .. code-block:: ini
@@ -258,6 +266,8 @@ To view all options available, run ``interrogate --help``:
                                     stdout]
 
       -c, --config FILE             Read configuration from `pyproject.toml`.
+      -g, --generate-badge PATH     Generate a 'shields.io' status badge (an SVG
+                                    image) in at a given file or directory.
       -h, --help                    Show this message and exit.
 
 
@@ -273,6 +283,7 @@ Credits
 The cute |sloth| logo is by `JustineW <https://thenounproject.com/wojcik.justine/>`_ purchased via `the Noun Project <https://thenounproject.com/>`_ (but also available under the `Creative Commons License <https://creativecommons.org/licenses/by/3.0/us/legalcode>`_ with attribution).
 
 
+.. |interrogate-badge|  image:: https://interrogate.readthedocs.io/en/latest/_static/interrogate_badge.svg
 .. |sloth| image:: https://interrogate.readthedocs.io/en/latest/_static/logo_smol.png
 
 .. |docstr-coverage| replace:: ``docstr-coverage``

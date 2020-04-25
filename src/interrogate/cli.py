@@ -7,6 +7,7 @@ import sys
 import click
 
 from interrogate import __version__ as version
+from interrogate import badge_gen
 from interrogate import config
 from interrogate import coverage
 from interrogate import utils
@@ -142,6 +143,23 @@ from interrogate import utils
     callback=config.read_pyproject_toml,
     help="Read configuration from `pyproject.toml`.",
 )
+@click.option(
+    "-g",
+    "--generate-badge",
+    type=click.Path(
+        exists=False,
+        file_okay=True,
+        dir_okay=True,
+        writable=True,
+        resolve_path=True,
+    ),
+    default=None,
+    callback=badge_gen.check_badge_path,
+    help=(
+        "Generate a 'shields.io' status badge (an SVG image) in at a given "
+        "file or directory."
+    ),
+)
 @click.help_option("-h", "--help")
 @click.argument(
     "paths",
@@ -175,9 +193,15 @@ def main(paths, **kwargs):
     )
     results = interrogate_coverage.get_coverage()
 
-    if not kwargs["quiet"]:
+    is_quiet = kwargs["quiet"]
+    if not is_quiet:
         interrogate_coverage.print_results(
             results, kwargs["output"], kwargs["verbose"]
         )
+
+    if kwargs["generate_badge"] is not None:
+        output_path = badge_gen.create(kwargs["generate_badge"], results)
+        if not is_quiet:
+            click.echo("Generated badge to {}".format(output_path))
 
     sys.exit(results.ret_code)

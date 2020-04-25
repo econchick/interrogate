@@ -1,9 +1,11 @@
 include LICENSE *.rst *.toml *.yml *.yaml *.ini
+include src/interrogate/badge/*.svg
 graft .github
 
 # Tests
 include tox.ini conftest.py
 recursive-include tests *.py
+recursive-include tests *.svg
 
 # Documentation
 include docs/Makefile docs/docutils.conf
