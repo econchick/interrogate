@@ -89,3 +89,13 @@ html_css_files = [
     "custom.css",
 ]
 templates_path = ["_templates"]
+
+
+# -- Other config
+
+# For when I want to turn on API documentation
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3", None),
+    "click": ("https://click.palletsprojects.com/en/7.x/", None),
+}
+autodoc_member_order = "bysource"
