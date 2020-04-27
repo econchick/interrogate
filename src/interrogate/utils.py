@@ -15,7 +15,15 @@ TERMINAL_WIDTH, _ = shutil.get_terminal_size((80, 20))
 
 
 def parse_regex(ctx, param, value):
-    """Compile a regex if given."""
+    """Compile a regex if given.
+
+    :param click.Context ctx: click command context.
+    :param click.Parameter param: click command parameter (in this case,
+        ``ignore_regex`` from ``-r|--ignore-regiex``).
+    :param str value: regular expression to be compiled.
+
+    :return: a compiled regular expression.
+    """
     if value is None:
         return
     return re.compile(value)
@@ -23,7 +31,13 @@ def parse_regex(ctx, param, value):
 
 @contextlib.contextmanager
 def smart_open(filename=None, fmode=None):
-    """Handle both stdout and files in the same manner."""
+    """Context manager to handle both stdout & files in the same manner.
+
+    :param filename: Filename to open.
+    :type filename: ``str`` or ``None``
+    :param fmode: Mode in which to open a given file.
+    :type fmode: ``str`` or ``None``
+    """
     if filename and filename != "-":
         fh = open(filename, fmode)
     else:
@@ -37,7 +51,16 @@ def smart_open(filename=None, fmode=None):
 
 
 def get_common_base(files):
-    """Find the common parent base path for a list of files."""
+    """Find the common parent base path for a list of files.
+
+    For example, ``["/usr/src/app", "/usr/src/tests", "/usr/src/app2"]``
+    would return ``"/usr/src"``.
+
+    :param files: files to scan.
+    :type files: ``iterable``
+    :return: Common parent path.
+    :rtype: str
+    """
 
     def allnamesequal(name):
         """Return if all names in an iterable are equal."""
@@ -49,7 +72,15 @@ def get_common_base(files):
 
 
 def interrogate_line_formatter(padded_cells, colwidths, colaligns):
-    """Format rows of a table to fit terminal."""
+    """Format rows of a table to fit terminal.
+
+    :param list(str) padded_cells: row where each cell is padded with spacing.
+    :param list(int) colwidths: list of widths, by column order.
+    :param list(str) colaligns: list of column alignment, by column order.
+
+    :return: a formatted table row
+    :rtype: str
+    """
     sep, padder = "|", " "
     final_row_width = sum([len(x) for x in padded_cells]) + (
         len(padded_cells) * len(sep)

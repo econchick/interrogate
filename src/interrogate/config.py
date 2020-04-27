@@ -1,8 +1,8 @@
 # Copyright 2020 Lynn Root
 """
 Configuration-related helpers.
-Adapted from Black https://github.com/psf/black/blob/master/black.py
 """
+# Adapted from Black https://github.com/psf/black/blob/master/black.py.
 
 import pathlib
 
@@ -13,7 +13,22 @@ import toml
 
 @attr.s
 class InterrogateConfig:
-    """Configuration related to interrogating."""
+    """Configuration related to interrogating a given codebase.
+
+    :param fail_under: Fail when coverage % is less than a given amount.
+    :type fail_under: `int` or `float`
+    :param str ignore_regex: Regex identifying class, method, and
+        function names to ignore.
+    :param bool ignore_magic: Ignore all magic methods of classes.
+    :param bool ignore_module: Ignore module-level docstrings.
+    :param bool ignore_private: Ignore private classes, methods, and
+        functions starting with two underscores.
+    :param bool ignore_semiprivate: Ignore semiprivate classes, methods,
+        and functions starting with a single underscore.
+    :param bool ignore_init_method: Ignore ``__init__`` method of
+        classes.
+    :param bool ignore_init_module: Ignore ``__init__.py`` modules.
+    """
 
     fail_under = attr.ib(default=80.0)
     ignore_regex = attr.ib(default=False)
@@ -60,7 +75,14 @@ def find_pyproject_toml(path_search_start):
 
 
 def parse_pyproject_toml(path_config):
-    """Parse a pyproject toml file and return relevant parts for Interrogate."""
+    """Parse ``pyproject.toml`` file and return relevant parts for Interrogate.
+
+    :param str path_config: Path to ``pyproject.toml`` file.
+    :return: Dictionary representing configuration for Interrogate.
+    :rtype: dict
+    :raise OSError: an I/O-related error when opening ``pyproject.toml``.
+    :raise toml.TomlDecodeError: unable to load ``pyproject.toml``.
+    """
     pyproject_toml = toml.load(path_config)
     config = pyproject_toml.get("tool", {}).get("interrogate", {})
     return {
@@ -69,10 +91,21 @@ def parse_pyproject_toml(path_config):
 
 
 def read_pyproject_toml(ctx, param, value):
-    """Inject conf from "pyproject.toml" into Click's `ctx`.
+    """Inject configuration from ``pyproject.toml`` into ``ctx``.
 
     These override option defaults, but still respect option values
     provided via the CLI.
+
+    :param click.Context ctx: click command context.
+    :param click.Parameter param: click command parameter (in this case,
+        ``config`` from ``-c|--config``).
+    :param str value: path to ``pyproject.toml`` file.
+
+    :return: path to ``pyproject.toml`` file.
+    :rtype: str
+
+    :raise click.FileError: if ``pyproject.toml`` is not parseable or
+        otherwise not available (i.e. does not exist).
     """
     assert not isinstance(value, (int, bool)), "Invalid parameter type passed"
     if not value:

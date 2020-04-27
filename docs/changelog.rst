@@ -1,6 +1,14 @@
 Changelog
 =========
 
+1.1.1 (2020-04-27)
+------------------
+
+Added
+^^^^^
+
+* Improve docstring content to reflect parameters, return values, and raised exceptions.
+
 1.1.0 (2020-04-24)
 ------------------
 

@@ -1,7 +1,7 @@
 # Copyright 2020 Lynn Root
 """Module for generating an SVG badge.
 
-Inspired by coverage-badge https://github.com/dbrgn/coverage-badge
+Inspired by `coverage-badge <https://github.com/dbrgn/coverage-badge>`_.
 """
 
 import os
@@ -32,7 +32,16 @@ COLOR_RANGES = [
 
 
 def check_badge_path(ctx, param, value):
-    """Only care if directory exists."""
+    """Only care if directory exists.
+
+    :param click.Context ctx: click command context.
+    :param click.Parameter param: click command parameter (in this case,
+        ``generate_badge`` from ``-g|--generate-badge``).
+    :param str value: path to output badge file.
+
+    :return: path to output badge file.
+    :rtype: str
+    """
     if value and os.path.isdir(value):
         if not os.path.exists(value):
             raise click.BadParameter(
@@ -42,7 +51,13 @@ def check_badge_path(ctx, param, value):
 
 
 def save_badge(badge, output):
-    """Save badge to the specified path."""
+    """Save badge to the specified path.
+
+    :param str badge: SVG contents of badge.
+    :param str output: path to output badge file.
+    :return: path to output badge file.
+    :rtype: str
+    """
     if os.path.isdir(output):
         output = os.path.join(output, DEFAULT_FILENAME)
 
@@ -53,7 +68,14 @@ def save_badge(badge, output):
 
 
 def get_badge(result, color):
-    """Generate an SVG from template."""
+    """Generate an SVG from template.
+
+    :param float result: coverage % result.
+    :param str color: color of badge.
+
+    :return: SVG contents of badge.
+    :rtype: str
+    """
     result = "{:.1f}".format(result)
     template_path = os.path.join("badge", "template.svg")
     tmpl = pkg_resources.resource_string(__name__, template_path)
@@ -62,7 +84,12 @@ def get_badge(result, color):
 
 
 def get_color(result):
-    """Get color for current doc coverage percent."""
+    """Get color for current doc coverage percent.
+
+    :param float result: coverage % result
+    :return: color of badge according to coverage completeness.
+    :rtype: str
+    """
     for minimum, color in COLOR_RANGES:
         if result >= minimum:
             return COLORS[color]
@@ -70,7 +97,14 @@ def get_color(result):
 
 
 def create(output, result):
-    """Create a status badge."""
+    """Create a status badge.
+
+    :param str output: path to output badge file.
+    :param coverage.InterrogateResults result: results of coverage
+        interrogation.
+    :return: path to output badge file.
+    :rtype: str
+    """
     result_perc = result.perc_covered
     color = get_color(result_perc)
     badge = get_badge(result_perc, color)

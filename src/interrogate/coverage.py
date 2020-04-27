@@ -20,7 +20,14 @@ tabulate.PRESERVE_WHITESPACE = True
 
 @attr.s
 class BaseInterrogateResult:
-    """Base results class."""
+    """Base results class.
+
+    :attr int total: total number of objects interrogated (modules,
+        classes, methods, and functions).
+    :attr int covered: number of objects covered by docstrings.
+    :attr int missing: number of objects not covered by docstrings.
+    :attr int skipped: number of modules skipped.
+    """
 
     total = attr.ib(init=False, default=0)
     covered = attr.ib(init=False, default=0)
@@ -29,7 +36,11 @@ class BaseInterrogateResult:
 
     @property
     def perc_covered(self):
-        """Percentage of node covered."""
+        """Percentage of node covered.
+
+        :return: percentage covered over total.
+        :rtype: float
+        """
         if self.total == 0:
             return 0
         return (float(self.covered) / float(self.total)) * 100
@@ -37,14 +48,20 @@ class BaseInterrogateResult:
 
 @attr.s
 class InterrogateFileResult(BaseInterrogateResult):
-    """Coverage results for a particular file."""
+    """Coverage results for a particular file.
+
+    :param str filename: filename associated with the coverage result.
+    :param bool ignore_module: whether or not to ignore this file/module.
+    :param visit.CoverageVisitor visitor: coverage visitor instance
+        that assessed docstring coverage of file.
+    """
 
     filename = attr.ib(default=None)
     ignore_module = attr.ib(default=False)
     visitor = attr.ib(repr=False, default=None)
 
     def combine(self):
-        """Tally results from each node."""
+        """Tally results from each AST node visited."""
         for node in self.visitor.graph.nodes:
             if node.node_type == "Module":
                 if self.ignore_module:
@@ -60,7 +77,13 @@ class InterrogateFileResult(BaseInterrogateResult):
 
 @attr.s
 class InterrogateResults(BaseInterrogateResult):
-    """Coverage results for all files."""
+    """Coverage results for all files.
+
+    :attr int ret_code: return code of program (``0`` for success, ``1``
+        for fail).
+    :attr list(InterrogateFileResults) file_results: list of file
+        results associated with this program run.
+    """
 
     ret_code = attr.ib(init=False, default=0, repr=False)
     file_results = attr.ib(init=False, default=None, repr=False)
@@ -75,7 +98,13 @@ class InterrogateResults(BaseInterrogateResult):
 
 
 class InterrogateCoverage:
-    """The doc coverage interrogator!"""
+    """The doc coverage interrogator!
+
+    :param list(str) paths: list of paths to interrogate.
+    :param config.InterrogateConfig conf: interrogation configuration.
+    :param tuple(str) excluded: tuple of files and directories to exclude
+        in assessing coverage.
+    """
 
     COMMON_EXCLUDE = [".tox", ".venv", "venv", ".git", ".hg"]
 
@@ -266,7 +295,15 @@ class InterrogateCoverage:
         tw.line(to_print)
 
     def print_results(self, results, output, verbosity):
-        """Print results to a given output stream."""
+        """Print results to a given output stream.
+
+        :param InterrogateResults results: results of docstring coverage
+            interrogation.
+        :param output: filename to output results. If ``None``, uses
+            ``sys.stdout``.
+        :type output: ``str`` or ``None``
+        :param int verbosity: level of detail to print out (``0``-``2``).
+        """
         with utils.smart_open(output, "w") as f:
             tw = py_io.TerminalWriter(file=f)
             if verbosity > 0:

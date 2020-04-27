@@ -10,7 +10,18 @@ import networkx as nx
 
 @attr.s(eq=False)
 class CovNode:
-    """Coverage of an AST Node"""
+    """Coverage of an AST Node.
+
+    :param str name: Name of node (module, class, method or function
+        names).
+    :param str path: Pseudo-import path to node (i.e. ``sample.py:
+        MyClass.my_method``).
+    :param int level: Level of recursiveness/indentation
+    :param int lineno: Line number of class, method, or function.
+    :param bool covered: Has a docstring
+    :param str node_type: type of node (e.g "module", "class", or
+        "function").
+    """
 
     name = attr.ib()
     path = attr.ib()
@@ -21,7 +32,11 @@ class CovNode:
 
 
 class CoverageVisitor(ast.NodeVisitor):
-    """NodeVisitor for a Python file to find docstrings."""
+    """NodeVisitor for a Python file to find docstrings.
+
+    :param str filename: filename to parse coverage.
+    :param config.InterrogateConfig config: configuration.
+    """
 
     def __init__(self, filename, config):
         self.filename = filename
@@ -136,25 +151,37 @@ class CoverageVisitor(ast.NodeVisitor):
         return self._is_ignored_common(node)
 
     def visit_Module(self, node):
-        """Visit module for docstrings."""
+        """Visit module for docstrings.
+
+        :param ast.Module node: a module AST node.
+        """
         self._visit_helper(node)
 
     def visit_ClassDef(self, node):
-        """Visit class for docstrings."""
+        """Visit class for docstrings.
+
+        :param ast.ClassDef node: a class AST node.
+        """
         if self._is_class_ignored(node):
             self.skipped += 1
             return
         self._visit_helper(node)
 
     def visit_FunctionDef(self, node):
-        """Visit function or method for docstrings."""
+        """Visit function or method for docstrings.
+
+        :param ast.FunctionDef node: a function/method AST node.
+        """
         if self._is_func_ignored(node):
             self.skipped += 1
             return
         self._visit_helper(node)
 
     def visit_AsyncFunctionDef(self, node):
-        """Visit async function or method for docstrings."""
+        """Visit async function or method for docstrings.
+
+        :param ast.AsyncFunctionDef node: a async function/method AST node.
+        """
         if self._is_func_ignored(node):
             self.skipped += 1
             return
