@@ -16,6 +16,8 @@ jobs:
   tests:
     name: "Python ${{ matrix.python-version }}"
     runs-on: "ubuntu-latest"
+    env:
+      USING_COVERAGE: '3.7,3.8'
     strategy:
       matrix:
         python-version: ["3.5", "3.6", "3.7", "3.8"]
@@ -33,7 +35,12 @@ jobs:
           python -m pip install --upgrade virtualenv tox tox-gh-actions
       - name: "Run tox targets for ${{ matrix.python-version }}"
         run: "python -m tox"
-      # todo: add coverage/codecov
+      - name: "Upload coverage to Codecov"
+        if: "contains(env.USING_COVERAGE, matrix.python-version)"
+        uses: "codecov/codecov-action@v1"
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: true
 
   package:
     name: "Build & verify package"
