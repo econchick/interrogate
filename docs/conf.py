@@ -65,7 +65,7 @@ exclude_patterns = []
 html_theme = "alabaster"
 html_theme_options = {
     "font_size": "18px",
-    "page_width": "1020px",
+    # "page_width": "1020px",
     "github_button": False,
     "github_user": "econchick",
     "github_repo": "interrogate",
