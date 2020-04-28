@@ -41,7 +41,9 @@ class BaseInterrogateResult:
         :return: percentage covered over total.
         :rtype: float
         """
-        if self.total == 0:
+        # technically this shouldn't happen since empty files still have
+        # a total of one (module-level)
+        if self.total == 0:  # pragma: no cover
             return 0
         return (float(self.covered) / float(self.total)) * 100
 
@@ -149,7 +151,7 @@ class InterrogateCoverage:
                         "E: Invalid file '{}'. Unable interrogate non-Python "
                         "files.".format(path)
                     )
-                    click.echo(msg)
+                    click.echo(msg, err=True)
                     return sys.exit(1)
                 filenames.append(path)
                 continue
@@ -159,9 +161,8 @@ class InterrogateCoverage:
 
         if not filenames:
             p = ", ".join(self.paths)
-            click.echo(
-                "E: No Python files found to interrogate in '{}'.".format(p)
-            )
+            msg = "E: No Python files found to interrogate in '{}'.".format(p)
+            click.echo(msg, err=True)
             return sys.exit(1)
 
         self.common_base = utils.get_common_base(filenames)
@@ -187,10 +188,10 @@ class InterrogateCoverage:
     def _get_coverage(self, filenames):
         """Get coverage results."""
         results = InterrogateResults()
-        if results.file_results is None:
-            results.file_results = []
+        file_results = []
         for f in filenames:
-            results.file_results.append(self._get_file_coverage(f))
+            file_results.append(self._get_file_coverage(f))
+        results.file_results = file_results
 
         results.combine()
 
@@ -224,12 +225,22 @@ class InterrogateCoverage:
         The detailed view shows coverage of each module, class, and
         function/method.
         """
+
+        def _sort_nodes(x):
+            """Sort nodes by line number."""
+            lineno = getattr(x, "lineno", 0)
+            # lineno is "None" if module is empty
+            if lineno is None:
+                lineno = 0
+            return lineno
+
         verbose_tbl = []
         header = ["Name", "Status"]
         verbose_tbl.append(header)
         verbose_tbl.append(utils.TABLE_SEPARATOR)
         for file_result in combined_results.file_results:
             nodes = file_result.visitor.graph.nodes
+            nodes = sorted(nodes, key=_sort_nodes)
             for n in nodes:
                 verbose_tbl.append(
                     self._get_detailed_row(n, file_result.filename)
@@ -245,7 +256,7 @@ class InterrogateCoverage:
             tablefmt=utils.InterrogateTableFormat,
             colalign=["left", "right"],
         )
-        tw.sep("-", "Detailed Coverage")
+        tw.sep("-", "Detailed Coverage", fullwidth=utils.TERMINAL_WIDTH)
         tw.line(to_print)
         tw.line()
 
@@ -286,13 +297,46 @@ class InterrogateCoverage:
     def _print_summary_table(self, results, tw):
         """Print summary table to the given output stream."""
         summary_table = self._create_summary_table(results)
-        tw.sep("-", title="Summary")
+        tw.sep("-", title="Summary", fullwidth=utils.TERMINAL_WIDTH)
         to_print = tabulate.tabulate(
             summary_table,
             tablefmt=utils.InterrogateTableFormat,
             colalign=("left", "right", "right", "right", "right"),
         )
         tw.line(to_print)
+
+    @staticmethod
+    def _sort_results(results):
+        """Sort results by filename, directories first"""
+        all_filenames_map = {r.filename: r for r in results.file_results}
+        all_dirs = sorted(
+            set(
+                [
+                    os.path.dirname(r.filename)
+                    for r in results.file_results
+                    if os.path.dirname(r.filename) != ""
+                ]
+            )
+        )
+
+        sorted_results = []
+        while all_dirs:
+            current_dir = all_dirs.pop()
+            files = []
+            for p in os.listdir(current_dir):
+                path = os.path.join(current_dir, p)
+                # if os.path.isdir(path):
+                #     continue
+                if path in all_filenames_map.keys():
+                    files.append(path)
+            files = sorted(files)
+            sorted_results.extend(files)
+
+        sorted_res = []
+        for filename in sorted_results:
+            sorted_res.append(all_filenames_map[filename])
+        results.file_results = sorted_res
+        return results
 
     def print_results(self, results, output, verbosity):
         """Print results to a given output stream.
@@ -306,8 +350,13 @@ class InterrogateCoverage:
         """
         with utils.smart_open(output, "w") as f:
             tw = py_io.TerminalWriter(file=f)
+            results = self._sort_results(results)
             if verbosity > 0:
-                tw.sep("=", "Coverage for {}/".format(self.common_base))
+                tw.sep(
+                    "=",
+                    "Coverage for {}/".format(self.common_base),
+                    fullwidth=utils.TERMINAL_WIDTH,
+                )
             if verbosity > 1:
                 self._print_detailed_table(results, tw)
             if verbosity > 0:
@@ -321,6 +370,6 @@ class InterrogateCoverage:
                 status, self.config.fail_under, results.perc_covered
             )
             if verbosity > 0:
-                tw.sep("-", title=status_line)
+                tw.sep("-", title=status_line, fullwidth=utils.TERMINAL_WIDTH)
             else:
                 tw.line(status_line)

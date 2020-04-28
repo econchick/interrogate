@@ -32,6 +32,9 @@ class Foo(object):
     def get(self):
         pass
 
+    async def get(self):
+        pass
+
 
 def documented_top_level_func():
     """A documented top level function"""

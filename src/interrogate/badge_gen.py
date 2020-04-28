@@ -6,7 +6,6 @@ Inspired by `coverage-badge <https://github.com/dbrgn/coverage-badge>`_.
 
 import os
 
-import click
 import pkg_resources
 
 
@@ -29,25 +28,6 @@ COLOR_RANGES = [
     (40, "orange"),
     (0, "red"),
 ]
-
-
-def check_badge_path(ctx, param, value):
-    """Only care if directory exists.
-
-    :param click.Context ctx: click command context.
-    :param click.Parameter param: click command parameter (in this case,
-        ``generate_badge`` from ``-g|--generate-badge``).
-    :param str value: path to output badge file.
-
-    :return: path to output badge file.
-    :rtype: str
-    """
-    if value and os.path.isdir(value):
-        if not os.path.exists(value):
-            raise click.BadParameter(
-                "Directory '{}' does not exist.".format(value)
-            )
-    return value
 
 
 def save_badge(badge, output):

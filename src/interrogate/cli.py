@@ -154,7 +154,6 @@ from interrogate import utils
         resolve_path=True,
     ),
     default=None,
-    callback=badge_gen.check_badge_path,
     help=(
         "Generate a 'shields.io' status badge (an SVG image) in at a given "
         "file or directory."

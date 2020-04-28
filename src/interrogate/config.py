@@ -54,6 +54,7 @@ def find_project_root(srcs):
     if common_base.is_dir():
         # Append a fake file so `parents` below returns `common_base_dir`, too.
         common_base /= "fake-file"
+
     for directory in common_base.parents:
         if (directory / ".git").exists():
             return directory
@@ -109,7 +110,7 @@ def read_pyproject_toml(ctx, param, value):
     """
     assert not isinstance(value, (int, bool)), "Invalid parameter type passed"
     if not value:
-        value = find_pyproject_toml(ctx.params.get("src", ()))
+        value = find_pyproject_toml(ctx.params.get("paths", ()))
         if value is None:
             return None
 

@@ -29,6 +29,10 @@ class Foo(object):
         """this method gets something"""
         pass
 
+    async def get(self):
+        """this async method gets something"""
+        pass
+
 
 def top_level_func():
     """A top level function"""

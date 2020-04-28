@@ -6,6 +6,7 @@ graft .github
 include tox.ini conftest.py
 recursive-include tests *.py
 recursive-include tests *.svg
+recursive-include tests *.txt
 
 # Documentation
 include docs/Makefile docs/docutils.conf

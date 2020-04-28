@@ -74,9 +74,11 @@ def get_common_base(files):
 def interrogate_line_formatter(padded_cells, colwidths, colaligns):
     """Format rows of a table to fit terminal.
 
-    :param list(str) padded_cells: row where each cell is padded with spacing.
+    :param list(str) padded_cells: row where each cell is padded with
+        spacing.
     :param list(int) colwidths: list of widths, by column order.
-    :param list(str) colaligns: list of column alignment, by column order.
+    :param list(str) colaligns: list of column alignment, by column
+        order. Possible values: ``"left"`` or ``"right"``
 
     :return: a formatted table row
     :rtype: str
@@ -95,11 +97,10 @@ def interrogate_line_formatter(padded_cells, colwidths, colaligns):
     to_join = []
     for index, cell in enumerate(padded_cells):
         alignment = colaligns[index]
-        if alignment == "left":
-            to_append = cell + (padder * padding_per_cell)
-
-        elif alignment == "right":
+        if alignment == "right":
             to_append = (padder * padding_per_cell) + cell
+        else:  # default to left
+            to_append = cell + (padder * padding_per_cell)
 
         to_join.append(to_append)
 
