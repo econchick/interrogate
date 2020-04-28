@@ -9,6 +9,10 @@
    :target: https://github.com/econchick/interrogate
    :alt: Documentation Coverage
 
+.. image:: https://codecov.io/gh/econchick/interrogate/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/econchick/interrogate
+   :alt: Testing Coverage
+
 .. image:: https://readthedocs.org/projects/interrogate/badge/?version=latest&style=flat
    :target: https://interrogate.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status

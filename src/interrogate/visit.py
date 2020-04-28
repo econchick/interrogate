@@ -65,10 +65,7 @@ class CoverageVisitor(ast.NodeVisitor):
 
         if self.stack:
             parent = self.stack[-1]
-            if parent.path:
-                parent_path = parent.path
-            else:
-                parent_path = parent.name
+            parent_path = parent.path
             if parent_path.endswith(".py"):
                 path = parent_path + ":" + node_name
             else:

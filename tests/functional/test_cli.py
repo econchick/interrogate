@@ -1,5 +1,6 @@
 # Copyright 2020 Lynn Root
-"""Functional tests for the CLI. I should add more testing..."""
+"""Functional tests for the CLI and implicitly interrogate/visit.py."""
+
 import os
 
 import pytest
@@ -20,29 +21,39 @@ def runner():
     return testing.CliRunner()
 
 
+def test_run_no_paths(runner, monkeypatch, tmpdir):
+    """Assume current working directory if no paths are given."""
+    monkeypatch.setattr(os, "getcwd", lambda: SAMPLE_DIR)
+
+    result = runner.invoke(cli.main, [])
+
+    assert "actual: 46.2%" in result.output
+    assert 1 == result.exit_code
+
+
 @pytest.mark.parametrize(
     "flags,exp_result,exp_exit_code",
     (
         # no flags
-        ([], 46.9, 1),
+        ([], 46.2, 1),
         # ignore init module
-        (["-I"], 46.8, 1),
+        (["-I"], 46.0, 1),
         # ignore module docs
-        (["-M"], 45.5, 1),
+        (["-M"], 45.7, 1),
         # ignore semiprivate docs
-        (["-s"], 47.6, 1),
+        (["-s"], 46.7, 1),
         # ignore private docs
-        (["-p"], 48.8, 1),
+        (["-p"], 47.8, 1),
         # ignore magic method docs
-        (["-m"], 46.7, 1),
+        (["-m"], 45.8, 1),
         # ignore init method docs
-        (["-i"], 45.7, 1),
+        (["-i"], 44.9, 1),
         # ignore regex
-        (["-r", "^method_foo$"], 47.8, 1),
+        (["-r", "^get$"], 45.8, 1),
         # exclude file
-        (["-e", os.path.join(SAMPLE_DIR, "partial.py")], 53.3, 1),
+        (["-e", os.path.join(SAMPLE_DIR, "partial.py")], 53.1, 1),
         # fail under
-        (["-f", "40"], 46.9, 0),
+        (["-f", "40"], 46.2, 0),
     ),
 )
 def test_run_shortflags(flags, exp_result, exp_exit_code, runner):
@@ -58,15 +69,15 @@ def test_run_shortflags(flags, exp_result, exp_exit_code, runner):
 @pytest.mark.parametrize(
     "flags,exp_result,exp_exit_code",
     (
-        (["--ignore-init-module"], 46.8, 1),
-        (["--ignore-module"], 45.5, 1),
-        (["--ignore-semiprivate"], 47.6, 1),
-        (["--ignore-private"], 48.8, 1),
-        (["--ignore-magic"], 46.7, 1),
-        (["--ignore-init-method"], 45.7, 1),
-        (["--ignore-regex", "^method_foo$"], 47.8, 1),
-        (["--exclude", os.path.join(SAMPLE_DIR, "partial.py")], 53.3, 1),
-        (["--fail-under", "40"], 46.9, 0),
+        (["--ignore-init-module"], 46.0, 1),
+        (["--ignore-module"], 45.7, 1),
+        (["--ignore-semiprivate"], 46.7, 1),
+        (["--ignore-private"], 47.8, 1),
+        (["--ignore-magic"], 45.8, 1),
+        (["--ignore-init-method"], 44.9, 1),
+        (["--ignore-regex", "^get$"], 45.8, 1),
+        (["--exclude", os.path.join(SAMPLE_DIR, "partial.py")], 53.1, 1),
+        (["--fail-under", "40"], 46.2, 0),
     ),
 )
 def test_run_longflags(flags, exp_result, exp_exit_code, runner):
@@ -82,9 +93,9 @@ def test_run_longflags(flags, exp_result, exp_exit_code, runner):
 @pytest.mark.parametrize(
     "flags,exp_result,exp_exit_code",
     (
-        (["-i", "-I", "-r" "^method_foo$"], 46.3, 1),
-        (["-s", "-p", "-M"], 48.4, 1),
-        (["-m", "-f", "45"], 46.7, 0),
+        (["-i", "-I", "-r" "^method_foo$"], 45.5, 1),
+        (["-s", "-p", "-M"], 48.5, 1),
+        (["-m", "-f", "45"], 45.8, 0),
     ),
 )
 def test_run_multiple_flags(flags, exp_result, exp_exit_code, runner):
@@ -97,7 +108,8 @@ def test_run_multiple_flags(flags, exp_result, exp_exit_code, runner):
     assert exp_exit_code == result.exit_code
 
 
-def test_generate_badge(runner):
+@pytest.mark.parametrize("quiet", (True, False))
+def test_generate_badge(quiet, runner):
     """Test expected SVG output when creating a status badge."""
     expected_output_path = os.path.join(FIXTURES, "expected_badge.svg")
     with open(expected_output_path, "r") as f:
@@ -112,10 +124,15 @@ def test_generate_badge(runner):
             tmpdir,
             SAMPLE_DIR,
         ]
+        if quiet:
+            cli_inputs.append("--quiet")
 
         result = runner.invoke(cli.main, cli_inputs)
         assert 0 == result.exit_code
-        assert expected_path in result.output
+        if quiet:
+            assert "" == result.output
+        else:
+            assert expected_path in result.output
 
         with open(expected_path, "r") as f:
             actual_output = f.read()

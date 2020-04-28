@@ -75,7 +75,7 @@ INSTALL_REQUIRES = [
 ]
 EXTRAS_REQUIRE = {
     "docs": ["sphinx", "sphinx-autobuild"],
-    "tests": ["pytest"],
+    "tests": ["pytest", "pytest-cov", "pytest-mock"],
 }
 EXTRAS_REQUIRE["dev"] = (
     EXTRAS_REQUIRE["docs"] + EXTRAS_REQUIRE["tests"] + ["wheel"]
