@@ -48,7 +48,7 @@ Try it out on a Python project:
 .. code-block:: console
 
     $ interrogate [PATH]
-    RESULT: PASSED (minumum: 80.0%, actual: 100.0%)
+    RESULT: PASSED (minimum: 80.0%, actual: 100.0%)
 
 
 Add verbosity to see a summary:
