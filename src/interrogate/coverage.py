@@ -366,7 +366,7 @@ class InterrogateCoverage:
             if results.ret_code > 0:
                 status = "FAILED"
 
-            status_line = "RESULT: {} (minumum: {}%, actual: {:.1f}%)".format(
+            status_line = "RESULT: {} (minimum: {}%, actual: {:.1f}%)".format(
                 status, self.config.fail_under, results.perc_covered
             )
             if verbosity > 0:
