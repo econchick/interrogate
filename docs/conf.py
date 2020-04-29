@@ -89,7 +89,8 @@ html_css_files = [
     "custom.css",
 ]
 templates_path = ["_templates"]
-
+html_title = "Python docstring coverage (v{})".format(release)
+html_short_title = "interrogate: Python docstring coverage"
 
 # -- Other config
 
