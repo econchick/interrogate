@@ -1,6 +1,19 @@
 Changelog
 =========
 
+1.1.2 (2020-04-28)
+------------------
+
+Fixed
+^^^^^
+
+* Fix typo in non-quiet results output (thanks `hynek <https://github.com/econchick/interrogate/pull/5>`_!).
+
+Added
+^^^^^
+
+* Add 100% test coverage in the form of functional and unit tests.
+
 1.1.1 (2020-04-27)
 ------------------
 
