@@ -26,7 +26,7 @@ ignore-semiprivate = false
 ignore-private = false
 ignore-module = false
 fail-under = 95
-exclude = ["tests/functional/sample", "setup.py", "tests/functional/__init__.py", "docs"]
+exclude = ["tests/functional/sample", "setup.py", "docs", "build"]
 verbose = 0
 quiet = false
 
