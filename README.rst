@@ -21,9 +21,26 @@
    :target: https://github.com/econchick/interrogate/actions?workflow=CI
    :alt: CI Status
 
+.. start-readme
+
 Interrogate a codebase for docstring coverage.
 
-.. start-readme
+Why Do I Need This?
+===================
+
+``interrogate`` checks your code base for missing docstrings.
+
+Documentation should be as important as code itself. And it should live *within* code. Python `standardized <https://www.python.org/dev/peps/pep-0257/>`_ docstrings, allowing for developers to navigate libraries as simply as calling ``help()`` on objects, and with powerful tools like `Sphinx <https://www.sphinx-doc.org/en/master/>`_, `pydoc <https://docs.python.org/3/library/pydoc.html>`_, and `Docutils <https://docutils.sourceforge.io/>`_ to automatically generate HTML, LaTeX, PDFs, etc.
+
+*Enter:* ``interrogate``.
+
+``interrogate`` will tell you which methods, functions, classes, and modules have docstrings, and which do not. Use ``interrogate`` to:
+
+* Get an understanding of how well your code is documented;
+* Add it to CI/CD checks to enforce documentation on newly-added code;
+* Assess a new code base for (one aspect of) code quality and maintainability.
+
+Let's get started.
 
 Requirements
 ============

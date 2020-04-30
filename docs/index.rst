@@ -2,8 +2,6 @@
 ``interrogate``: explain yourself
 =================================
 
-Interrogate a codebase for docstring coverage.
-
 
 .. toctree::
    :maxdepth: 2
