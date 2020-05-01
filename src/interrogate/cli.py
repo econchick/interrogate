@@ -120,11 +120,14 @@ from interrogate import utils
     "-r",
     "--ignore-regex",
     type=str,
-    default=None,
-    show_default=True,
+    default=(),
+    multiple=True,
     metavar="STR",
     callback=utils.parse_regex,
-    help="Regex identifying class, method, and function names to ignore.",
+    help=(
+        "Regex identifying class, method, and function names to ignore. "
+        "Multiple `-r/--ignore-regex` invocations supported."
+    ),
 )
 @click.option(
     "-o",
@@ -173,7 +176,14 @@ from interrogate import utils
     nargs=-1,
 )
 def main(paths, **kwargs):
-    """Measure and report on documentation coverage in Python modules."""
+    """Measure and report on documentation coverage in Python modules.
+
+    \f
+    # below the "\f" is ignored when running ``interrogate --help``
+
+    .. versionchanged:: 1.1.3 ``--ignore-regex`` may now accept multiple
+        values.
+    """
     if not paths:
         paths = (os.path.abspath(os.getcwd()),)
 

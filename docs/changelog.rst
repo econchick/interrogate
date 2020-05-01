@@ -1,6 +1,14 @@
 Changelog
 =========
 
+1.1.3 (UNRELEASED)
+------------------
+
+Changed
+^^^^^^^
+
+* ``-r/--ignore-regex`` now supports multiple invocations.
+
 1.1.2 (2020-04-29)
 ------------------
 

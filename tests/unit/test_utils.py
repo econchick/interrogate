@@ -10,7 +10,19 @@ from interrogate import utils
 
 
 @pytest.mark.parametrize(
-    "value,exp", ((None, None), ("^_.*", re.compile("^_.*")))
+    "value,exp",
+    (
+        # no regex given
+        (None, None),
+        ((), None),
+        # single regex
+        (["^_.*"], [re.compile("^_.*")]),
+        # multiple regexes
+        (
+            ["^get_.*", "^post_.*"],
+            [re.compile("^get_.*"), re.compile("^post_.*")],
+        ),
+    ),
 )
 def test_parse_regex(value, exp):
     """Compile a given string into regex."""

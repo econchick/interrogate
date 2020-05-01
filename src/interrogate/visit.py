@@ -121,9 +121,10 @@ class CoverageVisitor(ast.NodeVisitor):
             return True
 
         if self.config.ignore_regex:
-            regex_result = self.config.ignore_regex.match(node.name)
-            if regex_result:
-                return True
+            for regexp in self.config.ignore_regex:
+                regex_result = regexp.match(node.name)
+                if regex_result:
+                    return True
         return False
 
     def _is_func_ignored(self, node):

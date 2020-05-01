@@ -128,5 +128,13 @@ def read_pyproject_toml(ctx, param, value):
     if ctx.default_map is None:
         ctx.default_map = {}
 
+    # for backwards compatibility. before 1.1.3, only one regex was allowed.
+    # with 1.1.3+, multiple regexes can be provided, but we want to honor
+    # those that configured their pyproject.toml to be a single regex
+    # string (since now we're expecting a list of strings).
+    if "ignore_regex" in config:
+        if isinstance(config["ignore_regex"], str):
+            config["ignore_regex"] = [config["ignore_regex"]]
+
     ctx.default_map.update(config)
     return value
