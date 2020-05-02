@@ -62,27 +62,29 @@ def test_get_common_base(files, expected):
 
 
 @pytest.mark.parametrize(
-    "padded_cells,colwidths,colaligns,expected",
+    "padded_cells,colwidths,colaligns,width,expected",
     (
         # no data
-        ([""], [1], ["left"], "|             |"),
+        ([""], [0], ["left"], 15, "|             |"),
         # left & right align
-        (["foo", "bar"], [7, 7], ["left", "right"], "|foo  |  bar|"),
+        (["foo", "bar"], [3, 3], ["left", "right"], 15, "|foo   |   bar|"),
+        # left & right align with a non-equal amount of padding per column
+        (["foo", "bar"], [3, 3], ["left", "right"], 14, "|foo   |  bar|"),
         # table separator
-        (["---", ""], [7, 7], ["left", "right"], "|-------|----|"),
+        (["---", ""], [3, 0], ["left", "right"], 15, "|--------|----|"),
         # default to left alignment
-        (["foo", "bar"], [7, 7], ["center", "center"], "|foo  |bar  |"),
+        (["foo", "bar"], [3, 3], ["?", "?"], 15, "|foo   |bar   |"),
     ),
 )
 def test_interrogate_line_formatter(
-    padded_cells, colwidths, colaligns, expected, monkeypatch
+    padded_cells, colwidths, colaligns, width, expected, monkeypatch
 ):
     """Data is padded and aligned correctly to fit the terminal width."""
-    monkeypatch.setattr(utils, "TERMINAL_WIDTH", 15)
+    monkeypatch.setattr(utils, "TERMINAL_WIDTH", width)
 
     actual = utils.interrogate_line_formatter(
         padded_cells, colwidths, colaligns
     )
 
+    assert width == len(actual)
     assert expected == actual
-    assert 15 >= len(actual)
