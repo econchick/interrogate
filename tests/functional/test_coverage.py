@@ -5,6 +5,7 @@ import os
 
 import pytest
 
+from interrogate import config
 from interrogate import coverage
 
 
@@ -14,24 +15,29 @@ FIXTURES = os.path.join(HERE, "fixtures")
 
 
 @pytest.mark.parametrize(
-    "paths,exp_results",
+    "paths,conf,exp_results",
     (
-        ([os.path.join(SAMPLE_DIR, "empty.py"),], (1, 0, 1, 0, "0.0")),
-        ([SAMPLE_DIR,], (52, 24, 28, 0, "46.2")),
-        ([os.path.join(SAMPLE_DIR, "partial.py")], (20, 7, 13, 0, "35.0")),
+        ([os.path.join(SAMPLE_DIR, "empty.py"),], {}, (1, 0, 1, "0.0")),
+        (
+            [os.path.join(SAMPLE_DIR, "empty.py"),],
+            {"ignore_module": True},
+            (0, 0, 0, "0.0"),
+        ),
+        ([SAMPLE_DIR,], {}, (52, 24, 28, "46.2")),
+        ([os.path.join(SAMPLE_DIR, "partial.py")], {}, (20, 7, 13, "35.0")),
     ),
 )
-def test_coverage_simple(paths, exp_results):
+def test_coverage_simple(paths, conf, exp_results, mocker):
     """Happy path - get expected results given a file or directory"""
-    interrogate_coverage = coverage.InterrogateCoverage(paths=paths)
+    conf = config.InterrogateConfig(**conf)
+    interrogate_coverage = coverage.InterrogateCoverage(paths=paths, conf=conf)
 
     results = interrogate_coverage.get_coverage()
 
     assert exp_results[0] == results.total
     assert exp_results[1] == results.covered
     assert exp_results[2] == results.missing
-    assert exp_results[3] == results.skipped
-    assert exp_results[4] == "{:.1f}".format(results.perc_covered)
+    assert exp_results[3] == "{:.1f}".format(results.perc_covered)
 
 
 def test_coverage_errors(capsys):
@@ -68,7 +74,42 @@ def test_print_results(level, exp_fixture_file, capsys, monkeypatch):
 
     interrogate_coverage = coverage.InterrogateCoverage(paths=[SAMPLE_DIR])
     results = interrogate_coverage.get_coverage()
-    interrogate_coverage.print_results(results, None, level)
+    interrogate_coverage.print_results(
+        results=results, output=None, verbosity=level
+    )
+
+    captured = capsys.readouterr()
+    expected_fixture = os.path.join(FIXTURES, exp_fixture_file)
+    with open(expected_fixture, "r") as f:
+        expected_out = f.read()
+    assert expected_out in captured.out
+
+
+@pytest.mark.parametrize(
+    "ignore_module,level,exp_fixture_file",
+    (
+        (False, 2, "expected_detailed.txt"),
+        (True, 2, "expected_detailed_no_module.txt"),
+        (False, 1, "expected_summary.txt"),
+        (True, 1, "expected_summary_no_module.txt"),
+    ),
+)
+def test_print_results_ignore_module(
+    ignore_module, level, exp_fixture_file, capsys, monkeypatch
+):
+    """Do not print module info if ignore_module is True."""
+    monkeypatch.setattr(coverage.utils, "TERMINAL_WIDTH", 80)
+
+    conf = {"ignore_module": ignore_module}
+    conf = config.InterrogateConfig(**conf)
+
+    interrogate_coverage = coverage.InterrogateCoverage(
+        paths=[SAMPLE_DIR], conf=conf
+    )
+    results = interrogate_coverage.get_coverage()
+    interrogate_coverage.print_results(
+        results=results, output=None, verbosity=level
+    )
 
     captured = capsys.readouterr()
     expected_fixture = os.path.join(FIXTURES, exp_fixture_file)

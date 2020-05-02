@@ -9,6 +9,11 @@ Changed
 
 * ``-r/--ignore-regex`` now supports multiple invocations.
 
+Fixed
+^^^^^
+
+* Fix misleading bug where module info was still outputted even if ``--ignore-module`` was used.
+
 1.1.2 (2020-04-29)
 ------------------
 
