@@ -4,6 +4,11 @@ Changelog
 1.1.3 (UNRELEASED)
 ------------------
 
+Added
+^^^^^
+
+* New ``-w/--whitelist-regex`` flag: whitelist regex identifying class, method, and function names to include.
+
 Changed
 ^^^^^^^
 

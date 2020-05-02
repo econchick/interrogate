@@ -130,6 +130,19 @@ from interrogate import utils
     ),
 )
 @click.option(
+    "-w",
+    "--whitelist-regex",
+    type=str,
+    default=(),
+    multiple=True,
+    metavar="STR",
+    callback=utils.parse_regex,
+    help=(
+        "Regex identifying class, method, and function names to include. "
+        "Multiple `-w/--whitelist-regex` invocations supported."
+    ),
+)
+@click.option(
     "-o",
     "--output",
     default=None,
@@ -183,9 +196,19 @@ def main(paths, **kwargs):
 
     .. versionchanged:: 1.1.3 ``--ignore-regex`` may now accept multiple
         values.
+
+    .. versionadded:: 1.1.3 ``--whitelist-regex``
     """
     if not paths:
         paths = (os.path.abspath(os.getcwd()),)
+
+    # NOTE: this will need to be fixed if we want to start supporting
+    #       --whitelist-regex on filenames. This otherwise assumes you
+    #       want to ignore module-level docs when only white listing
+    #       items (visit.py will also need to be addressed since white/
+    #       black listing only looks at classes & funcs, not modules).
+    if kwargs["whitelist_regex"]:
+        kwargs["ignore_module"] = True
 
     conf = config.InterrogateConfig(
         ignore_init_method=kwargs["ignore_init_method"],
@@ -196,6 +219,7 @@ def main(paths, **kwargs):
         ignore_regex=kwargs["ignore_regex"],
         ignore_semiprivate=kwargs["ignore_semiprivate"],
         fail_under=kwargs["fail_under"],
+        include_regex=kwargs["whitelist_regex"],
     )
     interrogate_coverage = coverage.InterrogateCoverage(
         paths=paths, conf=conf, excluded=kwargs["exclude"],

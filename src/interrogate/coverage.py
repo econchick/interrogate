@@ -169,7 +169,26 @@ class InterrogateCoverage:
         is_empty = 1 == len(nodes)
         if is_empty and self.config.ignore_module:
             return []
-        return nodes
+
+        if not self.config.include_regex:
+            return nodes
+
+        # FIXME: any methods, closures, inner functions/classes, etc
+        #        will print out with extra indentation if the parent
+        #        does not meet the whitelist
+        filtered = []
+        module_node = None
+        for node in nodes:
+            if node.node_type == "Module":
+                module_node = node
+                continue
+            for regexp in self.config.include_regex:
+                match = regexp.match(node.name)
+                if match:
+                    filtered.append(node)
+        if module_node and filtered:
+            filtered.insert(0, module_node)
+        return filtered
 
     def _get_file_coverage(self, filename):
         """Get coverage results for a particular file."""

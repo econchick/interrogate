@@ -50,6 +50,8 @@ def test_run_no_paths(runner, monkeypatch, tmpdir):
         (["-i"], 44.9, 1),
         # ignore regex
         (["-r", "^get$"], 45.8, 1),
+        # whitelist regex
+        (["-w", "^get$"], 50.0, 1),
         # exclude file
         (["-e", os.path.join(SAMPLE_DIR, "partial.py")], 53.1, 1),
         # fail under
@@ -76,6 +78,7 @@ def test_run_shortflags(flags, exp_result, exp_exit_code, runner):
         (["--ignore-magic"], 45.8, 1),
         (["--ignore-init-method"], 44.9, 1),
         (["--ignore-regex", "^get$"], 45.8, 1),
+        (["--whitelist-regex", "^get$"], 50.0, 1),
         (["--exclude", os.path.join(SAMPLE_DIR, "partial.py")], 53.1, 1),
         (["--fail-under", "40"], 46.2, 0),
     ),

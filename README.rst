@@ -284,6 +284,7 @@ Configure within your ``pyproject.toml``:
     ignore-regex = ["^get$", "^mock_.*", ".*BaseClass.*"]
     verbose = 0
     quiet = false
+    whitelist-regex = []
 
 
 .. end-readme
@@ -338,6 +339,10 @@ To view all options available, run ``interrogate --help``:
       -r, --ignore-regex STR        Regex identifying class, method, and function
                                     names to ignore. Multiple `-r/--ignore-regex`
                                     invocations supported.
+
+      -w, --whitelist-regex STR     Regex identifying class, method, and function
+                                    names to include. Multiple `-w/--whitelist-
+                                    regex` invocations supported.
 
       -o, --output FILE             Write output to a given FILE.  [default:
                                     stdout]

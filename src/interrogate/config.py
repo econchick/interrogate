@@ -38,6 +38,7 @@ class InterrogateConfig:
     ignore_semiprivate = attr.ib(default=False)
     ignore_init_method = attr.ib(default=False)
     ignore_init_module = attr.ib(default=False)
+    include_regex = attr.ib(default=False)
 
 
 def find_project_root(srcs):
