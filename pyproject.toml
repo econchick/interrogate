@@ -29,4 +29,5 @@ fail-under = 95
 exclude = ["tests/functional/sample", "setup.py", "docs", "build"]
 verbose = 0
 quiet = false
-
+whitelist-regex = []
+ignore-regex = []

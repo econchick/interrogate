@@ -68,7 +68,11 @@ Command Line Options
 
 .. option:: -r, --ignore-regex STR
 
-    Regex identifying class, method, and function names to ignore.
+    Regex identifying class, method, and function names to ignore. Multiple ``-r/--ignore-regex`` invocations supported.
+
+.. option:: -w, --whitelist-regex STR
+
+    Regex identifying class, method, and function names to include. Multiple ``-r/--ignore-regex`` invocations supported.
 
 .. option:: -o, --output FILE
 

@@ -14,19 +14,22 @@ TABLE_SEPARATOR = ["---"]
 TERMINAL_WIDTH, _ = shutil.get_terminal_size((80, 20))
 
 
-def parse_regex(ctx, param, value):
+def parse_regex(ctx, param, values):
     """Compile a regex if given.
 
     :param click.Context ctx: click command context.
     :param click.Parameter param: click command parameter (in this case,
         ``ignore_regex`` from ``-r|--ignore-regiex``).
-    :param str value: regular expression to be compiled.
+    :param list(str) values: list of regular expressions to be compiled.
 
-    :return: a compiled regular expression.
+    :return: a list of compiled regular expressions.
+
+    .. versionchanged:: 1.1.3 parameter value (``values``) must be a
+        ``list`` of ``str``s.
     """
-    if value is None:
+    if not values:
         return
-    return re.compile(value)
+    return [re.compile(v) for v in values]
 
 
 @contextlib.contextmanager

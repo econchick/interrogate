@@ -77,14 +77,30 @@ def test_read_pyproject_toml_none(mocker, monkeypatch):
     "value,ret_config,default_map,exp_ret,exp_defaults",
     (
         (None, None, None, None, None),
-        ("a-value", {"fail-under": 90}, None, "a-value", {"fail-under": 90}),
-        ("a-value", {"fail-under": 90}, {}, "a-value", {"fail-under": 90}),
+        ("a-value", {"fail_under": 90}, None, "a-value", {"fail_under": 90}),
+        ("a-value", {"fail_under": 90}, {}, "a-value", {"fail_under": 90}),
         (
             "a-value",
-            {"fail-under": 90},
+            {"fail_under": 90},
             {"foo": "bar"},
             "a-value",
-            {"fail-under": 90, "foo": "bar"},
+            {"fail_under": 90, "foo": "bar"},
+        ),
+        # test backwards config for turning a single regex str (<1.1.3)
+        # to a list of regex strs (>=1.1.3)
+        (
+            "a-value",
+            {"ignore_regex": "^get_.*"},
+            None,
+            "a-value",
+            {"ignore_regex": ["^get_.*"]},
+        ),
+        (
+            "a-value",
+            {"ignore_regex": ["^get_.*", "^post_.*"]},
+            None,
+            "a-value",
+            {"ignore_regex": ["^get_.*", "^post_.*"]},
         ),
     ),
 )

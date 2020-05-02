@@ -26,13 +26,11 @@ class BaseInterrogateResult:
         classes, methods, and functions).
     :attr int covered: number of objects covered by docstrings.
     :attr int missing: number of objects not covered by docstrings.
-    :attr int skipped: number of modules skipped.
     """
 
     total = attr.ib(init=False, default=0)
     covered = attr.ib(init=False, default=0)
     missing = attr.ib(init=False, default=0)
-    skipped = attr.ib(init=False, default=0)
 
     @property
     def perc_covered(self):
@@ -60,21 +58,20 @@ class InterrogateFileResult(BaseInterrogateResult):
 
     filename = attr.ib(default=None)
     ignore_module = attr.ib(default=False)
-    visitor = attr.ib(repr=False, default=None)
+    nodes = attr.ib(repr=False, default=None)
 
     def combine(self):
         """Tally results from each AST node visited."""
-        for node in self.visitor.graph.nodes:
+        # for node in self.visitor.graph.nodes:
+        for node in self.nodes:
             if node.node_type == "Module":
                 if self.ignore_module:
-                    self.skipped += 1
                     continue
             self.total += 1
             if node.covered:
                 self.covered += 1
 
         self.missing = self.total - self.covered
-        self.skipped = self.visitor.skipped
 
 
 @attr.s
@@ -96,7 +93,6 @@ class InterrogateResults(BaseInterrogateResult):
             self.covered += result.covered
             self.missing += result.missing
             self.total += result.total
-            self.skipped += result.skipped
 
 
 class InterrogateCoverage:
@@ -168,6 +164,32 @@ class InterrogateCoverage:
         self.common_base = utils.get_common_base(filenames)
         return filenames
 
+    def _filter_nodes(self, nodes):
+        """Remove empty modules when ignoring modules."""
+        is_empty = 1 == len(nodes)
+        if is_empty and self.config.ignore_module:
+            return []
+
+        if not self.config.include_regex:
+            return nodes
+
+        # FIXME: any methods, closures, inner functions/classes, etc
+        #        will print out with extra indentation if the parent
+        #        does not meet the whitelist
+        filtered = []
+        module_node = None
+        for node in nodes:
+            if node.node_type == "Module":
+                module_node = node
+                continue
+            for regexp in self.config.include_regex:
+                match = regexp.match(node.name)
+                if match:
+                    filtered.append(node)
+        if module_node and filtered:
+            filtered.insert(0, module_node)
+        return filtered
+
     def _get_file_coverage(self, filename):
         """Get coverage results for a particular file."""
         with open(filename, "r", encoding="utf-8") as f:
@@ -177,10 +199,14 @@ class InterrogateCoverage:
         visitor = visit.CoverageVisitor(filename=filename, config=self.config)
         visitor.visit(parsed_tree)
 
+        filtered_nodes = self._filter_nodes(visitor.graph.nodes)
+        if len(filtered_nodes) == 0:
+            return
+
         results = InterrogateFileResult(
             filename=filename,
             ignore_module=self.config.ignore_module,
-            visitor=visitor,
+            nodes=filtered_nodes,
         )
         results.combine()
         return results
@@ -190,7 +216,9 @@ class InterrogateCoverage:
         results = InterrogateResults()
         file_results = []
         for f in filenames:
-            file_results.append(self._get_file_coverage(f))
+            result = self._get_file_coverage(f)
+            if result:
+                file_results.append(result)
         results.file_results = file_results
 
         results.combine()
@@ -205,16 +233,30 @@ class InterrogateCoverage:
         filenames = self.get_filenames_from_paths()
         return self._get_coverage(filenames)
 
+    def _get_filename(self, filename):
+        """Get filename for output information.
+
+        If only one file is being interrogated, then ``self.common_base``
+        and ``filename`` will be the same. Therefore, take the file
+        ``os.path.basename`` as the return ``filename``.
+        """
+        if filename == self.common_base:
+            return os.path.basename(filename)
+        return filename[len(self.common_base) + 1 :]
+
     def _get_detailed_row(self, node, filename):
         """Generate a row of data for the detailed view."""
-        padding = "  " * node.level
+        filename = self._get_filename(filename)
 
-        filename = filename[len(self.common_base) + 1 :]
-        name = "{} (module)".format(filename)
-        if node.node_type != "Module":
+        if node.node_type == "Module":
+            if self.config.ignore_module:
+                return [filename, ""]
+            name = "{} (module)".format(filename)
+        else:
             name = node.path.split(":")[-1]
             name = "{} (L{})".format(name, node.lineno)
 
+        padding = "  " * node.level
         name = "{}{}".format(padding, name)
         status = "MISSED" if not node.covered else "COVERED"
         return [name, status]
@@ -239,7 +281,7 @@ class InterrogateCoverage:
         verbose_tbl.append(header)
         verbose_tbl.append(utils.TABLE_SEPARATOR)
         for file_result in combined_results.file_results:
-            nodes = file_result.visitor.graph.nodes
+            nodes = file_result.nodes
             nodes = sorted(nodes, key=_sort_nodes)
             for n in nodes:
                 verbose_tbl.append(
@@ -271,7 +313,7 @@ class InterrogateCoverage:
         table.append(utils.TABLE_SEPARATOR)
 
         for file_result in combined_results.file_results:
-            filename = file_result.filename[len(self.common_base) + 1 :]
+            filename = self._get_filename(file_result.filename)
             perc_covered = "{:.0f}%".format(file_result.perc_covered)
             row = [
                 filename,
@@ -352,9 +394,12 @@ class InterrogateCoverage:
             tw = py_io.TerminalWriter(file=f)
             results = self._sort_results(results)
             if verbosity > 0:
+                base = self.common_base
+                if os.path.isfile(base):
+                    base = os.path.dirname(base)
                 tw.sep(
                     "=",
-                    "Coverage for {}/".format(self.common_base),
+                    "Coverage for {}/".format(base),
                     fullwidth=utils.TERMINAL_WIDTH,
                 )
             if verbosity > 1:

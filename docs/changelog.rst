@@ -1,6 +1,25 @@
 Changelog
 =========
 
+1.1.3 (UNRELEASED)
+------------------
+
+Added
+^^^^^
+
+* New ``-w/--whitelist-regex`` flag: whitelist regex identifying class, method, and function names to include.
+
+Changed
+^^^^^^^
+
+* ``-r/--ignore-regex`` now supports multiple invocations.
+
+Fixed
+^^^^^
+
+* Fix misleading bug where module info was still outputted even if ``--ignore-module`` was used.
+* Fix output when interrogating a single file where filenames were not listed.
+
 1.1.2 (2020-04-29)
 ------------------
 

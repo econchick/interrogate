@@ -281,8 +281,10 @@ Configure within your ``pyproject.toml``:
     ignore-module = false
     fail-under = 95
     exclude = ["setup.py", "docs", "build"]
+    ignore-regex = ["^get$", "^mock_.*", ".*BaseClass.*"]
     verbose = 0
     quiet = false
+    whitelist-regex = []
 
 
 .. end-readme
@@ -335,7 +337,12 @@ To view all options available, run ``interrogate --help``:
                                     [default: False]
 
       -r, --ignore-regex STR        Regex identifying class, method, and function
-                                    names to ignore.
+                                    names to ignore. Multiple `-r/--ignore-regex`
+                                    invocations supported.
+
+      -w, --whitelist-regex STR     Regex identifying class, method, and function
+                                    names to include. Multiple `-w/--whitelist-
+                                    regex` invocations supported.
 
       -o, --output FILE             Write output to a given FILE.  [default:
                                     stdout]

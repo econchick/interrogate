@@ -43,7 +43,6 @@ class CoverageVisitor(ast.NodeVisitor):
         self.stack = []
         self.graph = nx.Graph()
         self.config = config
-        self.skipped = 0
 
     @staticmethod
     def _has_doc(node):
@@ -121,9 +120,10 @@ class CoverageVisitor(ast.NodeVisitor):
             return True
 
         if self.config.ignore_regex:
-            regex_result = self.config.ignore_regex.match(node.name)
-            if regex_result:
-                return True
+            for regexp in self.config.ignore_regex:
+                regex_result = regexp.match(node.name)
+                if regex_result:
+                    return True
         return False
 
     def _is_func_ignored(self, node):
@@ -160,7 +160,6 @@ class CoverageVisitor(ast.NodeVisitor):
         :param ast.ClassDef node: a class AST node.
         """
         if self._is_class_ignored(node):
-            self.skipped += 1
             return
         self._visit_helper(node)
 
@@ -170,7 +169,6 @@ class CoverageVisitor(ast.NodeVisitor):
         :param ast.FunctionDef node: a function/method AST node.
         """
         if self._is_func_ignored(node):
-            self.skipped += 1
             return
         self._visit_helper(node)
 
@@ -180,6 +178,5 @@ class CoverageVisitor(ast.NodeVisitor):
         :param ast.AsyncFunctionDef node: a async function/method AST node.
         """
         if self._is_func_ignored(node):
-            self.skipped += 1
             return
         self._visit_helper(node)
