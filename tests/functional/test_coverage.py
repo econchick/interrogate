@@ -116,3 +116,27 @@ def test_print_results_ignore_module(
     with open(expected_fixture, "r") as f:
         expected_out = f.read()
     assert expected_out in captured.out
+
+
+def test_print_results_single_file(capsys, monkeypatch):
+    """Results for a single file should still list the filename."""
+
+    monkeypatch.setattr(coverage.utils, "TERMINAL_WIDTH", 80)
+    single_file = os.path.join(SAMPLE_DIR, "full.py")
+    interrogate_coverage = coverage.InterrogateCoverage(paths=[single_file])
+    results = interrogate_coverage.get_coverage()
+    interrogate_coverage.print_results(
+        results=results, output=None, verbosity=2
+    )
+
+    captured = capsys.readouterr()
+    expected_fixture = os.path.join(
+        FIXTURES, "expected_detailed_single_file.txt"
+    )
+    with open(expected_fixture, "r") as f:
+        expected_out = f.read()
+    assert expected_out in captured.out
+    # I don't want to deal with path mocking out just to get tests to run
+    # everywhere
+    assert "tests/functional/sample/" in captured.out
+    assert "tests/functional/sample/full.py" not in captured.out

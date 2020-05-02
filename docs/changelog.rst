@@ -13,6 +13,7 @@ Fixed
 ^^^^^
 
 * Fix misleading bug where module info was still outputted even if ``--ignore-module`` was used.
+* Fix output when interrogating a single file where filenames were not listed.
 
 1.1.2 (2020-04-29)
 ------------------

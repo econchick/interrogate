@@ -214,9 +214,20 @@ class InterrogateCoverage:
         filenames = self.get_filenames_from_paths()
         return self._get_coverage(filenames)
 
+    def _get_filename(self, filename):
+        """Get filename for output information.
+
+        If only one file is being interrogated, then ``self.common_base``
+        and ``filename`` will be the same. Therefore, take the file
+        ``os.path.basename`` as the return ``filename``.
+        """
+        if filename == self.common_base:
+            return os.path.basename(filename)
+        return filename[len(self.common_base) + 1 :]
+
     def _get_detailed_row(self, node, filename):
         """Generate a row of data for the detailed view."""
-        filename = filename[len(self.common_base) + 1 :]
+        filename = self._get_filename(filename)
 
         if node.node_type == "Module":
             if self.config.ignore_module:
@@ -283,7 +294,7 @@ class InterrogateCoverage:
         table.append(utils.TABLE_SEPARATOR)
 
         for file_result in combined_results.file_results:
-            filename = file_result.filename[len(self.common_base) + 1 :]
+            filename = self._get_filename(file_result.filename)
             perc_covered = "{:.0f}%".format(file_result.perc_covered)
             row = [
                 filename,
@@ -364,9 +375,12 @@ class InterrogateCoverage:
             tw = py_io.TerminalWriter(file=f)
             results = self._sort_results(results)
             if verbosity > 0:
+                base = self.common_base
+                if os.path.isfile(base):
+                    base = os.path.dirname(base)
                 tw.sep(
                     "=",
-                    "Coverage for {}/".format(self.common_base),
+                    "Coverage for {}/".format(base),
                     fullwidth=utils.TERMINAL_WIDTH,
                 )
             if verbosity > 1:
