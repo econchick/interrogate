@@ -252,6 +252,16 @@ Add it to your ``tox.ini`` file to enforce a level of coverage:
     commands =
         interrogate --quiet --fail-under 95 src tests
 
+Or use it with `pre-commit <https://pre-commit.com/>`_:
+
+.. code-block:: yaml
+
+    repos:
+      - repo: https://github.com/econchick/interrogate
+        rev: 1.1.3
+        hooks:
+          - id: interrogate
+            args: [--quiet, --fail-under=95]
 
 Use it within your code directly:
 
