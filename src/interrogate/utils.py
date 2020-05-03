@@ -88,22 +88,32 @@ def interrogate_line_formatter(padded_cells, colwidths, colaligns):
     """
     sep, padder = "|", " "
     final_row_width = sum([len(x) for x in padded_cells]) + (
-        len(padded_cells) * len(sep)
+        (len(padded_cells) + 1) * len(sep)
     )
-    extra_padding = TERMINAL_WIDTH - final_row_width - len(padded_cells)
+    extra_padding = TERMINAL_WIDTH - final_row_width
 
     if padded_cells[0].strip() == TABLE_SEPARATOR[0]:
         padder = "-"
         padded_cells = [len(c) * padder for c in padded_cells]
 
-    padding_per_cell = int(round(extra_padding / len(padded_cells)))
+    # Add extra padding to all cells to justify the table to the terminal width.
+    padding_per_cell = int(extra_padding / len(padded_cells))
+
+    # If the row width doesn't evenly divide into the cells with equal padding.
+    # take the leftover padding and add it to one of the cells.
+    final_row_width += len(padded_cells) * padding_per_cell
+    remaining_padding = max(0, TERMINAL_WIDTH - final_row_width)
+    cell_to_put_extra_padding_into = 0
+
     to_join = []
-    for index, cell in enumerate(padded_cells):
-        alignment = colaligns[index]
+    for index, (cell, alignment) in enumerate(zip(padded_cells, colaligns)):
+        cell_padding = padding_per_cell
+        if index == cell_to_put_extra_padding_into:
+            cell_padding += remaining_padding
         if alignment == "right":
-            to_append = (padder * padding_per_cell) + cell
+            to_append = (padder * cell_padding) + cell
         else:  # default to left
-            to_append = cell + (padder * padding_per_cell)
+            to_append = cell + (padder * cell_padding)
 
         to_join.append(to_append)
 
