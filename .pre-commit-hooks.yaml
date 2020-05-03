@@ -1,0 +1,7 @@
+- id: interrogate
+  name: interrogate
+  description: "interrogate your code base for missing docstrings"
+  entry: interrogate
+  language: python
+  language_version: python3
+  types: [python]
