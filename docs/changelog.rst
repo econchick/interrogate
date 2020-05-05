@@ -1,6 +1,19 @@
 Changelog
 =========
 
+1.1.4 (2020-05-05)
+------------------
+
+Added
+^^^^^
+
+* Use ``interrogate`` with `pre-commit <https://pre-commit.com/>`_ (addresses `Issue #10 <https://github.com/econchick/interrogate/issues/10>`_).
+
+Fixed
+^^^^^
+
+* Fix summary and detail output to fit width of terminal (thank you `psobot <https://github.com/econchick/interrogate/pull/8>`_!).
+
 1.1.3 (2020-05-02)
 ------------------
 
