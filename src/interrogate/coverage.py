@@ -62,7 +62,6 @@ class InterrogateFileResult(BaseInterrogateResult):
 
     def combine(self):
         """Tally results from each AST node visited."""
-        # for node in self.visitor.graph.nodes:
         for node in self.nodes:
             if node.node_type == "Module":
                 if self.ignore_module:
@@ -367,8 +366,6 @@ class InterrogateCoverage:
             files = []
             for p in os.listdir(current_dir):
                 path = os.path.join(current_dir, p)
-                # if os.path.isdir(path):
-                #     continue
                 if path in all_filenames_map.keys():
                     files.append(path)
             files = sorted(files)
