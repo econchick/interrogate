@@ -4,6 +4,8 @@
 import os
 import sys
 
+from pathlib import Path
+
 import click
 
 from interrogate import __version__ as version
@@ -200,7 +202,9 @@ def main(paths, **kwargs):
     .. versionadded:: 1.1.3 ``--whitelist-regex``
     """
     if not paths:
-        paths = (os.path.abspath(os.getcwd()),)
+        paths = (Path.cwd(),)
+    else:
+        paths = tuple(Path(p) for p in paths)
 
     # NOTE: this will need to be fixed if we want to start supporting
     #       --whitelist-regex on filenames. This otherwise assumes you

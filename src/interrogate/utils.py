@@ -3,9 +3,12 @@
 
 import contextlib
 import itertools
+import os
 import re
 import shutil
 import sys
+
+from pathlib import Path
 
 import tabulate
 
@@ -65,13 +68,8 @@ def get_common_base(files):
     :rtype: str
     """
 
-    def allnamesequal(name):
-        """Return if all names in an iterable are equal."""
-        return all(n == name[0] for n in name[1:])
 
-    level_slices = zip(*[f.split("/") for f in files])
-    tw = itertools.takewhile(allnamesequal, level_slices)
-    return "/".join(x[0] for x in tw)
+    return Path(os.path.commonpath(files))
 
 
 def interrogate_line_formatter(padded_cells, colwidths, colaligns):

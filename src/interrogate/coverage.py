@@ -4,6 +4,8 @@ import ast
 import os
 import sys
 
+from pathlib import Path
+
 import attr
 import click
 import tabulate
@@ -109,27 +111,27 @@ class InterrogateCoverage:
         self.paths = paths
         self.config = conf or config.InterrogateConfig()
         self.excluded = excluded or ()
-        self.common_base = ""
+        self.common_base = Path("/")
         self._add_common_exclude()
 
     def _add_common_exclude(self):
         """Ignore common directories by default"""
         for path in self.paths:
             self.excluded = self.excluded + tuple(
-                os.path.join(path, i) for i in self.COMMON_EXCLUDE
+                path / i for i in self.COMMON_EXCLUDE
             )
 
     def _filter_files(self, files):
         """Filter files that are explicitly excluded."""
         for f in files:
-            if not f.endswith(".py"):
+            if f.suffix != ".py":
                 continue
             if self.config.ignore_init_module:
-                basename = os.path.basename(f)
+                basename = f.name
                 if basename == "__init__.py":
                     continue
             maybe_excluded_dir = any(
-                [f.startswith(exc) for exc in self.excluded]
+                [str(f).startswith(str(exc)) for exc in self.excluded]
             )
             maybe_excluded_file = f in self.excluded
             if any([maybe_excluded_dir, maybe_excluded_file]):
@@ -140,8 +142,8 @@ class InterrogateCoverage:
         """Find all files to measure for docstring coverage."""
         filenames = []
         for path in self.paths:
-            if os.path.isfile(path):
-                if not path.endswith(".py"):
+            if path.is_file():
+                if path.suffix != ".py":
                     msg = (
                         "E: Invalid file '{}'. Unable interrogate non-Python "
                         "files.".format(path)
@@ -151,11 +153,12 @@ class InterrogateCoverage:
                 filenames.append(path)
                 continue
             for root, dirs, fs in os.walk(path):
-                full_paths = [os.path.join(root, f) for f in fs]
+                root = Path(root)
+                full_paths = [root / f for f in fs]
                 filenames.extend(self._filter_files(full_paths))
 
         if not filenames:
-            p = ", ".join(self.paths)
+            p = ", ".join([str(path) for path in self.paths])
             msg = "E: No Python files found to interrogate in '{}'.".format(p)
             click.echo(msg, err=True)
             return sys.exit(1)
@@ -237,11 +240,11 @@ class InterrogateCoverage:
 
         If only one file is being interrogated, then ``self.common_base``
         and ``filename`` will be the same. Therefore, take the file
-        ``os.path.basename`` as the return ``filename``.
+        ``Path.name`` as the return ``filename``.
         """
         if filename == self.common_base:
-            return os.path.basename(filename)
-        return filename[len(self.common_base) + 1 :]
+            return filename.name
+        return filename.relative_to(self.common_base)
 
     def _get_detailed_row(self, node, filename):
         """Generate a row of data for the detailed view."""
@@ -315,7 +318,7 @@ class InterrogateCoverage:
             filename = self._get_filename(file_result.filename)
             perc_covered = "{:.0f}%".format(file_result.perc_covered)
             row = [
-                filename,
+                str(filename),
                 file_result.total,
                 file_result.missing,
                 file_result.covered,
@@ -353,9 +356,9 @@ class InterrogateCoverage:
         all_dirs = sorted(
             set(
                 [
-                    os.path.dirname(r.filename)
+                    r.filename.parent
                     for r in results.file_results
-                    if os.path.dirname(r.filename) != ""
+                    if r.filename.parent != ""
                 ]
             )
         )
@@ -365,7 +368,7 @@ class InterrogateCoverage:
             current_dir = all_dirs.pop()
             files = []
             for p in os.listdir(current_dir):
-                path = os.path.join(current_dir, p)
+                path = current_dir / p
                 if path in all_filenames_map.keys():
                     files.append(path)
             files = sorted(files)
@@ -392,8 +395,8 @@ class InterrogateCoverage:
             results = self._sort_results(results)
             if verbosity > 0:
                 base = self.common_base
-                if os.path.isfile(base):
-                    base = os.path.dirname(base)
+                if base.is_file():
+                    base = base.parent
                 tw.sep(
                     "=",
                     "Coverage for {}/".format(base),

@@ -3,28 +3,30 @@
 
 import os
 
+from pathlib import Path
+
 import pytest
 
 from interrogate import config
 from interrogate import coverage
 
 
-HERE = os.path.abspath(os.path.join(os.path.abspath(__file__), os.path.pardir))
-SAMPLE_DIR = os.path.join(HERE, "sample")
-FIXTURES = os.path.join(HERE, "fixtures")
+HERE = Path(__file__).parent
+SAMPLE_DIR = HERE / "sample"
+FIXTURES = HERE / "fixtures"
 
 
 @pytest.mark.parametrize(
     "paths,conf,exp_results",
     (
-        ([os.path.join(SAMPLE_DIR, "empty.py"),], {}, (1, 0, 1, "0.0")),
+        ([SAMPLE_DIR / "empty.py",], {}, (1, 0, 1, "0.0")),
         (
-            [os.path.join(SAMPLE_DIR, "empty.py"),],
+            [SAMPLE_DIR / "empty.py",],
             {"ignore_module": True},
             (0, 0, 0, "0.0"),
         ),
         ([SAMPLE_DIR,], {}, (52, 24, 28, "46.2")),
-        ([os.path.join(SAMPLE_DIR, "partial.py")], {}, (20, 7, 13, "35.0")),
+        ([SAMPLE_DIR / "partial.py"], {}, (20, 7, 13, "35.0")),
     ),
 )
 def test_coverage_simple(paths, conf, exp_results, mocker):
@@ -42,7 +44,7 @@ def test_coverage_simple(paths, conf, exp_results, mocker):
 
 def test_coverage_errors(capsys):
     """Exit when no Python files are found."""
-    path = os.path.join(SAMPLE_DIR, "ignoreme.txt")
+    path = SAMPLE_DIR / "ignoreme.txt"
     interrogate_coverage = coverage.InterrogateCoverage(paths=[path])
 
     with pytest.raises(SystemExit, match="1"):
@@ -79,7 +81,7 @@ def test_print_results(level, exp_fixture_file, capsys, monkeypatch):
     )
 
     captured = capsys.readouterr()
-    expected_fixture = os.path.join(FIXTURES, exp_fixture_file)
+    expected_fixture = FIXTURES / exp_fixture_file
     with open(expected_fixture, "r") as f:
         expected_out = f.read()
     assert expected_out in captured.out
@@ -112,7 +114,7 @@ def test_print_results_ignore_module(
     )
 
     captured = capsys.readouterr()
-    expected_fixture = os.path.join(FIXTURES, exp_fixture_file)
+    expected_fixture = FIXTURES / exp_fixture_file
     with open(expected_fixture, "r") as f:
         expected_out = f.read()
     assert expected_out in captured.out
@@ -122,7 +124,7 @@ def test_print_results_single_file(capsys, monkeypatch):
     """Results for a single file should still list the filename."""
 
     monkeypatch.setattr(coverage.utils, "TERMINAL_WIDTH", 80)
-    single_file = os.path.join(SAMPLE_DIR, "full.py")
+    single_file = SAMPLE_DIR / "full.py"
     interrogate_coverage = coverage.InterrogateCoverage(paths=[single_file])
     results = interrogate_coverage.get_coverage()
     interrogate_coverage.print_results(
@@ -130,9 +132,7 @@ def test_print_results_single_file(capsys, monkeypatch):
     )
 
     captured = capsys.readouterr()
-    expected_fixture = os.path.join(
-        FIXTURES, "expected_detailed_single_file.txt"
-    )
+    expected_fixture = FIXTURES / "expected_detailed_single_file.txt"
     with open(expected_fixture, "r") as f:
         expected_out = f.read()
     assert expected_out in captured.out

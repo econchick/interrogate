@@ -4,6 +4,8 @@
 import re
 import sys
 
+from pathlib import Path
+
 import pytest
 
 from interrogate import utils
@@ -50,9 +52,9 @@ def test_smart_open(filename, mocker):
 @pytest.mark.parametrize(
     "files,expected",
     (
-        (("/usr/src/app", "/usr/src/tests"), "/usr/src"),
-        (("/usr/src/app/sample.py", "/usr/src/tests"), "/usr/src"),
-        (("/usr/src/app", "/src/tests"), ""),
+        ((Path("/usr/src/app"), Path("/usr/src/tests")), Path("/usr/src")),
+        ((Path("/usr/src/app/sample.py"), Path("/usr/src/tests")), Path("/usr/src")),
+        ((Path("/usr/src/app"), Path("/src/tests")), Path("/")),
     ),
 )
 def test_get_common_base(files, expected):
