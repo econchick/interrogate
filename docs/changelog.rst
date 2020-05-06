@@ -1,6 +1,8 @@
 Changelog
 =========
 
+.. short-log
+
 1.1.4 (2020-05-05)
 ------------------
 
@@ -13,6 +15,8 @@ Fixed
 ^^^^^
 
 * Fix summary and detail output to fit width of terminal (thank you `psobot <https://github.com/econchick/interrogate/pull/8>`_!).
+
+.. short-log
 
 1.1.3 (2020-05-02)
 ------------------
