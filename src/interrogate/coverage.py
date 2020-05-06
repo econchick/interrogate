@@ -198,7 +198,7 @@ class InterrogateCoverage:
         visitor = visit.CoverageVisitor(filename=filename, config=self.config)
         visitor.visit(parsed_tree)
 
-        filtered_nodes = self._filter_nodes(visitor.graph.nodes)
+        filtered_nodes = self._filter_nodes(visitor.nodes)
         if len(filtered_nodes) == 0:
             return
 

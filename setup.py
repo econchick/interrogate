@@ -68,7 +68,6 @@ CLASSIFIERS = [
 INSTALL_REQUIRES = [
     "attrs",
     "click",
-    "networkx",
     "py",
     "tabulate",
     "toml",
