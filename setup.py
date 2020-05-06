@@ -66,7 +66,7 @@ CLASSIFIERS = [
     "Topic :: Software Development :: Quality Assurance",
 ]
 INSTALL_REQUIRES = [
-    "attrs",
+    "attrs>=19.2",
     "click",
     "py",
     "tabulate",
