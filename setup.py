@@ -77,7 +77,7 @@ EXTRAS_REQUIRE = {
     "tests": ["pytest", "pytest-cov", "pytest-mock"],
 }
 EXTRAS_REQUIRE["dev"] = (
-    EXTRAS_REQUIRE["docs"] + EXTRAS_REQUIRE["tests"] + ["wheel"]
+    EXTRAS_REQUIRE["docs"] + EXTRAS_REQUIRE["tests"] + ["wheel", "pre-commit"]
 )
 URL = find_meta("uri")
 LONG = (
@@ -109,7 +109,5 @@ setup(
     python_requires=">=3.5",
     install_requires=INSTALL_REQUIRES,
     extras_require=EXTRAS_REQUIRE,
-    entry_points={
-        "console_scripts": ["interrogate = interrogate.cli:main"],
-    },
+    entry_points={"console_scripts": ["interrogate = interrogate.cli:main"],},
 )

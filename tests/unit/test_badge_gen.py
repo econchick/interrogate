@@ -7,6 +7,7 @@ import pytest
 
 from interrogate import badge_gen
 
+
 HERE = os.path.abspath(os.path.join(os.path.abspath(__file__), os.path.pardir))
 FIXTURES = os.path.join(HERE, "fixtures")
 
