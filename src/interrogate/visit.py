@@ -5,7 +5,6 @@ import ast
 import os
 
 import attr
-import networkx as nx
 
 
 @attr.s(eq=False)
@@ -41,7 +40,7 @@ class CoverageVisitor(ast.NodeVisitor):
     def __init__(self, filename, config):
         self.filename = filename
         self.stack = []
-        self.graph = nx.Graph()
+        self.nodes = []
         self.config = config
 
     @staticmethod
@@ -82,10 +81,7 @@ class CoverageVisitor(ast.NodeVisitor):
             lineno=lineno,
         )
         self.stack.append(cov_node)
-        self.graph.add_node(cov_node)
-
-        if parent:
-            self.graph.add_edge(cov_node, parent)
+        self.nodes.append(cov_node)
 
         self.generic_visit(node)
 

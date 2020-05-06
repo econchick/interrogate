@@ -1,6 +1,18 @@
 Changelog
 =========
 
+.. short-log
+
+1.1.5 (UNRELEASED)
+------------------
+
+Removed
+^^^^^^^
+
+* Removed ``networkx`` dependency.
+
+.. short-log
+
 1.1.4 (2020-05-05)
 ------------------
 

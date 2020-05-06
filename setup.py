@@ -68,7 +68,6 @@ CLASSIFIERS = [
 INSTALL_REQUIRES = [
     "attrs",
     "click",
-    "networkx",
     "py",
     "tabulate",
     "toml",
@@ -78,10 +77,18 @@ EXTRAS_REQUIRE = {
     "tests": ["pytest", "pytest-cov", "pytest-mock"],
 }
 EXTRAS_REQUIRE["dev"] = (
-    EXTRAS_REQUIRE["docs"] + EXTRAS_REQUIRE["tests"] + ["wheel"]
+    EXTRAS_REQUIRE["docs"] + EXTRAS_REQUIRE["tests"] + ["wheel", "pre-commit"]
 )
-LONG = read("README.rst")
-
+URL = find_meta("uri")
+LONG = (
+    read("README.rst")
+    + "\n"
+    + "Release Information\n"
+    + "==================="
+    + read("docs/changelog.rst").split(".. short-log")[1]
+    + "\n`Full changelog "
+    + "<{url}/en/latest/#changelog>`_.".format(url=URL)
+)
 
 setup(
     name=NAME,
@@ -89,7 +96,7 @@ setup(
     description=find_meta("description"),
     long_description=LONG,
     long_description_content_type="text/x-rst",
-    url=find_meta("uri"),
+    url=URL,
     author=find_meta("author"),
     author_email=find_meta("email"),
     maintainer=find_meta("author"),
@@ -102,7 +109,5 @@ setup(
     python_requires=">=3.5",
     install_requires=INSTALL_REQUIRES,
     extras_require=EXTRAS_REQUIRE,
-    entry_points={
-        "console_scripts": ["interrogate = interrogate.cli:main"],
-    },
+    entry_points={"console_scripts": ["interrogate = interrogate.cli:main"],},
 )

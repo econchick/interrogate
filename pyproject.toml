@@ -18,6 +18,15 @@ fail_under = 95
 [tool.black]
 line-length = 79
 
+[tool.isort]
+atomic=true
+force_single_line=true
+lines_after_imports=2
+lines_between_types=1
+use_parentheses=true
+known_first_party="interrogate"
+known_third_party=["attr", "click", "py", "pytest", "setuptools", "tabulate"]
+
 [tool.interrogate]
 ignore-init-method = true
 ignore-init-module = false
@@ -26,7 +35,7 @@ ignore-semiprivate = false
 ignore-private = false
 ignore-module = false
 fail-under = 95
-exclude = ["tests/functional/sample", "setup.py", "docs", "build"]
+exclude = ["tests/functional/sample", "setup.py", "docs"]
 verbose = 0
 quiet = false
 whitelist-regex = []
