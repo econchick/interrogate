@@ -2,6 +2,10 @@ include LICENSE *.rst *.toml *.yml *.yaml *.ini
 include src/interrogate/badge/*.svg
 graft .github
 
+# Stubs
+include src/interrogate/py.typed
+recursive-include src *.pyi
+
 # Tests
 include tox.ini conftest.py
 recursive-include tests *.py

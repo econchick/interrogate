@@ -52,8 +52,8 @@ class InterrogateFileResult(BaseInterrogateResult):
 
     :param str filename: filename associated with the coverage result.
     :param bool ignore_module: whether or not to ignore this file/module.
-    :param visit.CoverageVisitor visitor: coverage visitor instance
-        that assessed docstring coverage of file.
+    :param list(interrogate.CovNode): coverage nodes representing
+        assessed docstring coverage of file.
     """
 
     filename = attr.ib(default=None)
