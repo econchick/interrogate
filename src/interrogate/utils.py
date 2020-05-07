@@ -65,11 +65,16 @@ def get_common_base(files):
     :param files: files to scan.
     :type files: ``iterable``
     :return: Common parent path.
-    :rtype: str
+    :rtype: Path
     """
 
 
-    return Path(os.path.commonpath(files))
+    # Maintain Python 3.5 compatibility
+    try:
+        common_base =Path(os.path.commonpath(files))
+    except TypeError:
+        common_base = Path(os.path.commonpath([str(f) for f in files]))
+    return common_base
 
 
 def interrogate_line_formatter(padded_cells, colwidths, colaligns):
