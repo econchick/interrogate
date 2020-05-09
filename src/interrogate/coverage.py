@@ -2,6 +2,7 @@
 """Measure and report on documentation coverage in Python modules."""
 import ast
 import os
+import pathlib
 import sys
 
 import attr
@@ -109,7 +110,7 @@ class InterrogateCoverage:
         self.paths = paths
         self.config = conf or config.InterrogateConfig()
         self.excluded = excluded or ()
-        self.common_base = ""
+        self.common_base = pathlib.Path("/")
         self._add_common_exclude()
 
     def _add_common_exclude(self):

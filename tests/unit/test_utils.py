@@ -48,15 +48,27 @@ def test_smart_open(filename, mocker):
 
 
 @pytest.mark.parametrize(
-    "files,expected",
+    "files,side_effect,expected",
     (
-        (("/usr/src/app", "/usr/src/tests"), "/usr/src"),
-        (("/usr/src/app/sample.py", "/usr/src/tests"), "/usr/src"),
-        (("/usr/src/app", "/src/tests"), ""),
+        (("/usr/src/app", "/usr/src/tests"), (True,), "/usr/src"),
+        (
+            ("/usr/src/app/sample.py", "/usr/src/app/sample2.py"),
+            (False, True),
+            "/usr/src/app",
+        ),
+        (("/usr/src/app/sample.py", "/usr/src/tests"), (True,), "/usr/src"),
+        (("/usr/src/app", "/src/tests"), (True,), "/"),
+        (
+            (r"C:\path\to\src\file.py", r"C:\path\to\tests\test_file.py"),
+            (True,),
+            "C:\\path\\to\\",
+        ),
     ),
 )
-def test_get_common_base(files, expected):
+def test_get_common_base(files, side_effect, expected, mocker, monkeypatch):
     """Return common base of a set of files/directories, if any."""
+    mock_exists = mocker.Mock(side_effect=side_effect)
+    monkeypatch.setattr(utils.pathlib.Path, "exists", mock_exists)
     actual = utils.get_common_base(files)
     assert expected == actual
 

@@ -2,7 +2,8 @@
 """Collection of general helper functions."""
 
 import contextlib
-import itertools
+import os
+import pathlib
 import re
 import shutil
 import sys
@@ -64,14 +65,13 @@ def get_common_base(files):
     :return: Common parent path.
     :rtype: str
     """
-
-    def allnamesequal(name):
-        """Return if all names in an iterable are equal."""
-        return all(n == name[0] for n in name[1:])
-
-    level_slices = zip(*[f.split("/") for f in files])
-    tw = itertools.takewhile(allnamesequal, level_slices)
-    return "/".join(x[0] for x in tw)
+    commonbase = pathlib.Path(os.path.commonprefix(files))
+    # commonprefix may return an invalid path, e.g. for "/usr/foobar"
+    # and "/usr/foobaz", it will return "/usr/fooba", so we'll need to
+    # find its parent directory if that's the case.
+    while not commonbase.exists():
+        commonbase = commonbase.parent
+    return str(commonbase)
 
 
 def interrogate_line_formatter(padded_cells, colwidths, colaligns):
