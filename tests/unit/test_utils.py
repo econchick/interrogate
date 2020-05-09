@@ -83,7 +83,7 @@ def test_get_common_base(files, side_effect, expected, mocker, monkeypatch):
             r"C:\usr\src\app",
         ),
         ((r"C:\usr\src\app\sample.py", r"C:\usr\src\tests"), (True,), r"C:\usr\src"),
-        ((r"C:\usr\src\app", r"C:\src:tests"), (True,), r"C:\\"),
+        ((r"C:\usr\src\app", r"C:\src\tests"), (True,), "C:\\"),
         (
             (r"C:\path\to\src\file.py", r"C:\path\to\tests\test_file.py"),
             (True,),
