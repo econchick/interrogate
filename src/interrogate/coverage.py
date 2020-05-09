@@ -378,6 +378,14 @@ class InterrogateCoverage:
         results.file_results = sorted_res
         return results
 
+    def _get_header_base(self):
+        base = self.common_base
+        if os.path.isfile(base):
+            base = os.path.dirname(base)
+        if sys.platform in ("cygwin", "win32"):  # pragma: no cover
+            return base + "\\"
+        return base + "/"
+
     def print_results(self, results, output, verbosity):
         """Print results to a given output stream.
 
@@ -392,12 +400,10 @@ class InterrogateCoverage:
             tw = py_io.TerminalWriter(file=f)
             results = self._sort_results(results)
             if verbosity > 0:
-                base = self.common_base
-                if os.path.isfile(base):
-                    base = os.path.dirname(base)
+                base = self._get_header_base()
                 tw.sep(
                     "=",
-                    "Coverage for {}/".format(base),
+                    "Coverage for {}".format(base),
                     fullwidth=utils.TERMINAL_WIDTH,
                 )
             if verbosity > 1:

@@ -2,6 +2,7 @@
 """Functional tests for interrogate/coverage.py."""
 
 import os
+import sys
 
 import pytest
 
@@ -12,6 +13,7 @@ from interrogate import coverage
 HERE = os.path.abspath(os.path.join(os.path.abspath(__file__), os.path.pardir))
 SAMPLE_DIR = os.path.join(HERE, "sample")
 FIXTURES = os.path.join(HERE, "fixtures")
+IS_WINDOWS = sys.platform in ("cygwin", "win32")
 
 
 @pytest.mark.parametrize(
@@ -60,6 +62,7 @@ def test_coverage_errors(capsys):
     assert "E: No Python files found to interrogate in " in captured.err
 
 
+@pytest.mark.skipif(IS_WINDOWS, reason="FIXME for windows!")
 @pytest.mark.parametrize(
     "level,exp_fixture_file",
     (
@@ -80,11 +83,14 @@ def test_print_results(level, exp_fixture_file, capsys, monkeypatch):
 
     captured = capsys.readouterr()
     expected_fixture = os.path.join(FIXTURES, exp_fixture_file)
+    if IS_WINDOWS:
+        expected_fixture = os.path.join(FIXTURES, "windows", exp_fixture_file)
     with open(expected_fixture, "r") as f:
         expected_out = f.read()
     assert expected_out in captured.out
 
 
+@pytest.mark.skipif(IS_WINDOWS, reason="FIXME for windows!")
 @pytest.mark.parametrize(
     "ignore_module,level,exp_fixture_file",
     (
@@ -118,6 +124,7 @@ def test_print_results_ignore_module(
     assert expected_out in captured.out
 
 
+@pytest.mark.skipif(IS_WINDOWS, reason="FIXME for windows!")
 def test_print_results_single_file(capsys, monkeypatch):
     """Results for a single file should still list the filename."""
 

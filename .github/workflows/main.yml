@@ -14,13 +14,14 @@ on:
 
 jobs:
   tests:
-    name: "Python ${{ matrix.python-version }}"
-    runs-on: "ubuntu-latest"
+    name: "Python ${{ matrix.python-version }} on ${{ matrix.os }}"
+    runs-on: "${{ matrix.os }}"
     env:
-      USING_COVERAGE: '3.7,3.8'
+      USING_COVERAGE: '3.7,3.8,ubuntu-latest'
     strategy:
       matrix:
         python-version: ["3.5", "3.6", "3.7", "3.8"]
+        os: ["ubuntu-latest", "macos-latest"]
     steps:
       - uses: "actions/checkout@v2"
       - uses: "actions/setup-python@v1"
@@ -36,7 +37,7 @@ jobs:
       - name: "Run tox targets for ${{ matrix.python-version }}"
         run: "python -m tox"
       - name: "Upload coverage to Codecov"
-        if: "contains(env.USING_COVERAGE, matrix.python-version)"
+        if: "contains(env.USING_COVERAGE, matrix.python-version) && contains(env.USING_COVERAGE, matrix.os)"
         uses: "codecov/codecov-action@v1"
         with:
           file: ./coverage.xml

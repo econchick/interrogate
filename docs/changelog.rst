@@ -6,6 +6,11 @@ Changelog
 1.1.5 (UNRELEASED)
 ------------------
 
+Fixed
+^^^^^
+
+* (Windows) Fix commonpath derivation.
+
 Removed
 ^^^^^^^
 

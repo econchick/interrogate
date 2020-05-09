@@ -9,6 +9,9 @@ import pytest
 from interrogate import utils
 
 
+IS_WINDOWS = sys.platform in ("cygwin", "win32")
+
+
 @pytest.mark.parametrize(
     "value,exp",
     (
@@ -47,6 +50,7 @@ def test_smart_open(filename, mocker):
         assert act_ret == sys.stdout
 
 
+@pytest.mark.skipif(IS_WINDOWS, reason="unix-only tests")
 @pytest.mark.parametrize(
     "files,side_effect,expected",
     (
@@ -58,14 +62,42 @@ def test_smart_open(filename, mocker):
         ),
         (("/usr/src/app/sample.py", "/usr/src/tests"), (True,), "/usr/src"),
         (("/usr/src/app", "/src/tests"), (True,), "/"),
-        (
-            (r"C:\path\to\src\file.py", r"C:\path\to\tests\test_file.py"),
-            (True,),
-            "C:\\path\\to\\",
-        ),
     ),
 )
 def test_get_common_base(files, side_effect, expected, mocker, monkeypatch):
+    """Return common base of a set of files/directories, if any."""
+    mock_exists = mocker.Mock(side_effect=side_effect)
+    monkeypatch.setattr(utils.pathlib.Path, "exists", mock_exists)
+    actual = utils.get_common_base(files)
+    assert expected == actual
+
+
+@pytest.mark.skipif(not IS_WINDOWS, reason="windows-only tests")
+@pytest.mark.parametrize(
+    "files,side_effect,expected",
+    (
+        ((r"C:\usr\src\app", r"C:\usr\src\tests"), (True,), r"C:\usr\src"),
+        (
+            (r"C:\usr\src\app\sample.py", r"C:\usr\src\app\sample2.py"),
+            (False, True),
+            r"C:\usr\src\app",
+        ),
+        (
+            (r"C:\usr\src\app\sample.py", r"C:\usr\src\tests"),
+            (True,),
+            r"C:\usr\src",
+        ),
+        ((r"C:\usr\src\app", r"C:\src\tests"), (True,), "C:\\"),
+        (
+            (r"C:\path\to\src\file.py", r"C:\path\to\tests\test_file.py"),
+            (True,),
+            r"C:\path\to",
+        ),
+    ),
+)
+def test_get_common_base_windows(
+    files, side_effect, expected, mocker, monkeypatch
+):
     """Return common base of a set of files/directories, if any."""
     mock_exists = mocker.Mock(side_effect=side_effect)
     monkeypatch.setattr(utils.pathlib.Path, "exists", mock_exists)
