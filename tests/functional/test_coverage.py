@@ -2,6 +2,7 @@
 """Functional tests for interrogate/coverage.py."""
 
 import os
+import pathlib
 
 import pytest
 
@@ -138,5 +139,5 @@ def test_print_results_single_file(capsys, monkeypatch):
     assert expected_out in captured.out
     # I don't want to deal with path mocking out just to get tests to run
     # everywhere
-    assert "tests/functional/sample/" in captured.out
-    assert "tests/functional/sample/full.py" not in captured.out
+    assert str(pathlib.Path("tests/functional/sample/")) in captured.out
+    assert str(pathlib.Path("tests/functional/sample/full.py")) not in captured.out

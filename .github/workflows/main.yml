@@ -17,8 +17,6 @@ jobs:
   tests-windows:
     name: "Python ${{ matrix.python-version }} on Windows"
     runs-on: "windows-latest"
-    env:
-      USING_COVERAGE: '3.7,3.8'
     strategy:
       matrix:
         python-version: ["3.5", "3.6", "3.7", "3.8"]
