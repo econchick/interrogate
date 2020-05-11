@@ -9,7 +9,8 @@ Changelog
 Fixed
 ^^^^^
 
-* (Windows) Fix commonpath derivation.
+* (Windows) Fix commonpath derivation (`#15 <https://github.com/econchick/interrogate/issues/15>`_).
+* (Windows) Fix off-by-1 terminal width error (`#20 <https://github.com/econchick/interrogate/issues/20>`_).
 
 Removed
 ^^^^^^^
