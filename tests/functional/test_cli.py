@@ -2,6 +2,7 @@
 """Functional tests for the CLI and implicitly interrogate/visit.py."""
 
 import os
+import sys
 
 import pytest
 
@@ -13,6 +14,7 @@ from interrogate import cli
 HERE = os.path.abspath(os.path.join(os.path.abspath(__file__), os.path.pardir))
 SAMPLE_DIR = os.path.join(HERE, "sample")
 FIXTURES = os.path.join(HERE, "fixtures")
+IS_WINDOWS = sys.platform in ("cygwin", "win32")
 
 
 @pytest.fixture
@@ -111,6 +113,7 @@ def test_run_multiple_flags(flags, exp_result, exp_exit_code, runner):
     assert exp_exit_code == result.exit_code
 
 
+@pytest.mark.skipif(IS_WINDOWS, reason="FIXME for windows!")
 @pytest.mark.parametrize("quiet", (True, False))
 def test_generate_badge(quiet, runner):
     """Test expected SVG output when creating a status badge."""

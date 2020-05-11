@@ -2,6 +2,7 @@
 """Unit tests for interrogate/badge_gen.py module"""
 
 import os
+import sys
 
 import pytest
 
@@ -10,8 +11,10 @@ from interrogate import badge_gen
 
 HERE = os.path.abspath(os.path.join(os.path.abspath(__file__), os.path.pardir))
 FIXTURES = os.path.join(HERE, "fixtures")
+IS_WINDOWS = sys.platform in ("cygwin", "win32")
 
 
+@pytest.mark.skipif(IS_WINDOWS, reason="unix-only tests")
 @pytest.mark.parametrize(
     "output,is_dir,expected",
     (
@@ -33,6 +36,29 @@ def test_save_badge(output, is_dir, expected, mocker, monkeypatch):
     m.assert_called_once_with(expected, "w")
 
 
+@pytest.mark.skipif(not IS_WINDOWS, reason="windows-only tests")
+@pytest.mark.parametrize(
+    "output,is_dir,expected",
+    (
+        ("C:\\foo\\bar", True, "C:\\foo\\bar\\interrogate_badge.svg"),
+        ("C:\\foo\\bar\\my_badge.svg", False, "C:\\foo\\bar\\my_badge.svg"),
+    ),
+)
+def test_save_badge_windows(output, is_dir, expected, mocker, monkeypatch):
+    """Badge is saved in the expected location."""
+    monkeypatch.setattr(badge_gen.os.path, "isdir", lambda x: is_dir)
+
+    mock_open = mocker.mock_open()
+    m = mocker.patch("interrogate.badge_gen.open", mock_open)
+
+    badge_contents = "<svg>foo</svg>"
+
+    actual = badge_gen.save_badge(badge_contents, output)
+    assert expected == actual
+    m.assert_called_once_with(expected, "w")
+
+
+@pytest.mark.skipif(IS_WINDOWS, reason="FIXME for windows!")
 def test_get_badge():
     """SVG badge is templated as expected."""
     actual = badge_gen.get_badge(99.9, "#4c1")
@@ -59,6 +85,7 @@ def test_get_color(result, expected):
     assert expected == badge_gen.get_color(result)
 
 
+@pytest.mark.skipif(IS_WINDOWS, reason="FIXME for windows!")
 @pytest.mark.parametrize(
     "result,expected_fixture",
     (
