@@ -82,7 +82,11 @@ def test_get_common_base(files, side_effect, expected, mocker, monkeypatch):
             (False, True),
             r"C:\usr\src\app",
         ),
-        ((r"C:\usr\src\app\sample.py", r"C:\usr\src\tests"), (True,), r"C:\usr\src"),
+        (
+            (r"C:\usr\src\app\sample.py", r"C:\usr\src\tests"),
+            (True,),
+            r"C:\usr\src",
+        ),
         ((r"C:\usr\src\app", r"C:\src\tests"), (True,), "C:\\"),
         (
             (r"C:\path\to\src\file.py", r"C:\path\to\tests\test_file.py"),
@@ -91,12 +95,15 @@ def test_get_common_base(files, side_effect, expected, mocker, monkeypatch):
         ),
     ),
 )
-def test_get_common_base_windows(files, side_effect, expected, mocker, monkeypatch):
+def test_get_common_base_windows(
+    files, side_effect, expected, mocker, monkeypatch
+):
     """Return common base of a set of files/directories, if any."""
     mock_exists = mocker.Mock(side_effect=side_effect)
     monkeypatch.setattr(utils.pathlib.Path, "exists", mock_exists)
     actual = utils.get_common_base(files)
     assert expected == actual
+
 
 @pytest.mark.parametrize(
     "padded_cells,colwidths,colaligns,width,expected",
