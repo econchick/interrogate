@@ -6,6 +6,7 @@ build-backend = "setuptools.build_meta"
 parallel = true
 branch = true
 source = ["interrogate"]
+omit = ["**/__main__.py"]
 
 [tool.coverage.paths]
 source = ["src", ".tox/*/site-packages"]
