@@ -150,11 +150,6 @@ def test_print_results_single_file(capsys, monkeypatch):
     with open(expected_fixture, "r") as f:
         expected_out = f.read()
 
-    print("===EXPECTED===")
-    print(expected_out)
-    print("===ACTUAL===")
-    print(captured.out)
-
     assert expected_out in captured.out
     # I don't want to deal with path mocking out just to get tests to run
     # everywhere
