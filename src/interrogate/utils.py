@@ -92,9 +92,11 @@ def interrogate_line_formatter(padded_cells, colwidths, colaligns):
         (len(padded_cells) + 1) * len(sep)
     )
     if IS_WINDOWS:
+        # windows may pad the output a bit unknowingly (see
+        # https://github.com/econchick/interrogate/issues/20)
         final_row_width += 1
 
-    extra_padding = TERMINAL_WIDTH - final_row_width
+    extra_padding = max(TERMINAL_WIDTH - final_row_width, 0)
 
     if padded_cells[0].strip() == TABLE_SEPARATOR[0]:
         padder = "-"
