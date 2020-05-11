@@ -17,6 +17,8 @@ jobs:
   tests:
     name: "Python ${{ matrix.python-version }} on ${{ matrix.os }}"
     runs-on: "${{ matrix.os }}"
+    env:
+      USING_COVERAGE: '3.7,3.8,ubuntu-latest'
     strategy:
       matrix:
         python-version: ["3.5", "3.6", "3.7", "3.8"]
@@ -33,7 +35,7 @@ jobs:
       - name: "Run tox targets for ${{ matrix.python-version }}"
         run: "python -m tox"
       - name: "Upload coverage to Codecov"
-        if: "contains(env.USING_COVERAGE, matrix.python-version)"
+        if: "contains(env.USING_COVERAGE, matrix.python-version) && contains(env.USING_COVERAGE, matrix.os)"
         uses: "codecov/codecov-action@v1"
         with:
           file: ./coverage.xml
