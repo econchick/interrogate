@@ -62,7 +62,6 @@ def test_coverage_errors(capsys):
     assert "E: No Python files found to interrogate in " in captured.err
 
 
-# @pytest.mark.skipif(IS_WINDOWS, reason="FIXME for windows!")
 @pytest.mark.parametrize(
     "level,exp_fixture_file",
     (
@@ -88,14 +87,9 @@ def test_print_results(level, exp_fixture_file, capsys, monkeypatch):
     with open(expected_fixture, "r") as f:
         expected_out = f.read()
 
-    print("===EXPECTED===")
-    print(expected_out)
-    print("===ACTUAL===")
-    print(captured.out)
     assert expected_out in captured.out
 
 
-@pytest.mark.skipif(IS_WINDOWS, reason="FIXME for windows!")
 @pytest.mark.parametrize(
     "ignore_module,level,exp_fixture_file",
     (
@@ -124,8 +118,16 @@ def test_print_results_ignore_module(
 
     captured = capsys.readouterr()
     expected_fixture = os.path.join(FIXTURES, exp_fixture_file)
+    if IS_WINDOWS:
+        expected_fixture = os.path.join(FIXTURES, "windows", exp_fixture_file)
     with open(expected_fixture, "r") as f:
         expected_out = f.read()
+
+    print("===EXPECTED===")
+    print(expected_out)
+    print("===ACTUAL===")
+    print(captured.out)
+
     assert expected_out in captured.out
 
 
