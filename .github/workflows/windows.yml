@@ -11,40 +11,31 @@ on:
 
 jobs:
   windows-tests:
-    name: "Python ${{ matrix.python-version }} on Windows"
+    name: "Python py37 tests on Windows"
     runs-on: "windows-latest"
-    strategy:
-      matrix:
-        python-version: ["3.7", "3.8"]
     steps:
       - uses: "actions/checkout@v2"
       - uses: "actions/setup-python@v1"
         with:
-          python-version: "${{ matrix.python-version }}"
+          python-version: "3.7"
       - name: "Install dependencies"
         run: |
           python -m pip install --upgrade pip setuptools wheel
           python -m pip install --upgrade virtualenv tox tox-gh-actions
-      - name: "Run tox targets for ${{ matrix.python-version }}"
-        run: "python -m tox"
+      - name: "Run tox targets for py37"
+        run: "python -m tox -e py37"
 
-  # commenting out for quicker windows testing
-  # windows-tests:
-  #   name: "Python ${{ matrix.python-version }} on Windows"
-  #   runs-on: "windows-latest"
-  #   env:
-  #     USING_COVERAGE: '3.7,3.8,ubuntu-latest'
-  #   strategy:
-  #     matrix:
-  #       python-version: ["3.5", "3.6", "3.7", "3.8"]
-  #   steps:
-  #     - uses: "actions/checkout@v2"
-  #     - uses: "actions/setup-python@v1"
-  #       with:
-  #         python-version: "${{ matrix.python-version }}"
-  #     - name: "Install dependencies"
-  #       run: |
-  #         python -m pip install --upgrade pip setuptools wheel
-  #         python -m pip install --upgrade virtualenv tox tox-gh-actions
-  #     - name: "Run tox targets for ${{ matrix.python-version }}"
-  #       run: "python -m tox"
+  windows-interrogate-output:
+    name: "Interrogate output on Windows"
+    runs-on: "windows-latest"
+    steps:
+      - uses: "actions/checkout@v2"
+      - uses: "actions/setup-python@v1"
+        with:
+          python-version: "3.7"
+      - name: "Install dependencies"
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install -e .
+      - name: "Run interrogate on windows"
+        run: "python -m interrogate -vv --config pyproject.toml"
