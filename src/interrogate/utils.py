@@ -13,6 +13,7 @@ import tabulate
 
 TABLE_SEPARATOR = ["---"]
 TERMINAL_WIDTH, _ = shutil.get_terminal_size((80, 20))
+IS_WINDOWS = sys.platform == "win32"
 
 
 def parse_regex(ctx, param, values):
@@ -90,6 +91,9 @@ def interrogate_line_formatter(padded_cells, colwidths, colaligns):
     final_row_width = sum([len(x) for x in padded_cells]) + (
         (len(padded_cells) + 1) * len(sep)
     )
+    if IS_WINDOWS:
+        final_row_width += 1
+
     extra_padding = TERMINAL_WIDTH - final_row_width
 
     if padded_cells[0].strip() == TABLE_SEPARATOR[0]:
