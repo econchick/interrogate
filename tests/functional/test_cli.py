@@ -113,34 +113,37 @@ def test_run_multiple_flags(flags, exp_result, exp_exit_code, runner):
     assert exp_exit_code == result.exit_code
 
 
-@pytest.mark.skipif(IS_WINDOWS, reason="FIXME for windows!")
 @pytest.mark.parametrize("quiet", (True, False))
-def test_generate_badge(quiet, runner):
+def test_generate_badge(quiet, runner, tmp_path):
     """Test expected SVG output when creating a status badge."""
     expected_output_path = os.path.join(FIXTURES, "expected_badge.svg")
     with open(expected_output_path, "r") as f:
         expected_output = f.read()
 
-    with runner.isolated_filesystem() as tmpdir:
-        expected_path = os.path.join(tmpdir, "interrogate_badge.svg")
-        cli_inputs = [
-            "--fail-under",
-            0,
-            "--generate-badge",
-            tmpdir,
-            SAMPLE_DIR,
-        ]
-        if quiet:
-            cli_inputs.append("--quiet")
+    expected_output = expected_output.replace("\n", "")
 
-        result = runner.invoke(cli.main, cli_inputs)
-        assert 0 == result.exit_code
-        if quiet:
-            assert "" == result.output
-        else:
-            assert expected_path in result.output
+    tmpdir = tmp_path / "testing"
+    tmpdir.mkdir()
+    expected_path = tmpdir / "interrogate_badge.svg"
+    cli_inputs = [
+        "--fail-under",
+        0,
+        "--generate-badge",
+        str(tmpdir),
+        SAMPLE_DIR,
+    ]
+    if quiet:
+        cli_inputs.append("--quiet")
 
-        with open(expected_path, "r") as f:
-            actual_output = f.read()
+    result = runner.invoke(cli.main, cli_inputs)
+    assert 0 == result.exit_code
+    if quiet:
+        assert "" == result.output
+    else:
+        assert str(expected_path) in result.output
 
-        assert expected_output == actual_output
+    with open(str(expected_path), "r") as f:
+        actual_output = f.read()
+        actual_output = actual_output.replace("\n", "")
+
+    assert expected_output == actual_output
