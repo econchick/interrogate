@@ -113,13 +113,14 @@ def test_run_multiple_flags(flags, exp_result, exp_exit_code, runner):
     assert exp_exit_code == result.exit_code
 
 
-@pytest.mark.skipif(IS_WINDOWS, reason="FIXME for windows!")
 @pytest.mark.parametrize("quiet", (True, False))
 def test_generate_badge(quiet, runner):
     """Test expected SVG output when creating a status badge."""
     expected_output_path = os.path.join(FIXTURES, "expected_badge.svg")
     with open(expected_output_path, "r") as f:
         expected_output = f.read()
+
+    expected_output = expected_output.replace("\n", "")
 
     with runner.isolated_filesystem() as tmpdir:
         expected_path = os.path.join(tmpdir, "interrogate_badge.svg")
@@ -142,5 +143,6 @@ def test_generate_badge(quiet, runner):
 
         with open(expected_path, "r") as f:
             actual_output = f.read()
+            actual_output = actual_output.replace("\n", "")
 
         assert expected_output == actual_output

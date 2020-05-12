@@ -1,0 +1,28 @@
+------------------------------ Detailed Coverage ------------------------------
+| Name                                               |                 Status |
+|----------------------------------------------------|------------------------|
+| full.py (module)                                   |                COVERED |
+|   Foo (L5)                                         |                COVERED |
+|     Foo.__init__ (L8)                              |                COVERED |
+|     Foo.__str__ (L12)                              |                COVERED |
+|     Foo._semiprivate (L16)                         |                COVERED |
+|     Foo.__private (L20)                            |                COVERED |
+|     Foo.method_foo (L24)                           |                COVERED |
+|     Foo.get (L28)                                  |                COVERED |
+|     Foo.get (L32)                                  |                COVERED |
+|   top_level_func (L37)                             |                COVERED |
+|     top_level_func.inner_func (L40)                |                COVERED |
+|   Bar (L45)                                        |                COVERED |
+|     Bar.method_bar (L48)                           |                COVERED |
+|       Bar.method_bar.InnerBar (L51)                |                COVERED |
+|   _SemiprivateClass (L57)                          |                COVERED |
+|   __PrivateClass (L63)                             |                COVERED |
+|----------------------------------------------------|------------------------|
+
+----------------------------------- Summary -----------------------------------
+| Name            |        Total |        Miss |        Cover |        Cover% |
+|-----------------|--------------|-------------|--------------|---------------|
+| full.py         |           16 |           0 |           16 |          100% |
+|-----------------|--------------|-------------|--------------|---------------|
+| TOTAL           |           16 |           0 |           16 |        100.0% |
+--------------- RESULT: PASSED (minimum: 80.0%, actual: 100.0%) ---------------

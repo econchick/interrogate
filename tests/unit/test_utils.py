@@ -105,6 +105,7 @@ def test_get_common_base_windows(
     assert expected == actual
 
 
+@pytest.mark.skipif(IS_WINDOWS, reason="unix-only tests")
 @pytest.mark.parametrize(
     "padded_cells,colwidths,colaligns,width,expected",
     (
@@ -131,4 +132,34 @@ def test_interrogate_line_formatter(
     )
 
     assert width == len(actual)
+    assert expected == actual
+
+
+@pytest.mark.skipif(not IS_WINDOWS, reason="windows-only tests")
+@pytest.mark.parametrize(
+    "padded_cells,colwidths,colaligns,width,expected",
+    (
+        # no data
+        ([""], [0], ["left"], 15, "|            |"),
+        # left & right align
+        (["foo", "bar"], [3, 3], ["left", "right"], 15, "|foo   |  bar|"),
+        # left & right align with a non-equal amount of padding per column
+        (["foo", "bar"], [3, 3], ["left", "right"], 14, "|foo  |  bar|"),
+        # table separator
+        (["---", ""], [3, 0], ["left", "right"], 15, "|-------|----|"),
+        # default to left alignment
+        (["foo", "bar"], [3, 3], ["?", "?"], 15, "|foo   |bar  |"),
+    ),
+)
+def test_interrogate_line_formatter_windows(
+    padded_cells, colwidths, colaligns, width, expected, monkeypatch
+):
+    """Data is padded and aligned correctly to fit the terminal width."""
+    monkeypatch.setattr(utils, "TERMINAL_WIDTH", width)
+
+    actual = utils.interrogate_line_formatter(
+        padded_cells, colwidths, colaligns
+    )
+
+    assert width - 1 == len(actual)
     assert expected == actual
