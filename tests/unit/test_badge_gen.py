@@ -58,13 +58,15 @@ def test_save_badge_windows(output, is_dir, expected, mocker, monkeypatch):
     m.assert_called_once_with(expected, "w")
 
 
-@pytest.mark.skipif(IS_WINDOWS, reason="FIXME for windows!")
 def test_get_badge():
     """SVG badge is templated as expected."""
     actual = badge_gen.get_badge(99.9, "#4c1")
+    actual = actual.replace("\n", "").replace("\r", "")
     expected_fixture = os.path.join(FIXTURES, "99.svg")
     with open(expected_fixture, "r") as f:
         expected = f.read()
+        expected = expected.replace("\n", "").replace("\r", "")
+
     assert expected == actual
 
 
@@ -85,7 +87,6 @@ def test_get_color(result, expected):
     assert expected == badge_gen.get_color(result)
 
 
-@pytest.mark.skipif(IS_WINDOWS, reason="FIXME for windows!")
 @pytest.mark.parametrize(
     "result,expected_fixture",
     (
@@ -105,9 +106,11 @@ def test_create(result, expected_fixture, mocker, monkeypatch, tmpdir):
 
     with open(actual, "r") as f:
         actual_contents = f.read()
+        actual_contents = actual_contents.replace("\n", "")
 
     expected_fixture = os.path.join(FIXTURES, expected_fixture)
     with open(expected_fixture, "r") as f:
         expected_contents = f.read()
+        expected_contents = expected_contents.replace("\n", "")
 
     assert expected_contents == actual_contents

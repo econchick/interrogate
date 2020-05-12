@@ -145,8 +145,4 @@ def test_generate_badge(quiet, runner):
             actual_output = f.read()
             actual_output = actual_output.replace("\n", "")
 
-        print("===EXPECTED===")
-        print(expected_output)
-        print("===ACTUAL===")
-        print(actual_output)
         assert expected_output == actual_output

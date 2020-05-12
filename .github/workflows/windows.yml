@@ -25,17 +25,17 @@ jobs:
       - name: "Run tox targets for py37"
         run: "python -m tox -e py37"
 
-  windows-interrogate-output:
-    name: "Interrogate output on Windows"
-    runs-on: "windows-latest"
-    steps:
-      - uses: "actions/checkout@v2"
-      - uses: "actions/setup-python@v1"
-        with:
-          python-version: "3.7"
-      - name: "Install dependencies"
-        run: |
-          python -m pip install --upgrade pip setuptools wheel
-          python -m pip install -e .
-      - name: "Run interrogate on windows"
-        run: "python -m interrogate -vv --config pyproject.toml"
+  # windows-interrogate-output:
+  #   name: "Interrogate output on Windows"
+  #   runs-on: "windows-latest"
+  #   steps:
+  #     - uses: "actions/checkout@v2"
+  #     - uses: "actions/setup-python@v1"
+  #       with:
+  #         python-version: "3.7"
+  #     - name: "Install dependencies"
+  #       run: |
+  #         python -m pip install --upgrade pip setuptools wheel
+  #         python -m pip install -e .
+  #     - name: "Run interrogate on windows"
+  #       run: "python -m interrogate -vv --config pyproject.toml"
