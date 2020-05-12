@@ -3,8 +3,13 @@ Changelog
 
 .. short-log
 
-1.1.5 (UNRELEASED)
+1.1.5 (2020-05-12)
 ------------------
+
+Added
+^^^^^
+
+* Add ``__main__.py`` module to allow for invocation via ``python -m interrogate``.
 
 Fixed
 ^^^^^
