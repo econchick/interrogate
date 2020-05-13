@@ -27,6 +27,16 @@ IS_WINDOWS = sys.platform in ("cygwin", "win32")
         ),
         ([SAMPLE_DIR,], {}, (52, 24, 28, "46.2")),
         ([os.path.join(SAMPLE_DIR, "partial.py")], {}, (20, 7, 13, "35.0")),
+        (
+            [os.path.join(SAMPLE_DIR, "full.py"),],
+            {"ignore_nested_functions": True},
+            (15, 15, 0, "100.0"),
+        ),
+        (
+            [os.path.join(SAMPLE_DIR, "partial.py"),],
+            {"ignore_nested_functions": True},
+            (18, 6, 12, "33.3"),
+        ),
     ),
 )
 def test_coverage_simple(paths, conf, exp_results, mocker):

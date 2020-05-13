@@ -203,6 +203,11 @@ class InterrogateCoverage:
         if len(filtered_nodes) == 0:
             return
 
+        if self.config.ignore_nested_functions:
+            filtered_nodes = [
+                n for n in filtered_nodes if not n.is_nested_func
+            ]
+
         results = InterrogateFileResult(
             filename=filename,
             ignore_module=self.config.ignore_module,

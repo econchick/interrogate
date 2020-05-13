@@ -95,6 +95,14 @@ from interrogate import utils
     help="Ignore module-level docstrings.",
 )
 @click.option(
+    "-n",
+    "--ignore-nested-functions",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help="Ignore nested functions and methods.",
+)
+@click.option(
     "-p",
     "--ignore-private",
     is_flag=True,
@@ -198,6 +206,7 @@ def main(paths, **kwargs):
         values.
 
     .. versionadded:: 1.1.3 ``--whitelist-regex``
+    .. versionadded:: 1.2.0 ``--ignore-nested-functions``
     """
     if not paths:
         paths = (os.path.abspath(os.getcwd()),)
@@ -215,6 +224,7 @@ def main(paths, **kwargs):
         ignore_init_module=kwargs["ignore_init_module"],
         ignore_magic=kwargs["ignore_magic"],
         ignore_module=kwargs["ignore_module"],
+        ignore_nested_functions=kwargs["ignore_nested_functions"],
         ignore_private=kwargs["ignore_private"],
         ignore_regex=kwargs["ignore_regex"],
         ignore_semiprivate=kwargs["ignore_semiprivate"],
