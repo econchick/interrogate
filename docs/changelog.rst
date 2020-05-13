@@ -3,6 +3,17 @@ Changelog
 
 .. short-log
 
+1.2.0 (UNRELEASED)
+------------------
+
+Added
+^^^^^
+
+* Add ``-n`` / ``--ignore-nested-functions`` flag to ignore nested functions and methods (`#11 <https://github.com/econchick/interrogate/issues/11>`_).
+
+.. short-log
+
+
 1.1.5 (2020-05-12)
 ------------------
 
@@ -21,8 +32,6 @@ Removed
 ^^^^^^^
 
 * Removed ``networkx`` dependency.
-
-.. short-log
 
 1.1.4 (2020-05-05)
 ------------------

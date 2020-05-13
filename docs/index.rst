@@ -56,6 +56,10 @@ Command Line Options
 
     Ignore module-level docstrings.  [default: ``False``]
 
+.. option:: -n, --ignore-nested-functions
+
+    Ignore nested functions and methods.  [default: ``False``]
+
 .. option:: -p, --ignore-private
 
     Ignore private classes, methods, and functions starting with two underscores.  [default: ``False``]

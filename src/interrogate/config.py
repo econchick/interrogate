@@ -27,6 +27,8 @@ class InterrogateConfig:
         and functions starting with a single underscore.
     :param bool ignore_init_method: Ignore ``__init__`` method of
         classes.
+    :param bool ignore_nested_functions: Ignore nested functions and
+        methods.
     :param bool ignore_init_module: Ignore ``__init__.py`` modules.
     """
 
@@ -38,6 +40,7 @@ class InterrogateConfig:
     ignore_semiprivate = attr.ib(default=False)
     ignore_init_method = attr.ib(default=False)
     ignore_init_module = attr.ib(default=False)
+    ignore_nested_functions = attr.ib(default=False)
     include_regex = attr.ib(default=False)
 
 

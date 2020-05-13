@@ -309,58 +309,63 @@ To view all options available, run ``interrogate --help``:
       Measure and report on documentation coverage in Python modules.
 
     Options:
-      --version                     Show the version and exit.
-      -v, --verbose                 Level of verbosity  [default: 0]
-      -q, --quiet                   Do not print output  [default: False]
-      -f, --fail-under INT | FLOAT  Fail when coverage % is less than a given
-                                    amount.  [default: 80.0]
+      --version                      Show the version and exit.
+      -v, --verbose                  Level of verbosity  [default: 0]
+      -q, --quiet                    Do not print output  [default: False]
+      -f, --fail-under INT | FLOAT   Fail when coverage % is less than a given
+                                     amount.  [default: 80.0]
 
-      -e, --exclude PATH            Exclude PATHs of files and/or directories.
-                                    Multiple `-e/--exclude` invocations supported.
+      -e, --exclude PATH             Exclude PATHs of files and/or directories.
+                                     Multiple `-e/--exclude` invocations
+                                     supported.
 
-      -i, --ignore-init-method      Ignore `__init__` method of classes.
-                                    [default: False]
+      -i, --ignore-init-method       Ignore `__init__` method of classes.
+                                     [default: False]
 
-      -I, --ignore-init-module      Ignore `__init__.py` modules.  [default:
-                                    False]
+      -I, --ignore-init-module       Ignore `__init__.py` modules.  [default:
+                                     False]
 
-      -m, --ignore-magic            Ignore all magic methods of classes.
-                                    [default: False]
+      -m, --ignore-magic             Ignore all magic methods of classes.
+                                     [default: False]
 
-                                    NOTE: This does not include the `__init__`
-                                    method. To ignore `__init__` methods, use
-                                    `--ignore-init-method`.
+                                     NOTE: This does not include the `__init__`
+                                     method. To ignore `__init__` methods, use
+                                     `--ignore-init-method`.
 
-      -M, --ignore-module           Ignore module-level docstrings.  [default:
-                                    False]
+      -M, --ignore-module            Ignore module-level docstrings.  [default:
+                                     False]
 
-      -p, --ignore-private          Ignore private classes, methods, and functions
-                                    starting with two underscores.
-                                    [default:False]
+      -n, --ignore-nested-functions  Ignore nested functions and methods.
+                                     [default: False]
 
-                                    NOTE: This does not include magic methods; use
-                                    `--ignore-magic` and/or `--ignore-init-method`
-                                    instead.
+      -p, --ignore-private           Ignore private classes, methods, and
+                                     functions starting with two underscores.
+                                     [default:False]
 
-      -s, --ignore-semiprivate      Ignore semiprivate classes, methods, and
-                                    functions starting with a single underscore.
-                                    [default: False]
+                                     NOTE: This does not include magic methods;
+                                     use `--ignore-magic` and/or `--ignore-init-
+                                     method` instead.
 
-      -r, --ignore-regex STR        Regex identifying class, method, and function
-                                    names to ignore. Multiple `-r/--ignore-regex`
-                                    invocations supported.
+      -s, --ignore-semiprivate       Ignore semiprivate classes, methods, and
+                                     functions starting with a single underscore.
+                                     [default: False]
 
-      -w, --whitelist-regex STR     Regex identifying class, method, and function
-                                    names to include. Multiple `-w/--whitelist-
-                                    regex` invocations supported.
+      -r, --ignore-regex STR         Regex identifying class, method, and function
+                                     names to ignore. Multiple `-r/--ignore-regex`
+                                     invocations supported.
 
-      -o, --output FILE             Write output to a given FILE.  [default:
-                                    stdout]
+      -w, --whitelist-regex STR      Regex identifying class, method, and function
+                                     names to include. Multiple `-w/--whitelist-
+                                     regex` invocations supported.
 
-      -c, --config FILE             Read configuration from `pyproject.toml`.
-      -g, --generate-badge PATH     Generate a 'shields.io' status badge (an SVG
-                                    image) in at a given file or directory.
-      -h, --help                    Show this message and exit.
+      -o, --output FILE              Write output to a given FILE.  [default:
+                                     stdout]
+
+      -c, --config FILE              Read configuration from `pyproject.toml`.
+      -g, --generate-badge PATH      Generate a 'shields.io' status badge (an SVG
+                                     image) in at a given file or directory.
+
+      -h, --help                     Show this message and exit.
 
 
 .. start-credits

@@ -20,6 +20,9 @@ class CovNode:
     :param bool covered: Has a docstring
     :param str node_type: type of node (e.g "module", "class", or
         "function").
+    :param bool is_nested_func: if the node itself is a nested function
+        or method.
+    :param CovNode _parent: parent node of current CovNode, if any.
     """
 
     name = attr.ib()
@@ -28,6 +31,8 @@ class CovNode:
     lineno = attr.ib()
     covered = attr.ib()
     node_type = attr.ib()
+    is_nested_func = attr.ib()
+    _parent = attr.ib()
 
 
 class CoverageVisitor(ast.NodeVisitor):
@@ -72,20 +77,34 @@ class CoverageVisitor(ast.NodeVisitor):
         lineno = None
         if hasattr(node, "lineno"):
             lineno = node.lineno
+
+        node_type = type(node).__name__
         cov_node = CovNode(
             name=node_name,
             path=path,
             covered=self._has_doc(node),
             level=len(self.stack),
-            node_type=type(node).__name__,
+            node_type=node_type,
             lineno=lineno,
+            parent=parent,
+            is_nested_func=self._is_nested(parent, node_type),
         )
+        # if cov_node.nested:
+        # print(f"nested node: {node_name}")
         self.stack.append(cov_node)
         self.nodes.append(cov_node)
 
         self.generic_visit(node)
 
         self.stack.pop()
+
+    def _is_nested(self, parent, node_type):
+        if parent is None:
+            return False
+        # is it a nested function?
+        if parent.node_type == "FunctionDef" and node_type == "FunctionDef":
+            return True
+        return False
 
     def _is_private(self, node):
         """Is node private (i.e. __MyClass, __my_func)."""
