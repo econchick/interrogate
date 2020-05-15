@@ -21,7 +21,7 @@ def parse_regex(ctx, param, values):
 
     :param click.Context ctx: click command context.
     :param click.Parameter param: click command parameter (in this case,
-        ``ignore_regex`` from ``-r|--ignore-regiex``).
+        ``ignore_regex`` from ``-r|--ignore-regex``).
     :param list(str) values: list of regular expressions to be compiled.
 
     :return: a list of compiled regular expressions.

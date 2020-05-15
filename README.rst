@@ -51,7 +51,7 @@ Requirements
 Installation
 ============
 
-``interrogate`` available on `PyPI <https://pypi.org/project/interrogate/>`_ and `GitHub <https://github.com/econchick/interrogate>`_. The recommended installation method is `pip <https://pip.pypa.io/en/stable/>`_-installing into a `virtualenv <https://hynek.me/articles/virtualenv-lives/>`_:
+``interrogate`` is available on `PyPI <https://pypi.org/project/interrogate/>`_ and `GitHub <https://github.com/econchick/interrogate>`_. The recommended installation method is `pip <https://pip.pypa.io/en/stable/>`_-installing into a `virtualenv <https://hynek.me/articles/virtualenv-lives/>`_:
 
 .. code-block:: console
 
@@ -258,7 +258,7 @@ Or use it with `pre-commit <https://pre-commit.com/>`_:
 
     repos:
       - repo: https://github.com/econchick/interrogate
-        rev: 1.1.4  # or master if you're bold
+        rev: 1.1.5  # or master if you're bold
         hooks:
           - id: interrogate
             args: [--quiet, --fail-under=95]

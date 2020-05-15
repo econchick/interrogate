@@ -384,6 +384,7 @@ class InterrogateCoverage:
         return results
 
     def _get_header_base(self):
+        """Get common base directory for header of verbose output."""
         base = self.common_base
         if os.path.isfile(base):
             base = os.path.dirname(base)
