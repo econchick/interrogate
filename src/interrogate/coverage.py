@@ -379,7 +379,7 @@ class InterrogateCoverage:
 
         sorted_results = []
         while all_dirs:
-            current_dir = all_dirs.pop()
+            current_dir = all_dirs.pop(0)
             files = []
             for p in os.listdir(current_dir):
                 path = os.path.join(current_dir, p)

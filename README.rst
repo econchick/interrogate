@@ -78,13 +78,6 @@ Add verbosity to see a summary:
     ------------------------------------ Summary ------------------------------------
     | Name                                  |   Total |   Miss |   Cover |   Cover% |
     |---------------------------------------|---------|--------|---------|----------|
-    | tests/unit/__init__.py                |       1 |      0 |       1 |     100% |
-    | tests/unit/test_badge_gen.py          |       6 |      0 |       6 |     100% |
-    | tests/unit/test_config.py             |       7 |      0 |       7 |     100% |
-    | tests/unit/test_utils.py              |      13 |      0 |      13 |     100% |
-    | tests/functional/__init__.py          |       1 |      0 |       1 |     100% |
-    | tests/functional/test_cli.py          |       7 |      0 |       7 |     100% |
-    | tests/functional/test_coverage.py     |       6 |      0 |       6 |     100% |
     | src/interrogate/__init__.py           |       1 |      0 |       1 |     100% |
     | src/interrogate/__main__.py           |       1 |      0 |       1 |     100% |
     | src/interrogate/badge_gen.py          |       5 |      0 |       5 |     100% |
@@ -93,6 +86,13 @@ Add verbosity to see a summary:
     | src/interrogate/coverage.py           |      25 |      0 |      25 |     100% |
     | src/interrogate/utils.py              |      10 |      0 |      10 |     100% |
     | src/interrogate/visit.py              |      15 |      0 |      15 |     100% |
+    | tests/functional/__init__.py          |       1 |      0 |       1 |     100% |
+    | tests/functional/test_cli.py          |       7 |      0 |       7 |     100% |
+    | tests/functional/test_coverage.py     |       6 |      0 |       6 |     100% |
+    | tests/unit/__init__.py                |       1 |      0 |       1 |     100% |
+    | tests/unit/test_badge_gen.py          |       6 |      0 |       6 |     100% |
+    | tests/unit/test_config.py             |       7 |      0 |       7 |     100% |
+    | tests/unit/test_utils.py              |      13 |      0 |      13 |     100% |
     |---------------------------------------|---------|--------|---------|----------|
     | TOTAL                                 |     106 |      0 |     106 |   100.0% |
     ---------------- RESULT: PASSED (minimum: 80.0%, actual: 100.0%) ----------------
@@ -108,54 +108,6 @@ Add even *more* verbosity:
     ================== Coverage for /Users/lynn/dev/interrogate/ ====================
     ------------------------------- Detailed Coverage -------------------------------
     | Name                                                                |  Status |
-    |---------------------------------------------------------------------|---------|
-    | tests/unit/__init__.py (module)                                     | COVERED |
-    |---------------------------------------------------------------------|---------|
-    | tests/unit/test_badge_gen.py (module)                               | COVERED |
-    |   test_save_badge (L17)                                             | COVERED |
-    |   test_save_badge_windows (L39)                                     | COVERED |
-    |   test_get_badge (L61)                                              | COVERED |
-    |   test_get_color (L73)                                              | COVERED |
-    |   test_create (L90)                                                 | COVERED |
-    |---------------------------------------------------------------------|---------|
-    | tests/unit/test_config.py (module)                                  | COVERED |
-    |   test_find_project_root (L13)                                      | COVERED |
-    |   test_find_pyproject_toml (L40)                                    | COVERED |
-    |   test_parse_pyproject_toml (L53)                                   | COVERED |
-    |   test_read_pyproject_toml_none (L69)                               | COVERED |
-    |   test_read_pyproject_toml (L77)                                    | COVERED |
-    |   test_read_pyproject_toml_raises (L123)                            | COVERED |
-    |---------------------------------------------------------------------|---------|
-    | tests/unit/test_utils.py (module)                                   | COVERED |
-    |   test_parse_regex (L17)                                            | COVERED |
-    |   test_smart_open (L38)                                             | COVERED |
-    |   test_get_common_base (L55)                                        | COVERED |
-    |   test_get_common_base_windows (L77)                                | COVERED |
-    |   test_output_formatter_should_markup (L110)                        | COVERED |
-    |   test_output_formatter_set_detailed_markup (L146)                  | COVERED |
-    |   test_output_formatter_set_summary_markup (L176)                   | COVERED |
-    |   test_output_formatter_interrogate_line_formatter (L219)           | COVERED |
-    |   test_output_formatter_interrogate_line_formatter_windows (L280)   | COVERED |
-    |   test_output_formatter_get_table_formatter (L341)                  | COVERED |
-    |   test_output_formatter_get_table_formatter_py38 (L377)             | COVERED |
-    |   test_output_formatter_get_table_formatter_raises (L395)           | COVERED |
-    |---------------------------------------------------------------------|---------|
-    | tests/functional/__init__.py (module)                               | COVERED |
-    |---------------------------------------------------------------------|---------|
-    | tests/functional/test_cli.py (module)                               | COVERED |
-    |   runner (L20)                                                      | COVERED |
-    |   test_run_no_paths (L26)                                           | COVERED |
-    |   test_run_shortflags (L36)                                         | COVERED |
-    |   test_run_longflags (L73)                                          | COVERED |
-    |   test_run_multiple_flags (L98)                                     | COVERED |
-    |   test_generate_badge (L116)                                        | COVERED |
-    |---------------------------------------------------------------------|---------|
-    | tests/functional/test_coverage.py (module)                          | COVERED |
-    |   test_coverage_simple (L19)                                        | COVERED |
-    |   test_coverage_errors (L55)                                        | COVERED |
-    |   test_print_results (L75)                                          | COVERED |
-    |   test_print_results_ignore_module (L103)                           | COVERED |
-    |   test_print_results_single_file (L139)                             | COVERED |
     |---------------------------------------------------------------------|---------|
     | src/interrogate/__init__.py (module)                                | COVERED |
     |---------------------------------------------------------------------|---------|
@@ -230,17 +182,58 @@ Add even *more* verbosity:
     |     CoverageVisitor.visit_FunctionDef (L180)                        | COVERED |
     |     CoverageVisitor.visit_AsyncFunctionDef (L189)                   | COVERED |
     |---------------------------------------------------------------------|---------|
+    | tests/functional/__init__.py (module)                               | COVERED |
+    |---------------------------------------------------------------------|---------|
+    | tests/functional/test_cli.py (module)                               | COVERED |
+    |   runner (L20)                                                      | COVERED |
+    |   test_run_no_paths (L26)                                           | COVERED |
+    |   test_run_shortflags (L36)                                         | COVERED |
+    |   test_run_longflags (L73)                                          | COVERED |
+    |   test_run_multiple_flags (L98)                                     | COVERED |
+    |   test_generate_badge (L116)                                        | COVERED |
+    |---------------------------------------------------------------------|---------|
+    | tests/functional/test_coverage.py (module)                          | COVERED |
+    |   test_coverage_simple (L19)                                        | COVERED |
+    |   test_coverage_errors (L55)                                        | COVERED |
+    |   test_print_results (L75)                                          | COVERED |
+    |   test_print_results_ignore_module (L103)                           | COVERED |
+    |   test_print_results_single_file (L139)                             | COVERED |
+    |---------------------------------------------------------------------|---------|
+    | tests/unit/__init__.py (module)                                     | COVERED |
+    |---------------------------------------------------------------------|---------|
+    | tests/unit/test_badge_gen.py (module)                               | COVERED |
+    |   test_save_badge (L17)                                             | COVERED |
+    |   test_save_badge_windows (L39)                                     | COVERED |
+    |   test_get_badge (L61)                                              | COVERED |
+    |   test_get_color (L73)                                              | COVERED |
+    |   test_create (L90)                                                 | COVERED |
+    |---------------------------------------------------------------------|---------|
+    | tests/unit/test_config.py (module)                                  | COVERED |
+    |   test_find_project_root (L13)                                      | COVERED |
+    |   test_find_pyproject_toml (L40)                                    | COVERED |
+    |   test_parse_pyproject_toml (L53)                                   | COVERED |
+    |   test_read_pyproject_toml_none (L69)                               | COVERED |
+    |   test_read_pyproject_toml (L77)                                    | COVERED |
+    |   test_read_pyproject_toml_raises (L123)                            | COVERED |
+    |---------------------------------------------------------------------|---------|
+    | tests/unit/test_utils.py (module)                                   | COVERED |
+    |   test_parse_regex (L17)                                            | COVERED |
+    |   test_smart_open (L38)                                             | COVERED |
+    |   test_get_common_base (L55)                                        | COVERED |
+    |   test_get_common_base_windows (L77)                                | COVERED |
+    |   test_output_formatter_should_markup (L110)                        | COVERED |
+    |   test_output_formatter_set_detailed_markup (L146)                  | COVERED |
+    |   test_output_formatter_set_summary_markup (L176)                   | COVERED |
+    |   test_output_formatter_interrogate_line_formatter (L219)           | COVERED |
+    |   test_output_formatter_interrogate_line_formatter_windows (L280)   | COVERED |
+    |   test_output_formatter_get_table_formatter (L341)                  | COVERED |
+    |   test_output_formatter_get_table_formatter_py38 (L377)             | COVERED |
+    |   test_output_formatter_get_table_formatter_raises (L395)           | COVERED |
+    |---------------------------------------------------------------------|---------|
 
     ------------------------------------ Summary ------------------------------------
     | Name                                  |   Total |   Miss |   Cover |   Cover% |
     |---------------------------------------|---------|--------|---------|----------|
-    | tests/unit/__init__.py                |       1 |      0 |       1 |     100% |
-    | tests/unit/test_badge_gen.py          |       6 |      0 |       6 |     100% |
-    | tests/unit/test_config.py             |       7 |      0 |       7 |     100% |
-    | tests/unit/test_utils.py              |      13 |      0 |      13 |     100% |
-    | tests/functional/__init__.py          |       1 |      0 |       1 |     100% |
-    | tests/functional/test_cli.py          |       7 |      0 |       7 |     100% |
-    | tests/functional/test_coverage.py     |       6 |      0 |       6 |     100% |
     | src/interrogate/__init__.py           |       1 |      0 |       1 |     100% |
     | src/interrogate/__main__.py           |       1 |      0 |       1 |     100% |
     | src/interrogate/badge_gen.py          |       5 |      0 |       5 |     100% |
@@ -249,6 +242,13 @@ Add even *more* verbosity:
     | src/interrogate/coverage.py           |      25 |      0 |      25 |     100% |
     | src/interrogate/utils.py              |      10 |      0 |      10 |     100% |
     | src/interrogate/visit.py              |      15 |      0 |      15 |     100% |
+    | tests/functional/__init__.py          |       1 |      0 |       1 |     100% |
+    | tests/functional/test_cli.py          |       7 |      0 |       7 |     100% |
+    | tests/functional/test_coverage.py     |       6 |      0 |       6 |     100% |
+    | tests/unit/__init__.py                |       1 |      0 |       1 |     100% |
+    | tests/unit/test_badge_gen.py          |       6 |      0 |       6 |     100% |
+    | tests/unit/test_config.py             |       7 |      0 |       7 |     100% |
+    | tests/unit/test_utils.py              |      13 |      0 |      13 |     100% |
     |---------------------------------------|---------|--------|---------|----------|
     | TOTAL                                 |     106 |      0 |     106 |   100.0% |
     ---------------- RESULT: PASSED (minimum: 80.0%, actual: 100.0%) ----------------
