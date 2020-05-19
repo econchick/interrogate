@@ -86,6 +86,10 @@ Command Line Options
 
     Read configuration from ``pyproject.toml``.
 
+.. option:: --color, --no-color
+
+  Toggle color output on/off when printing to stdout.  [default: color]
+
 .. option:: -g, --generate-badge PATH
 
     Generate a `shields.io <https://shields.io/>`_ status badge (an SVG image) in at a given file or directory.

@@ -15,6 +15,7 @@ import toml
 class InterrogateConfig:
     """Configuration related to interrogating a given codebase.
 
+    :param bool color: Highlight verbose output with color.
     :param fail_under: Fail when coverage % is less than a given amount.
     :type fail_under: `int` or `float`
     :param str ignore_regex: Regex identifying class, method, and
@@ -32,6 +33,7 @@ class InterrogateConfig:
     :param bool ignore_init_module: Ignore ``__init__.py`` modules.
     """
 
+    color = attr.ib(default=False)
     fail_under = attr.ib(default=80.0)
     ignore_regex = attr.ib(default=False)
     ignore_magic = attr.ib(default=False)

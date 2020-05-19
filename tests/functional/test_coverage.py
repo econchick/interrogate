@@ -82,7 +82,7 @@ def test_coverage_errors(capsys):
 )
 def test_print_results(level, exp_fixture_file, capsys, monkeypatch):
     """Output of test results differ by verbosity."""
-    monkeypatch.setattr(coverage.utils, "TERMINAL_WIDTH", 80)
+    monkeypatch.setattr(coverage.utils.OutputFormatter, "TERMINAL_WIDTH", 80)
 
     interrogate_coverage = coverage.InterrogateCoverage(paths=[SAMPLE_DIR])
     results = interrogate_coverage.get_coverage()
@@ -113,7 +113,7 @@ def test_print_results_ignore_module(
     ignore_module, level, exp_fixture_file, capsys, monkeypatch
 ):
     """Do not print module info if ignore_module is True."""
-    monkeypatch.setattr(coverage.utils, "TERMINAL_WIDTH", 80)
+    monkeypatch.setattr(coverage.utils.OutputFormatter, "TERMINAL_WIDTH", 80)
 
     conf = {"ignore_module": ignore_module}
     conf = config.InterrogateConfig(**conf)
@@ -139,7 +139,7 @@ def test_print_results_ignore_module(
 def test_print_results_single_file(capsys, monkeypatch):
     """Results for a single file should still list the filename."""
 
-    monkeypatch.setattr(coverage.utils, "TERMINAL_WIDTH", 80)
+    monkeypatch.setattr(coverage.utils.OutputFormatter, "TERMINAL_WIDTH", 80)
     single_file = os.path.join(SAMPLE_DIR, "full.py")
     interrogate_coverage = coverage.InterrogateCoverage(paths=[single_file])
     results = interrogate_coverage.get_coverage()

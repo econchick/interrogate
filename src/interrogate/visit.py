@@ -89,8 +89,6 @@ class CoverageVisitor(ast.NodeVisitor):
             parent=parent,
             is_nested_func=self._is_nested(parent, node_type),
         )
-        # if cov_node.nested:
-        # print(f"nested node: {node_name}")
         self.stack.append(cov_node)
         self.nodes.append(cov_node)
 
@@ -99,6 +97,7 @@ class CoverageVisitor(ast.NodeVisitor):
         self.stack.pop()
 
     def _is_nested(self, parent, node_type):
+        """Is node a nested func/method of another func/method."""
         if parent is None:
             return False
         # is it a nested function?

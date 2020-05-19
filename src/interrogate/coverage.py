@@ -9,8 +9,6 @@ import attr
 import click
 import tabulate
 
-from py import io as py_io
-
 from interrogate import config
 from interrogate import utils
 from interrogate import visit
@@ -111,6 +109,7 @@ class InterrogateCoverage:
         self.config = conf or config.InterrogateConfig()
         self.excluded = excluded or ()
         self.common_base = pathlib.Path("/")
+        self.output_formatter = None
         self._add_common_exclude()
 
     def _add_common_exclude(self):
@@ -284,7 +283,7 @@ class InterrogateCoverage:
         verbose_tbl = []
         header = ["Name", "Status"]
         verbose_tbl.append(header)
-        verbose_tbl.append(utils.TABLE_SEPARATOR)
+        verbose_tbl.append(self.output_formatter.TABLE_SEPARATOR)
         for file_result in combined_results.file_results:
             nodes = file_result.nodes
             nodes = sorted(nodes, key=_sort_nodes)
@@ -292,20 +291,26 @@ class InterrogateCoverage:
                 verbose_tbl.append(
                     self._get_detailed_row(n, file_result.filename)
                 )
-            verbose_tbl.append(utils.TABLE_SEPARATOR)
+            verbose_tbl.append(self.output_formatter.TABLE_SEPARATOR)
         return verbose_tbl
 
-    def _print_detailed_table(self, results, tw):
+    def _print_detailed_table(self, results):
         """Print detailed table to the given output stream."""
         detailed_table = self._create_detailed_table(results)
         to_print = tabulate.tabulate(
             detailed_table,
-            tablefmt=utils.InterrogateTableFormat,
+            tablefmt=self.output_formatter.get_table_formatter(
+                table_type="detailed"
+            ),
             colalign=["left", "right"],
         )
-        tw.sep("-", "Detailed Coverage", fullwidth=utils.TERMINAL_WIDTH)
-        tw.line(to_print)
-        tw.line()
+        self.output_formatter.tw.sep(
+            "-",
+            "Detailed Coverage",
+            fullwidth=self.output_formatter.TERMINAL_WIDTH,
+        )
+        self.output_formatter.tw.line(to_print)
+        self.output_formatter.tw.line()
 
     def _create_summary_table(self, combined_results):
         """Generate table for the summary view.
@@ -315,7 +320,7 @@ class InterrogateCoverage:
         table = []
         header = ["Name", "Total", "Miss", "Cover", "Cover%"]
         table.append(header)
-        table.append(utils.TABLE_SEPARATOR)
+        table.append(self.output_formatter.TABLE_SEPARATOR)
 
         for file_result in combined_results.file_results:
             filename = self._get_filename(file_result.filename)
@@ -329,7 +334,7 @@ class InterrogateCoverage:
             ]
             table.append(row)
 
-        table.append(utils.TABLE_SEPARATOR)
+        table.append(self.output_formatter.TABLE_SEPARATOR)
         total_perc_covered = "{:.1f}%".format(combined_results.perc_covered)
         total_row = [
             "TOTAL",
@@ -341,16 +346,22 @@ class InterrogateCoverage:
         table.append(total_row)
         return table
 
-    def _print_summary_table(self, results, tw):
+    def _print_summary_table(self, results):
         """Print summary table to the given output stream."""
         summary_table = self._create_summary_table(results)
-        tw.sep("-", title="Summary", fullwidth=utils.TERMINAL_WIDTH)
+        self.output_formatter.tw.sep(
+            "-",
+            title="Summary",
+            fullwidth=self.output_formatter.TERMINAL_WIDTH,
+        )
         to_print = tabulate.tabulate(
             summary_table,
-            tablefmt=utils.InterrogateTableFormat,
+            tablefmt=self.output_formatter.get_table_formatter(
+                table_type="summary"
+            ),
             colalign=("left", "right", "right", "right", "right"),
         )
-        tw.line(to_print)
+        self.output_formatter.tw.line(to_print)
 
     @staticmethod
     def _sort_results(results):
@@ -368,7 +379,7 @@ class InterrogateCoverage:
 
         sorted_results = []
         while all_dirs:
-            current_dir = all_dirs.pop()
+            current_dir = all_dirs.pop(0)
             files = []
             for p in os.listdir(current_dir):
                 path = os.path.join(current_dir, p)
@@ -384,6 +395,7 @@ class InterrogateCoverage:
         return results
 
     def _get_header_base(self):
+        """Get common base directory for header of verbose output."""
         base = self.common_base
         if os.path.isfile(base):
             base = os.path.dirname(base)
@@ -402,28 +414,38 @@ class InterrogateCoverage:
         :param int verbosity: level of detail to print out (``0``-``2``).
         """
         with utils.smart_open(output, "w") as f:
-            tw = py_io.TerminalWriter(file=f)
+            self.output_formatter = utils.OutputFormatter(
+                file=f, config=self.config
+            )
             results = self._sort_results(results)
             if verbosity > 0:
                 base = self._get_header_base()
-                tw.sep(
+                self.output_formatter.tw.sep(
                     "=",
                     "Coverage for {}".format(base),
-                    fullwidth=utils.TERMINAL_WIDTH,
+                    fullwidth=self.output_formatter.TERMINAL_WIDTH,
                 )
             if verbosity > 1:
-                self._print_detailed_table(results, tw)
+                self._print_detailed_table(results)
             if verbosity > 0:
-                self._print_summary_table(results, tw)
+                self._print_summary_table(results)
 
-            status = "PASSED"
+            status, color = "PASSED", {"green": True}
             if results.ret_code > 0:
-                status = "FAILED"
+                status, color = "FAILED", {"red": True}
+
+            if self.output_formatter.should_markup() is False:
+                color = {}
 
             status_line = "RESULT: {} (minimum: {}%, actual: {:.1f}%)".format(
                 status, self.config.fail_under, results.perc_covered
             )
             if verbosity > 0:
-                tw.sep("-", title=status_line, fullwidth=utils.TERMINAL_WIDTH)
+                self.output_formatter.tw.sep(
+                    "-",
+                    title=status_line,
+                    fullwidth=self.output_formatter.TERMINAL_WIDTH,
+                    **color
+                )
             else:
-                tw.line(status_line)
+                self.output_formatter.tw.line(status_line)

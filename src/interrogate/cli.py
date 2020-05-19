@@ -6,6 +6,8 @@ import sys
 
 import click
 
+import colorama
+
 from interrogate import __version__ as version
 from interrogate import badge_gen
 from interrogate import config
@@ -168,6 +170,14 @@ from interrogate import utils
     help="Read configuration from `pyproject.toml`.",
 )
 @click.option(
+    "--color/--no-color",
+    is_flag=True,
+    default=True,
+    show_default=True,
+    envvar="INTERROGATE_COLOR",
+    help="Toggle color output on/off when printing to stdout.",
+)
+@click.option(
     "-g",
     "--generate-badge",
     type=click.Path(
@@ -207,6 +217,7 @@ def main(paths, **kwargs):
 
     .. versionadded:: 1.1.3 ``--whitelist-regex``
     .. versionadded:: 1.2.0 ``--ignore-nested-functions``
+    .. versionadded:: 1.2.0 ``--color``/``--no-color``
     """
     if not paths:
         paths = (os.path.abspath(os.getcwd()),)
@@ -230,6 +241,7 @@ def main(paths, **kwargs):
         ignore_semiprivate=kwargs["ignore_semiprivate"],
         fail_under=kwargs["fail_under"],
         include_regex=kwargs["whitelist_regex"],
+        color=kwargs["color"],
     )
     interrogate_coverage = coverage.InterrogateCoverage(
         paths=paths, conf=conf, excluded=kwargs["exclude"],
@@ -238,6 +250,7 @@ def main(paths, **kwargs):
 
     is_quiet = kwargs["quiet"]
     if not is_quiet:
+        colorama.init()  # needed for Windows
         interrogate_coverage.print_results(
             results, kwargs["output"], kwargs["verbose"]
         )
