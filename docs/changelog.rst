@@ -10,6 +10,7 @@ Added
 ^^^^^
 
 * Add ``-n`` / ``--ignore-nested-functions`` flag to ignore nested functions and methods (`#11 <https://github.com/econchick/interrogate/issues/11>`_).
+* Add color output for stdout via ``--color``/``--no-color`` (`#25 <https://github.com/econchick/interrogate/issues/25>`_).
 
 .. short-log
 

@@ -68,6 +68,7 @@ CLASSIFIERS = [
 INSTALL_REQUIRES = [
     "attrs",
     "click",
+    "colorama",
     "py",
     "tabulate",
     "toml",

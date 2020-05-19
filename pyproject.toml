@@ -41,3 +41,4 @@ verbose = 0
 quiet = false
 whitelist-regex = []
 ignore-regex = []
+color = true
