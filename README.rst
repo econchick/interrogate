@@ -281,7 +281,7 @@ Or use it with `pre-commit <https://pre-commit.com/>`_:
 
     repos:
       - repo: https://github.com/econchick/interrogate
-        rev: 1.1.5  # or master if you're bold
+        rev: 1.2.0  # or master if you're bold
         hooks:
           - id: interrogate
             args: [--quiet, --fail-under=95]
