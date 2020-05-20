@@ -14,14 +14,13 @@ on:
 
 jobs:
   tests:
-    name: "Python ${{ matrix.python-version }} on ${{ matrix.os }}"
-    runs-on: "${{ matrix.os }}"
+    name: "Python ${{ matrix.python-version }} on Ubuntu"
+    runs-on: "ubuntu-latest"
     env:
-      USING_COVERAGE: '3.7,3.8,ubuntu-latest'
+      USING_COVERAGE: '3.7,3.8'
     strategy:
       matrix:
         python-version: ["3.5", "3.6", "3.7", "3.8"]
-        os: ["ubuntu-latest", "macos-latest"]
     steps:
       - uses: "actions/checkout@v2"
       - uses: "actions/setup-python@v1"
@@ -37,16 +36,15 @@ jobs:
       - name: "Run tox targets for ${{ matrix.python-version }}"
         run: "python -m tox"
       - name: "Upload coverage to Codecov"
-        if: "contains(env.USING_COVERAGE, matrix.python-version) && contains(env.USING_COVERAGE, matrix.os)"
+        if: "contains(env.USING_COVERAGE, matrix.python-version)"
         uses: "codecov/codecov-action@v1"
         with:
           file: ./coverage.xml
           fail_ci_if_error: true
 
   package:
-    name: "Build & verify package"
+    name: "Build & Verify Package on Ubuntu"
     runs-on: "ubuntu-latest"
-
     steps:
       - uses: "actions/checkout@v2"
       - uses: "actions/setup-python@v1"
@@ -62,9 +60,11 @@ jobs:
         run: "python -m twine check dist/*"
 
   install-dev:
-    name: "Verify dev env"
-    runs-on: "ubuntu-latest"  # todo: maybe add windows & mac
-
+    name: "Verify Dev Env on ${{ matrix.os }}"
+    strategy:
+      matrix:
+        os: ["ubuntu-latest", "windows-latest", "macos-latest"]
+    runs-on: "${{ matrix.os }}"
     steps:
       - uses: "actions/checkout@v2"
       - uses: "actions/setup-python@v1"
