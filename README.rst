@@ -393,6 +393,11 @@ To view all options available, run ``interrogate --help``:
 
       -h, --help                     Show this message and exit.
 
+Interrogate with Github Actions
+===============================
+
+``interrogate`` can be integrated into your project CI/CD with GitHub Actions! Check out the Action by `Jack McKew
+<https://github.com/JackMcKew>`_ over at https://github.com/marketplace/actions/python-interrogate-check.
 
 .. start-credits
 
