@@ -43,6 +43,14 @@ from interrogate import utils
     help="Fail when coverage % is less than a given amount.",
 )
 @click.option(
+    "-S",
+    "--skip-covered",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help="Skip files with 100% coverage.",
+)
+@click.option(
     "-e",
     "--exclude",
     multiple=True,
@@ -256,6 +264,7 @@ def main(ctx, paths, **kwargs):
         ignore_regex=kwargs["ignore_regex"],
         ignore_semiprivate=kwargs["ignore_semiprivate"],
         fail_under=kwargs["fail_under"],
+        skip_covered=kwargs["skip_covered"],
         include_regex=kwargs["whitelist_regex"],
         color=kwargs["color"],
     )

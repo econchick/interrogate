@@ -37,6 +37,7 @@ class InterrogateConfig:
 
     color = attr.ib(default=False)
     fail_under = attr.ib(default=80.0)
+    skip_covered = attr.ib(default=False)
     ignore_regex = attr.ib(default=False)
     ignore_magic = attr.ib(default=False)
     ignore_module = attr.ib(default=False)

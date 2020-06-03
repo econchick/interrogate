@@ -318,12 +318,11 @@ class InterrogateCoverage:
 
         The summary view shows coverage for an overall file.
         """
-        table = []
-        header = ["Name", "Total", "Miss", "Cover", "Cover%"]
-        table.append(header)
-        table.append(self.output_formatter.TABLE_SEPARATOR)
-
+        file_rows = []
         for file_result in combined_results.file_results:
+            if self.config.skip_covered and file_result.missing == 0:
+                continue
+
             filename = self._get_filename(file_result.filename)
             perc_covered = "{:.0f}%".format(file_result.perc_covered)
             row = [
@@ -333,12 +332,22 @@ class InterrogateCoverage:
                 file_result.covered,
                 perc_covered,
             ]
-            table.append(row)
+            file_rows.append(row)
 
+        if self.config.skip_covered and not file_rows:
+            return None
+
+        table = []
+        header = ["Name", "Total", "Miss", "Cover", "Cover%"]
+        table.append(header)
+        table.append(self.output_formatter.TABLE_SEPARATOR)
+        table.extend(file_rows)
         table.append(self.output_formatter.TABLE_SEPARATOR)
         total_perc_covered = "{:.1f}%".format(combined_results.perc_covered)
         total_row = [
-            "TOTAL",
+            "TOTAL (including 100% covered)"
+            if self.config.skip_covered
+            else "TOTAL",
             combined_results.total,
             combined_results.missing,
             combined_results.covered,
@@ -350,6 +359,9 @@ class InterrogateCoverage:
     def _print_summary_table(self, results):
         """Print summary table to the given output stream."""
         summary_table = self._create_summary_table(results)
+        if not summary_table:
+            return
+
         self.output_formatter.tw.sep(
             "-",
             title="Summary",

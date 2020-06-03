@@ -4,6 +4,8 @@ Changelog
 1.3.3 (UNRELEASED)
 ------------------
 
+* Add ``-S`` / ``--skip-covered`` flag to skip functions and files which are already fully covered (`#31 <https://github.com/econchick/interrogate/pull/31>`_).
+
 .. short-log
 
 1.3.2 (2020-11-03)

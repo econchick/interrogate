@@ -388,6 +388,9 @@ To view all options available, run ``interrogate --help``:
       -i, --ignore-init-method        Ignore `__init__` method of classes.
                                       [default: False]
 
+      -S, --skip-covered              Skip files with 100% coverage.  [default:
+                                      False]
+
       -I, --ignore-init-module        Ignore `__init__.py` modules.  [default:
                                       False]
 

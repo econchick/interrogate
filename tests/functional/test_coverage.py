@@ -101,6 +101,39 @@ def test_print_results(level, exp_fixture_file, capsys, monkeypatch):
 
 
 @pytest.mark.parametrize(
+    "level,exp_fixture_file",
+    (
+        (0, "expected_no_verbosity.txt"),
+        (1, "expected_summary_skip_covered.txt"),
+        # (2, "expected_detailed_skip_covered.txt"),
+    ),
+)
+def test_print_results_skip_covered(
+    level, exp_fixture_file, capsys, monkeypatch
+):
+    """Output of test results differ by verbosity."""
+    monkeypatch.setattr(coverage.utils.OutputFormatter, "TERMINAL_WIDTH", 80)
+
+    conf = config.InterrogateConfig(skip_covered=True)
+    interrogate_coverage = coverage.InterrogateCoverage(
+        paths=[SAMPLE_DIR], conf=conf
+    )
+    results = interrogate_coverage.get_coverage()
+    interrogate_coverage.print_results(
+        results=results, output=None, verbosity=level
+    )
+
+    captured = capsys.readouterr()
+    expected_fixture = os.path.join(FIXTURES, exp_fixture_file)
+    if IS_WINDOWS:
+        expected_fixture = os.path.join(FIXTURES, "windows", exp_fixture_file)
+    with open(expected_fixture, "r") as f:
+        expected_out = f.read()
+
+    assert expected_out in captured.out
+
+
+@pytest.mark.parametrize(
     "ignore_module,level,exp_fixture_file",
     (
         (False, 2, "expected_detailed.txt"),
