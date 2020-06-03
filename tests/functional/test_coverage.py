@@ -105,7 +105,7 @@ def test_print_results(level, exp_fixture_file, capsys, monkeypatch):
     (
         (0, "expected_no_verbosity.txt"),
         (1, "expected_summary_skip_covered.txt"),
-        # (2, "expected_detailed_skip_covered.txt"),
+        (2, "expected_detailed_skip_covered.txt"),
     ),
 )
 def test_print_results_skip_covered(

@@ -37,6 +37,14 @@ class CovNode:
     node_type = attr.ib()
     is_nested_func = attr.ib()
     _parent = attr.ib()
+    _children = attr.ib(default=attr.Factory(list))
+
+    @property
+    def are_descendants_covered(self):
+        for child in self._children:
+            if not child.covered or not child.are_descendants_covered:
+                return False
+        return True
 
 
 class CoverageVisitor(ast.NodeVisitor):
@@ -101,6 +109,8 @@ class CoverageVisitor(ast.NodeVisitor):
         )
         self.stack.append(cov_node)
         self.nodes.append(cov_node)
+        if parent:
+            parent._children.append(cov_node)
 
         self.generic_visit(node)
 

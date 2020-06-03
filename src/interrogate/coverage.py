@@ -281,23 +281,47 @@ class InterrogateCoverage:
                 lineno = 0
             return lineno
 
+        file_rows = []
+        for file_result in combined_results.file_results:
+            if self.config.skip_covered and file_result.missing == 0:
+                continue
+
+            nodes = file_result.nodes
+            nodes = sorted(nodes, key=_sort_nodes)
+
+            # All nodes covered, skip the  whole file
+            if self.config.skip_covered and all(n.covered for n in nodes):
+                continue
+
+            for n in nodes:
+                if (
+                    self.config.skip_covered
+                    and n.covered
+                    and n.are_descendants_covered
+                ):
+                    continue
+
+                file_rows.append(
+                    self._get_detailed_row(n, file_result.filename)
+                )
+            file_rows.append(self.output_formatter.TABLE_SEPARATOR)
+
+        if self.config.skip_covered and not file_rows:
+            return None
+
         verbose_tbl = []
         header = ["Name", "Status"]
         verbose_tbl.append(header)
         verbose_tbl.append(self.output_formatter.TABLE_SEPARATOR)
-        for file_result in combined_results.file_results:
-            nodes = file_result.nodes
-            nodes = sorted(nodes, key=_sort_nodes)
-            for n in nodes:
-                verbose_tbl.append(
-                    self._get_detailed_row(n, file_result.filename)
-                )
-            verbose_tbl.append(self.output_formatter.TABLE_SEPARATOR)
+        verbose_tbl.extend(file_rows)
         return verbose_tbl
 
     def _print_detailed_table(self, results):
         """Print detailed table to the given output stream."""
         detailed_table = self._create_detailed_table(results)
+        if not detailed_table:
+            return
+
         to_print = tabulate.tabulate(
             detailed_table,
             tablefmt=self.output_formatter.get_table_formatter(
