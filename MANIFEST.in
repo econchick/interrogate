@@ -17,3 +17,6 @@ recursive-include docs *.rst
 recursive-include docs *.css
 recursive-include docs *.html
 prune docs/_build
+
+# Ignore github-related markdown files
+exclude *.md
