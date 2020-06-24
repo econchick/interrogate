@@ -1,0 +1,65 @@
+# Run workflow weekly to make sure interrogate can regularly build in case
+# there are new releases of dependencies. This is the same as main workflow,
+# but (1) coverage isn't uploaded, and (2) `install-dev` job runs onlyy on
+# ubuntu, not all three OS platforms.
+
+name: sanity
+
+# trigger weekly on Monday at 5am UTC (no particular reason why this date/time)
+on:
+  schedule:
+    - cron: "0 5 * * 1"
+
+jobs:
+  tests:
+    name: "Python ${{ matrix.python-version }} on Ubuntu"
+    runs-on: "ubuntu-latest"
+    env:
+      USING_COVERAGE: '3.7,3.8'
+    strategy:
+      matrix:
+        python-version: ["3.5", "3.6", "3.7", "3.8"]
+    steps:
+      - uses: "actions/checkout@v2"
+      - uses: "actions/setup-python@v1"
+        with:
+          python-version: "${{ matrix.python-version }}"
+      - name: "Install dependencies"
+        run: |
+          set -xe
+          python -VV
+          python -m site
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install --upgrade virtualenv tox tox-gh-actions
+      - name: "Run tox targets for ${{ matrix.python-version }}"
+        run: "python -m tox"
+
+  package:
+    name: "Build & Verify Package on Ubuntu"
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/checkout@v2"
+      - uses: "actions/setup-python@v1"
+        with:
+          python-version: "3.8"
+      - name: "Install pep517 and twine"
+        run: "python -m pip install pep517 twine"
+      - name: "Build package"
+        run: "python -m pep517.build --source --binary ."
+      - name: "List result"
+        run: "ls -l dist"
+      - name: "Check long_description"
+        run: "python -m twine check dist/*"
+
+  install-dev:
+    name: "Verify Dev Env on Ubuntu"
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/checkout@v2"
+      - uses: "actions/setup-python@v1"
+        with:
+          python-version: "3.8"
+      - name: "Install in dev mode"
+        run: "python -m pip install -e .[dev]"
+      - name: "Import package"
+        run: "python -c 'import interrogate; print(interrogate.__version__)'"
