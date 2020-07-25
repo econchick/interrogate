@@ -16,6 +16,7 @@ Fixed
 ^^^^^
 
 * Output now alpha-sorts by directory.
+* ``-e`` / ``--exclude`` doesn't error if a non-existent file/directory is passed (`#38 <https://github.com/econchick/interrogate/issues/38>`_).
 
 .. short-log
 

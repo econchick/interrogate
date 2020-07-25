@@ -56,6 +56,8 @@ def test_run_no_paths(runner, monkeypatch, tmpdir):
         (["-w", "^get$"], 50.0, 1),
         # exclude file
         (["-e", os.path.join(SAMPLE_DIR, "partial.py")], 53.1, 1),
+        # exclude file which doesn't exist
+        (["-e", os.path.join(SAMPLE_DIR, "does.not.exist")], 46.2, 1),
         # fail under
         (["-f", "40"], 46.2, 0),
     ),
