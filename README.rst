@@ -321,6 +321,10 @@ Configure within your ``pyproject.toml`` (``interrogate`` will automatically det
     color = true
 
 
+
+Use ``interrogate`` with `GitHub Actions <https://github.com/features/actions>`_! Check out the `action <https://github.com/marketplace/actions/python-interrogate-check>`_ written & maintained by `Jack McKew <https://github.com/JackMcKew>`_ (thank you, Jack!).
+
+
 .. end-readme
 
 To view all options available, run ``interrogate --help``:
