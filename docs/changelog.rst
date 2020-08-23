@@ -8,6 +8,7 @@ Added
 
 * Read configuration from ``pyproject.toml`` by default (`#36 <https://github.com/econchick/interrogate/issues/36>`_).
 * Add ``-P`` / ``--ignore-property-decorators`` flag to ignore methods with property getter/setter decorators (`#37 <https://github.com/econchick/interrogate/issues/37>`_).
+* Add support for read configuration from ``setup.cfg`` (`#35 <https://github.com/econchick/interrogate/issues/35>`_).
 
 Fixed
 ^^^^^

@@ -82,7 +82,7 @@ Add verbosity to see a summary:
     | src/interrogate/__main__.py           |       1 |      0 |       1 |     100% |
     | src/interrogate/badge_gen.py          |       5 |      0 |       5 |     100% |
     | src/interrogate/cli.py                |       2 |      0 |       2 |     100% |
-    | src/interrogate/config.py             |       6 |      0 |       6 |     100% |
+    | src/interrogate/config.py             |       8 |      0 |       8 |     100% |
     | src/interrogate/coverage.py           |      25 |      0 |      25 |     100% |
     | src/interrogate/utils.py              |      10 |      0 |      10 |     100% |
     | src/interrogate/visit.py              |      16 |      0 |      16 |     100% |
@@ -91,11 +91,11 @@ Add verbosity to see a summary:
     | tests/functional/test_coverage.py     |       6 |      0 |       6 |     100% |
     | tests/unit/__init__.py                |       1 |      0 |       1 |     100% |
     | tests/unit/test_badge_gen.py          |       6 |      0 |       6 |     100% |
-    | tests/unit/test_config.py             |       7 |      0 |       7 |     100% |
+    | tests/unit/test_config.py             |      10 |      0 |      10 |     100% |
     | tests/unit/test_utils.py              |      13 |      0 |      13 |     100% |
     |---------------------------------------|---------|--------|---------|----------|
-    | TOTAL                                 |     107 |      0 |     107 |   100.0% |
-    ---------------- RESULT: PASSED (minimum: 80.0%, actual: 100.0%) ----------------
+    | TOTAL                                 |     112 |      0 |     112 |   100.0% |
+    ---------------- RESULT: PASSED (minimum: 95.0%, actual: 100.0%) ----------------
 
 
 Add even *more* verbosity:
@@ -123,11 +123,13 @@ Add even *more* verbosity:
     |   main (L218)                                                       | COVERED |
     |---------------------------------------------------------------------|---------|
     | src/interrogate/config.py (module)                                  | COVERED |
-    |   InterrogateConfig (L16)                                           | COVERED |
-    |   find_project_root (L51)                                           | COVERED |
-    |   find_pyproject_toml (L79)                                         | COVERED |
-    |   parse_pyproject_toml (L86)                                        | COVERED |
-    |   read_pyproject_toml (L102)                                        | COVERED |
+    |   InterrogateConfig (L17)                                           | COVERED |
+    |   find_project_root (L52)                                           | COVERED |
+    |   find_project_config (L80)                                         | COVERED |
+    |   parse_pyproject_toml (L91)                                        | COVERED |
+    |   sanitize_list_values (L107)                                       | COVERED |
+    |   parse_setup_cfg (L130)                                            | COVERED |
+    |   read_config_file (L164)                                           | COVERED |
     |---------------------------------------------------------------------|---------|
     | src/interrogate/coverage.py (module)                                | COVERED |
     |   BaseInterrogateResult (L21)                                       | COVERED |
@@ -210,12 +212,15 @@ Add even *more* verbosity:
     |   test_create (L102)                                                | COVERED |
     |---------------------------------------------------------------------|---------|
     | tests/unit/test_config.py (module)                                  | COVERED |
-    |   test_find_project_root (L28)                                      | COVERED |
-    |   test_find_pyproject_toml (L44)                                    | COVERED |
-    |   test_parse_pyproject_toml (L53)                                   | COVERED |
-    |   test_read_pyproject_toml_none (L69)                               | COVERED |
-    |   test_read_pyproject_toml (L108)                                   | COVERED |
-    |   test_read_pyproject_toml_raises (L123)                            | COVERED |
+    |   test_find_project_root (L29)                                      | COVERED |
+    |   test_find_project_config (L45)                                    | COVERED |
+    |   test_parse_pyproject_toml (L54)                                   | COVERED |
+    |   test_sanitize_list_values (L84)                                   | COVERED |
+    |   test_parse_setup_cfg (L89)                                        | COVERED |
+    |   test_parse_setup_cfg_raises (L114)                                | COVERED |
+    |   test_read_config_file_none (L125)                                 | COVERED |
+    |   test_read_config_file (L184)                                      | COVERED |
+    |   test_read_config_file_raises (L198)                               | COVERED |
     |---------------------------------------------------------------------|---------|
     | tests/unit/test_utils.py (module)                                   | COVERED |
     |   test_parse_regex (L32)                                            | COVERED |
@@ -239,7 +244,7 @@ Add even *more* verbosity:
     | src/interrogate/__main__.py           |       1 |      0 |       1 |     100% |
     | src/interrogate/badge_gen.py          |       5 |      0 |       5 |     100% |
     | src/interrogate/cli.py                |       2 |      0 |       2 |     100% |
-    | src/interrogate/config.py             |       6 |      0 |       6 |     100% |
+    | src/interrogate/config.py             |       8 |      0 |       8 |     100% |
     | src/interrogate/coverage.py           |      25 |      0 |      25 |     100% |
     | src/interrogate/utils.py              |      10 |      0 |      10 |     100% |
     | src/interrogate/visit.py              |      16 |      0 |      16 |     100% |
@@ -248,12 +253,11 @@ Add even *more* verbosity:
     | tests/functional/test_coverage.py     |       6 |      0 |       6 |     100% |
     | tests/unit/__init__.py                |       1 |      0 |       1 |     100% |
     | tests/unit/test_badge_gen.py          |       6 |      0 |       6 |     100% |
-    | tests/unit/test_config.py             |       7 |      0 |       7 |     100% |
+    | tests/unit/test_config.py             |      10 |      0 |      10 |     100% |
     | tests/unit/test_utils.py              |      13 |      0 |      13 |     100% |
     |---------------------------------------|---------|--------|---------|----------|
-    | TOTAL                                 |     107 |      0 |     107 |   100.0% |
-    ---------------- RESULT: PASSED (minimum: 80.0%, actual: 100.0%) ----------------
-
+    | TOTAL                                 |     112 |      0 |     112 |   100.0% |
+    ---------------- RESULT: PASSED (minimum: 95.0%, actual: 100.0%) ----------------
 
 Other Usage
 ===========
@@ -298,6 +302,12 @@ Use it within your code directly:
     InterrogateResults(total=68, covered=65, missing=3)
 
 
+Use ``interrogate`` with `GitHub Actions <https://github.com/features/actions>`_. Check out the `action <https://github.com/marketplace/actions/python-interrogate-check>`_ written & maintained by `Jack McKew <https://github.com/JackMcKew>`_ (thank you, Jack!).
+
+
+Configuration
+=============
+
 Configure within your ``pyproject.toml`` (``interrogate`` will automatically detect a ``pyproject.toml`` file and pick up default values for the command line options):
 
 .. code-block:: console
@@ -323,8 +333,34 @@ Configure within your ``pyproject.toml`` (``interrogate`` will automatically det
     color = true
 
 
+Or configure within your ``setup.cfg`` (``interrogate`` will automatically detect a ``setup.cfg`` file and pick up default values for the command line options):
 
-Use ``interrogate`` with `GitHub Actions <https://github.com/features/actions>`_! Check out the `action <https://github.com/marketplace/actions/python-interrogate-check>`_ written & maintained by `Jack McKew <https://github.com/JackMcKew>`_ (thank you, Jack!).
+.. code-block:: console
+
+    $ interrogate -c setup.cfg [OPTIONS] [PATHS]...
+
+.. code-block:: ini
+
+    [tool:interrogate]
+    ignore-init-method = true
+    ignore-init-module = false
+    ignore-magic = false
+    ignore-semiprivate = false
+    ignore-private = false
+    ignore-property-decorators = false
+    ignore-module = false
+    fail-under = 95
+    exclude = setup.py,docs,build
+    ignore-regex = ^get$,^mock_.*,.*BaseClass.*
+    verbose = 0
+    quiet = false
+    whitelist-regex =
+    color = true
+
+
+.. warning::
+
+    The use of ``setup.cfg`` is not recommended unless for very simple use cases. ``.cfg`` files use a different parser than ``pyproject.toml`` which might cause hard to track down problems. When possible, it is recommended to use ``pyproject.toml`` to define your interrogate configuration.
 
 
 .. end-readme
@@ -403,7 +439,8 @@ To view all options available, run ``interrogate --help``:
                                       image) in at a given file or directory.
 
       -h, --help                      Show this message and exit.
-      -c, --config FILE               Read configuration from `pyproject.toml`.
+      -c, --config FILE               Read configuration from `pyproject.toml` or
+                                      `setup.cfg`.
 
 .. start-credits
 

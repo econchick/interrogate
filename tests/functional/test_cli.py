@@ -23,7 +23,7 @@ def runner(monkeypatch):
     """Click fixture runner"""
     # don't let the tests accidentally bring in the project's own
     # pyproject.toml
-    monkeypatch.setattr(config, "find_pyproject_toml", lambda x: None)
+    monkeypatch.setattr(config, "find_project_config", lambda x: None)
     return testing.CliRunner()
 
 

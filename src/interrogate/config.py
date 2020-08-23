@@ -4,6 +4,7 @@ Configuration-related helpers.
 """
 # Adapted from Black https://github.com/psf/black/blob/master/black.py.
 
+import configparser
 import os
 import pathlib
 
@@ -76,11 +77,15 @@ def find_project_root(srcs):
     return directory
 
 
-def find_pyproject_toml(path_search_start):
+def find_project_config(path_search_start):
     """Find the absolute filepath to a pyproject.toml if it exists."""
     project_root = find_project_root(path_search_start)
     pyproject_toml = project_root / "pyproject.toml"
-    return str(pyproject_toml) if pyproject_toml.is_file() else None
+    if pyproject_toml.is_file():
+        return str(pyproject_toml)
+
+    setup_cfg = project_root / "setup.cfg"
+    return str(setup_cfg) if setup_cfg.is_file() else None
 
 
 def parse_pyproject_toml(path_config):
@@ -99,8 +104,65 @@ def parse_pyproject_toml(path_config):
     }
 
 
-def read_pyproject_toml(ctx, param, value):
-    """Inject configuration from ``pyproject.toml`` into ``ctx``.
+def sanitize_list_values(value):
+    """Parse a string of list items to a Python list.
+
+    This is super hacky...
+
+    :param str value: string-representation of a Python list
+    :return: List of strings
+    :rtype: list
+    """
+    if not value:
+        return []
+
+    if value.startswith("["):
+        value = value[1:]
+    if value.endswith("]"):
+        value = value[:-1]
+    if not value:
+        return []
+
+    raw_values = [v.strip() for v in value.split(",")]
+    return [v.strip('"') for v in raw_values]
+
+
+def parse_setup_cfg(path_config):
+    """Parse ``setup.cfg`` file and return relevant parts for Interrogate.
+
+    This is super hacky...
+
+    :param str path_config: Path to ``setup.cfg`` file.
+    :return: Dictionary representing configuration for Interrogate.
+    :rtype: dict
+    :raise OSError: an I/O-related error when opening ``setup.cfg``.
+    :raise configparser.ConfigParser: unable to load ``setup.cfg``.
+    """
+    cfg = configparser.ConfigParser()
+    cfg.read(path_config)
+
+    try:
+        interrogate_section = cfg["tool:interrogate"]
+    except KeyError:
+        return None
+
+    keys_for_list_values = ["whitelist_regex", "ignore_regex", "exclude"]
+    raw_config = dict(interrogate_section.items())
+    config = {
+        k.replace("--", "").replace("-", "_"): v for k, v in raw_config.items()
+    }
+    for k, v in config.items():
+        if k in keys_for_list_values:
+            config[k] = sanitize_list_values(v)
+        elif v.lower() == "false":
+            config[k] = False
+        elif v.lower() == "true":
+            config[k] = True
+    return config
+
+
+def read_config_file(ctx, param, value):
+    """Inject config from ``pyproject.toml`` or ``setup.py`` into ``ctx``.
 
     These override option defaults, but still respect option values
     provided via the CLI.
@@ -108,29 +170,40 @@ def read_pyproject_toml(ctx, param, value):
     :param click.Context ctx: click command context.
     :param click.Parameter param: click command parameter (in this case,
         ``config`` from ``-c|--config``).
-    :param str value: path to ``pyproject.toml`` file.
+    :param str value: path to ``pyproject.toml`` or ``setup.cfg`` file.
 
-    :return: path to ``pyproject.toml`` file.
+    :return: path to ``pyproject.toml`` or ``setup.cfg`` file.
     :rtype: str
 
-    :raise click.FileError: if ``pyproject.toml`` is not parseable or
-        otherwise not available (i.e. does not exist).
+    :raise click.FileError: if ``pyproject.toml`` or ``setup.cfg`` is not
+        parseable or otherwise not available (i.e. does not exist).
     """
     if not value:
         paths = ctx.params.get("paths")
         if not paths:
             paths = (os.path.abspath(os.getcwd()),)
-        value = find_pyproject_toml(paths)
+        value = find_project_config(paths)
         if value is None:
             return None
 
-    try:
-        config = parse_pyproject_toml(value)
-    except (toml.TomlDecodeError, OSError) as e:
-        raise click.FileError(
-            filename=value,
-            hint="Error reading configuration file: {}".format(e),
-        )
+    config = None
+    if value.endswith(".toml"):
+        try:
+            config = parse_pyproject_toml(value)
+        except (toml.TomlDecodeError, OSError) as e:
+            raise click.FileError(
+                filename=value,
+                hint="Error reading configuration file: {}".format(e),
+            )
+
+    elif value.endswith(".cfg"):
+        try:
+            config = parse_setup_cfg(value)
+        except configparser.ParsingError as e:
+            raise click.FileError(
+                filename=value,
+                hint="Error reading configuration file: {}".format(e),
+            )
 
     if not config:
         return None
