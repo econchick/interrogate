@@ -7,6 +7,7 @@ Added
 ^^^^^
 
 * Read configuration from ``pyproject.toml`` by default (`#36 <https://github.com/econchick/interrogate/issues/36>`_).
+* ``-e`` / ``--exclude`` doesn't error if a non-existent file/directory is passed (`#38 <https://github.com/econchick/interrogate/issues/38>`_ - thank you `MarcoGorelli <https://github.com/MarcoGorelli>`_!).
 
 .. short-log
 
@@ -23,7 +24,6 @@ Fixed
 ^^^^^
 
 * Output now alpha-sorts by directory.
-* ``-e`` / ``--exclude`` doesn't error if a non-existent file/directory is passed (`#38 <https://github.com/econchick/interrogate/issues/38>`_).
 
 .. short-log
 
