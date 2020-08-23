@@ -9,6 +9,7 @@ import pytest
 from click import testing
 
 from interrogate import cli
+from interrogate import config
 
 
 HERE = os.path.abspath(os.path.join(os.path.abspath(__file__), os.path.pardir))
@@ -18,8 +19,11 @@ IS_WINDOWS = sys.platform in ("cygwin", "win32")
 
 
 @pytest.fixture
-def runner():
+def runner(monkeypatch):
     """Click fixture runner"""
+    # don't let the tests accidentally bring in the project's own
+    # pyproject.toml
+    monkeypatch.setattr(config, "find_pyproject_toml", lambda x: None)
     return testing.CliRunner()
 
 

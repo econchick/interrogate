@@ -160,16 +160,6 @@ from interrogate import utils
     help="Write output to a given FILE.  [default: stdout]",
 )
 @click.option(
-    "-c",
-    "--config",
-    type=click.Path(
-        exists=False, file_okay=True, dir_okay=False, readable=True
-    ),
-    is_eager=True,
-    callback=config.read_pyproject_toml,
-    help="Read configuration from `pyproject.toml`.",
-)
-@click.option(
     "--color/--no-color",
     is_flag=True,
     default=True,
@@ -204,9 +194,21 @@ from interrogate import utils
         readable=True,
         resolve_path=True,
     ),
+    is_eager=True,
     nargs=-1,
 )
-def main(paths, **kwargs):
+@click.option(
+    "-c",
+    "--config",
+    type=click.Path(
+        exists=False, file_okay=True, dir_okay=False, readable=True
+    ),
+    is_eager=True,
+    callback=config.read_pyproject_toml,
+    help="Read configuration from `pyproject.toml`.",
+)
+@click.pass_context
+def main(ctx, paths, **kwargs):
     """Measure and report on documentation coverage in Python modules.
 
     \f

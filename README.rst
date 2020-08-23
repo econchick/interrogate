@@ -297,7 +297,7 @@ Use it within your code directly:
     InterrogateResults(total=68, covered=65, missing=3)
 
 
-Configure within your ``pyproject.toml``:
+Configure within your ``pyproject.toml`` (``interrogate`` will automatically detect a ``pyproject.toml`` file and pick up default values for the command line options):
 
 .. code-block:: console
 
