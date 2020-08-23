@@ -66,6 +66,10 @@ Command Line Options
 
     NOTE: This does not include magic methods; use ``--ignore-magic`` and/or ``--ignore-init-method`` instead.
 
+.. option:: -P, --ignore-property-decorators
+
+    Ignore methods with property setter/getter decorators.  [default: ``False``]
+
 .. option:: -s, --ignore-semiprivate
 
     Ignore semiprivate classes, methods, and functions starting with a single underscore. [default: ``False``]

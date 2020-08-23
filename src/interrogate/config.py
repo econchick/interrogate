@@ -44,6 +44,7 @@ class InterrogateConfig:
     ignore_init_method = attr.ib(default=False)
     ignore_init_module = attr.ib(default=False)
     ignore_nested_functions = attr.ib(default=False)
+    ignore_property_decorators = attr.ib(default=False)
     include_regex = attr.ib(default=False)
 
 

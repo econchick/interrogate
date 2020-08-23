@@ -33,6 +33,16 @@ class Foo(object):
         """this async method gets something"""
         pass
 
+    @property
+    def prop(self):
+        """this method has a get property decorator"""
+        pass
+
+    @prop.setter
+    def prop(self):
+        """this method has a set property decorator"""
+        pass
+
 
 def top_level_func():
     """A top level function"""

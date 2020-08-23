@@ -7,6 +7,10 @@ Added
 ^^^^^
 
 * Read configuration from ``pyproject.toml`` by default (`#36 <https://github.com/econchick/interrogate/issues/36>`_).
+* Add ``-P`` / ``--ignore-property-decorators`` flag to ignore methods with property getter/setter decorators (`#37 <https://github.com/econchick/interrogate/issues/37>`_).
+
+Fixed
+^^^^^
 * ``-e`` / ``--exclude`` doesn't error if a non-existent file/directory is passed (`#38 <https://github.com/econchick/interrogate/issues/38>`_ - thank you `MarcoGorelli <https://github.com/MarcoGorelli>`_!).
 
 .. short-log
