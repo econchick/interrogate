@@ -1,6 +1,13 @@
 Changelog
 =========
 
+1.3.0 (UNRELEASED)
+
+Added
+^^^^^
+
+* Read configuration from ``pyproject.toml`` by default (`#36 <https://github.com/econchick/interrogate/issues/36>`_).
+
 .. short-log
 
 1.2.0 (2020-05-19)

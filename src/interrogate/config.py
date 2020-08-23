@@ -4,6 +4,7 @@ Configuration-related helpers.
 """
 # Adapted from Black https://github.com/psf/black/blob/master/black.py.
 
+import os
 import pathlib
 
 import attr
@@ -114,9 +115,11 @@ def read_pyproject_toml(ctx, param, value):
     :raise click.FileError: if ``pyproject.toml`` is not parseable or
         otherwise not available (i.e. does not exist).
     """
-    assert not isinstance(value, (int, bool)), "Invalid parameter type passed"
     if not value:
-        value = find_pyproject_toml(ctx.params.get("paths", ()))
+        paths = ctx.params.get("paths")
+        if not paths:
+            paths = (os.path.abspath(os.getcwd()),)
+        value = find_pyproject_toml(paths)
         if value is None:
             return None
 

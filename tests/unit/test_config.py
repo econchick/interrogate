@@ -122,12 +122,6 @@ def test_read_pyproject_toml(
 
 def test_read_pyproject_toml_raises(mocker, monkeypatch):
     """Handle expected exceptions while reading pyproject.toml, if any."""
-    with pytest.raises(AssertionError, match="Invalid parameter type passed"):
-        config.read_pyproject_toml({}, "foo", True)
-
-    with pytest.raises(AssertionError, match="Invalid parameter type passed"):
-        config.read_pyproject_toml({}, "foo", 123)
-
     toml_error = toml.TomlDecodeError("toml error", doc="foo", pos=0)
     os_error = OSError("os error")
     mock_parse_pyproject_toml = mocker.Mock()
