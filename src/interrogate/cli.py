@@ -47,7 +47,6 @@ from interrogate import utils
     "--exclude",
     multiple=True,
     type=click.Path(
-        exists=True,
         file_okay=True,
         dir_okay=True,
         writable=False,
