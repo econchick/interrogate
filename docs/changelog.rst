@@ -1,7 +1,9 @@
 Changelog
 =========
 
-1.3.0 (UNRELEASED)
+.. short-log
+
+1.3.0 (2020-08-23)
 
 Added
 ^^^^^
@@ -29,9 +31,6 @@ Fixed
 ^^^^^
 
 * Output now alpha-sorts by directory.
-
-.. short-log
-
 
 1.1.5 (2020-05-12)
 ------------------
