@@ -88,7 +88,7 @@ Command Line Options
 
 .. option:: -c, --config FILE
 
-    Read configuration from ``pyproject.toml``.
+    Read configuration from ``pyproject.toml`` or ``setup.cfg``.
 
 .. option:: --color, --no-color
 

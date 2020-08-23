@@ -211,8 +211,8 @@ from interrogate import utils
         exists=False, file_okay=True, dir_okay=False, readable=True
     ),
     is_eager=True,
-    callback=config.read_pyproject_toml,
-    help="Read configuration from `pyproject.toml`.",
+    callback=config.read_config_file,
+    help="Read configuration from `pyproject.toml` or `setup.cfg`.",
 )
 @click.pass_context
 def main(ctx, paths, **kwargs):
@@ -228,6 +228,7 @@ def main(ctx, paths, **kwargs):
     .. versionadded:: 1.2.0 ``--ignore-nested-functions``
     .. versionadded:: 1.2.0 ``--color``/``--no-color``
     .. versionadded:: 1.3.0 ``--ignore-property-decorators``
+    .. versionadded:: 1.3.0 config parsing support for setup.cfg
     """
     if not paths:
         paths = (os.path.abspath(os.getcwd()),)
