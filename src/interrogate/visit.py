@@ -3,8 +3,12 @@
 
 import ast
 import os
+import sys
 
 import attr
+
+
+PY_38_HIGHER = sys.version_info >= (3, 8)
 
 
 @attr.s(eq=False)
@@ -77,6 +81,12 @@ class CoverageVisitor(ast.NodeVisitor):
         lineno = None
         if hasattr(node, "lineno"):
             lineno = node.lineno
+            # Python 3.8+ fixed the line number calc for decorated functions;
+            # previously the AST node would report the line number of the
+            # decorator, not the obj itself. We're going to try and back-port.
+            if not PY_38_HIGHER:
+                if hasattr(node, "decorator_list"):
+                    lineno += len(node.decorator_list)
 
         node_type = type(node).__name__
         cov_node = CovNode(
@@ -140,6 +150,20 @@ class CoverageVisitor(ast.NodeVisitor):
                     return True
         return False
 
+    def _has_property_decorators(self, node):
+        """Detect if node has property get/setter decorators."""
+        if not hasattr(node, "decorator_list"):
+            return False
+
+        for dec in node.decorator_list:
+            if hasattr(dec, "id"):
+                if dec.id == "property":
+                    return True
+            if hasattr(dec, "attr"):
+                if dec.attr == "setter":
+                    return True
+        return False
+
     def _is_func_ignored(self, node):
         """Should the AST visitor ignore this func/method node."""
         is_init = node.name == "__init__"
@@ -150,11 +174,15 @@ class CoverageVisitor(ast.NodeVisitor):
                 node.name != "__init__",
             ]
         )
+        has_property_decorators = self._has_property_decorators(node)
 
         if self.config.ignore_init_method and is_init:
             return True
         if self.config.ignore_magic and is_magic:
             return True
+        if self.config.ignore_property_decorators and has_property_decorators:
+            return True
+
         return self._is_ignored_common(node)
 
     def _is_class_ignored(self, node):

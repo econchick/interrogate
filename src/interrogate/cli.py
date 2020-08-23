@@ -111,10 +111,18 @@ from interrogate import utils
     show_default=False,
     help=(
         "Ignore private classes, methods, and functions starting with two "
-        "underscores.  [default:False]"
+        "underscores.  [default: False]"
         "\n\nNOTE: This does not include magic methods; use `--ignore-magic` "
         "and/or `--ignore-init-method` instead."
     ),
+)
+@click.option(
+    "-P",
+    "--ignore-property-decorators",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help="Ignore methods with property setter/getter decorators.",
 )
 @click.option(
     "-s",
@@ -219,6 +227,7 @@ def main(ctx, paths, **kwargs):
     .. versionadded:: 1.1.3 ``--whitelist-regex``
     .. versionadded:: 1.2.0 ``--ignore-nested-functions``
     .. versionadded:: 1.2.0 ``--color``/``--no-color``
+    .. versionadded:: 1.3.0 ``--ignore-property-decorators``
     """
     if not paths:
         paths = (os.path.abspath(os.getcwd()),)
@@ -237,6 +246,7 @@ def main(ctx, paths, **kwargs):
         ignore_magic=kwargs["ignore_magic"],
         ignore_module=kwargs["ignore_module"],
         ignore_nested_functions=kwargs["ignore_nested_functions"],
+        ignore_property_decorators=kwargs["ignore_property_decorators"],
         ignore_private=kwargs["ignore_private"],
         ignore_regex=kwargs["ignore_regex"],
         ignore_semiprivate=kwargs["ignore_semiprivate"],

@@ -10,13 +10,15 @@
 |     Foo.method_foo (L24)                                        |   COVERED |
 |     Foo.get (L28)                                               |   COVERED |
 |     Foo.get (L32)                                               |   COVERED |
-|   top_level_func (L37)                                          |   COVERED |
-|     top_level_func.inner_func (L40)                             |   COVERED |
-|   Bar (L45)                                                     |   COVERED |
-|     Bar.method_bar (L48)                                        |   COVERED |
-|       Bar.method_bar.InnerBar (L51)                             |   COVERED |
-|   _SemiprivateClass (L57)                                       |   COVERED |
-|   __PrivateClass (L63)                                          |   COVERED |
+|     Foo.prop (L37)                                              |   COVERED |
+|     Foo.prop (L42)                                              |   COVERED |
+|   top_level_func (L47)                                          |   COVERED |
+|     top_level_func.inner_func (L50)                             |   COVERED |
+|   Bar (L55)                                                     |   COVERED |
+|     Bar.method_bar (L58)                                        |   COVERED |
+|       Bar.method_bar.InnerBar (L61)                             |   COVERED |
+|   _SemiprivateClass (L67)                                       |   COVERED |
+|   __PrivateClass (L73)                                          |   COVERED |
 |-----------------------------------------------------------------|-----------|
 | partial.py                                                      |           |
 |   Foo (L5)                                                      |   COVERED |
@@ -29,15 +31,17 @@
 |     Foo.method_foo (L29)                                        |    MISSED |
 |     Foo.get (L32)                                               |    MISSED |
 |     Foo.get (L35)                                               |    MISSED |
-|   documented_top_level_func (L39)                               |   COVERED |
-|     documented_top_level_func.documented_inner_func (L42)       |   COVERED |
-|   undocumented_top_level_func (L47)                             |    MISSED |
-|     undocumented_top_level_func.undocumented_inner_func (L48)   |    MISSED |
-|   Bar (L52)                                                     |    MISSED |
-|     Bar.method_bar (L53)                                        |    MISSED |
-|       Bar.method_bar.InnerBar (L54)                             |    MISSED |
-|   _SemiprivateClass (L58)                                       |    MISSED |
-|   __PrivateClass (L62)                                          |    MISSED |
+|     Foo.a_prop (L39)                                            |    MISSED |
+|     Foo.a_prop (L43)                                            |    MISSED |
+|   documented_top_level_func (L47)                               |   COVERED |
+|     documented_top_level_func.documented_inner_func (L50)       |   COVERED |
+|   undocumented_top_level_func (L55)                             |    MISSED |
+|     undocumented_top_level_func.undocumented_inner_func (L56)   |    MISSED |
+|   Bar (L60)                                                     |    MISSED |
+|     Bar.method_bar (L61)                                        |    MISSED |
+|       Bar.method_bar.InnerBar (L62)                             |    MISSED |
+|   _SemiprivateClass (L66)                                       |    MISSED |
+|   __PrivateClass (L70)                                          |    MISSED |
 |-----------------------------------------------------------------|-----------|
 | child_sample\child_sample_module.py                             |           |
 |   ChildFoo (L5)                                                 |    MISSED |

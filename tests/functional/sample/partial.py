@@ -35,6 +35,14 @@ class Foo(object):
     async def get(self):
         pass
 
+    @property
+    def a_prop(self):
+        pass
+
+    @a_prop.setter
+    def a_prop(self, x):
+        pass
+
 
 def documented_top_level_func():
     """A documented top level function"""
