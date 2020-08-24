@@ -4,6 +4,8 @@
 import os
 import sys
 
+from pathlib import Path
+
 import pytest
 
 from interrogate import badge_gen
@@ -14,48 +16,75 @@ FIXTURES = os.path.join(HERE, "fixtures")
 IS_WINDOWS = sys.platform in ("cygwin", "win32")
 
 
-@pytest.mark.skipif(IS_WINDOWS, reason="unix-only tests")
-@pytest.mark.parametrize(
-    "output,is_dir,expected",
-    (
-        ("foo/bar", True, "foo/bar/interrogate_badge.svg"),
-        ("foo/bar/my_badge.svg", False, "foo/bar/my_badge.svg"),
-    ),
-)
-def test_save_badge(output, is_dir, expected, mocker, monkeypatch):
-    """Badge is saved in the expected location."""
-    monkeypatch.setattr(badge_gen.os.path, "isdir", lambda x: is_dir)
-
-    mock_open = mocker.mock_open()
-    m = mocker.patch("interrogate.badge_gen.open", mock_open)
-
+def body_test_save_badge(
+    output, expected, file_exists, expected_read, mocker, monkeypatch,
+):
+    """Function body of test_save_badge and test_save_badge_windows"""
+    monkeypatch.setattr(Path, "is_file", lambda x: file_exists)
+    mock_read_text = mocker.Mock(return_value=expected_read)
+    monkeypatch.setattr(Path, "read_text", mock_read_text)
+    mock_write_text = mocker.Mock(return_value=None)
+    monkeypatch.setattr(Path, "write_text", mock_write_text)
     badge_contents = "<svg>foo</svg>"
-
     actual = badge_gen.save_badge(badge_contents, output)
     assert expected == actual
-    m.assert_called_once_with(expected, "w")
+
+    if file_exists:
+        mock_read_text.assert_called_once_with(encoding="utf8")
+        if expected_read == badge_contents:
+            mock_write_text.assert_not_called()
+        else:
+            mock_write_text.assert_called_once_with(
+                badge_contents, encoding="utf8"
+            )
+
+    else:
+        mock_read_text.assert_not_called()
+        mock_write_text.assert_called_once_with(
+            badge_contents, encoding="utf8"
+        )
+
+
+@pytest.mark.skipif(IS_WINDOWS, reason="unix-only tests")
+@pytest.mark.parametrize(
+    "expected_read", ["<svg>foo</svg>", "<svg>foo2</svg>"]
+)
+@pytest.mark.parametrize("file_exists", [True, False])
+@pytest.mark.parametrize(
+    "output,expected",
+    (
+        ("foo/bar", "foo/bar/interrogate_badge.svg"),
+        ("foo/bar/my_badge.svg", "foo/bar/my_badge.svg"),
+    ),
+)
+def test_save_badge(
+    output, expected, file_exists, expected_read, mocker, monkeypatch
+):
+    """Badge is saved in the expected location."""
+    body_test_save_badge(
+        output, expected, file_exists, expected_read, mocker, monkeypatch
+    )
 
 
 @pytest.mark.skipif(not IS_WINDOWS, reason="windows-only tests")
 @pytest.mark.parametrize(
-    "output,is_dir,expected",
+    "expected_read", ["<svg>foo</svg>", "<svg>foo2</svg>"]
+)
+@pytest.mark.parametrize("file_exists", [True, False])
+@pytest.mark.parametrize(
+    "output,expected",
     (
-        ("C:\\foo\\bar", True, "C:\\foo\\bar\\interrogate_badge.svg"),
-        ("C:\\foo\\bar\\my_badge.svg", False, "C:\\foo\\bar\\my_badge.svg"),
+        ("C:\\foo\\bar", "C:\\foo\\bar\\interrogate_badge.svg"),
+        ("C:\\foo\\bar\\my_badge.svg", "C:\\foo\\bar\\my_badge.svg"),
     ),
 )
-def test_save_badge_windows(output, is_dir, expected, mocker, monkeypatch):
+def test_save_badge_windows(
+    output, expected, file_exists, expected_read, mocker, monkeypatch
+):
     """Badge is saved in the expected location."""
-    monkeypatch.setattr(badge_gen.os.path, "isdir", lambda x: is_dir)
-
-    mock_open = mocker.mock_open()
-    m = mocker.patch("interrogate.badge_gen.open", mock_open)
-
-    badge_contents = "<svg>foo</svg>"
-
-    actual = badge_gen.save_badge(badge_contents, output)
-    assert expected == actual
-    m.assert_called_once_with(expected, "w")
+    body_test_save_badge(
+        output, expected, file_exists, expected_read, mocker, monkeypatch
+    )
 
 
 def test_get_badge():

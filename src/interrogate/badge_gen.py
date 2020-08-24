@@ -6,7 +6,11 @@ Inspired by `coverage-badge <https://github.com/dbrgn/coverage-badge>`_.
 
 import os
 
+from pathlib import Path
+
 import pkg_resources
+
+from interrogate.utils import multiline_str_is_equal
 
 
 DEFAULT_FILENAME = "interrogate_badge.svg"
@@ -38,13 +42,17 @@ def save_badge(badge, output):
     :return: path to output badge file.
     :rtype: str
     """
-    if os.path.isdir(output):
-        output = os.path.join(output, DEFAULT_FILENAME)
+    badge_path = Path(output)
+    if not badge_path.suffixes:
+        badge_path = badge_path / DEFAULT_FILENAME
+    if not badge_path.is_file():
+        badge_path.write_text(badge, encoding="utf8")
+    elif not multiline_str_is_equal(
+        badge_path.read_text(encoding="utf8"), badge
+    ):
+        badge_path.write_text(badge, encoding="utf8")
 
-    with open(output, "w") as f:
-        f.write(badge)
-
-    return output
+    return str(badge_path)
 
 
 def get_badge(result, color):
