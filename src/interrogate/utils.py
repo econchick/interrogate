@@ -19,6 +19,20 @@ import colorama
 IS_WINDOWS = sys.platform == "win32"
 
 
+def multiline_str_is_equal(lhs, rhs):
+    """Checks multiline string equality idependent of lineending.
+
+    :param str lhs: Left hand side string.
+    :param str rhs: Right hand side string.
+
+    :return: Whether or not the strings are equal.
+    :rtype: bool
+    """
+    lhs = lhs.replace("\n", "").replace("\r", "")
+    rhs = rhs.replace("\n", "").replace("\r", "")
+    return lhs == rhs
+
+
 def parse_regex(ctx, param, values):
     """Compile a regex if given.
 

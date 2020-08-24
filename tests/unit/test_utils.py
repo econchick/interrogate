@@ -15,6 +15,17 @@ IS_PY38 = sys.version_info >= (3, 8)
 
 
 @pytest.mark.parametrize(
+    "lhs", ["foobar", "foo\nbar", "foo\rbar", "foo\r\nbar"]
+)
+@pytest.mark.parametrize(
+    "rhs", ["foobar", "foo\nbar", "foo\rbar", "foo\r\nbar"]
+)
+def test_multiline_str_is_equal(lhs, rhs):
+    assert utils.multiline_str_is_equal(lhs, rhs)
+    assert not utils.multiline_str_is_equal(lhs, rhs + "baz")
+
+
+@pytest.mark.parametrize(
     "value,exp",
     (
         # no regex given
