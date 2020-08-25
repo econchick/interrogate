@@ -1,7 +1,6 @@
 # Copyright 2020 Lynn Root
 """Unit tests for interrogate/badge_gen.py module"""
 
-import os
 import sys
 
 from pathlib import Path
@@ -9,10 +8,11 @@ from pathlib import Path
 import pytest
 
 from interrogate import badge_gen
+from interrogate.utils import multiline_str_is_equal
 
 
-HERE = os.path.abspath(os.path.join(os.path.abspath(__file__), os.path.pardir))
-FIXTURES = os.path.join(HERE, "fixtures")
+HERE = Path(__file__).absolute().parent
+FIXTURES = HERE / "fixtures"
 IS_WINDOWS = sys.platform in ("cygwin", "win32")
 
 
@@ -90,13 +90,11 @@ def test_save_badge_windows(
 def test_get_badge():
     """SVG badge is templated as expected."""
     actual = badge_gen.get_badge(99.9, "#4c1")
-    actual = actual.replace("\n", "").replace("\r", "")
-    expected_fixture = os.path.join(FIXTURES, "99.svg")
-    with open(expected_fixture, "r") as f:
-        expected = f.read()
-        expected = expected.replace("\n", "").replace("\r", "")
 
-    assert expected == actual
+    expected_fixture = FIXTURES / "99.svg"
+    expected = expected_fixture.read_text()
+
+    assert multiline_str_is_equal(expected, actual)
 
 
 @pytest.mark.parametrize(
@@ -132,14 +130,9 @@ def test_create(result, expected_fixture, mocker, monkeypatch, tmpdir):
     """Status badges are created according to interrogation results."""
     mock_result = mocker.Mock(perc_covered=result)
     actual = badge_gen.create(str(tmpdir), mock_result)
+    actual_contents = Path(actual).read_text()
 
-    with open(actual, "r") as f:
-        actual_contents = f.read()
-        actual_contents = actual_contents.replace("\n", "")
+    expected_fixture = FIXTURES / expected_fixture
+    expected_contents = expected_fixture.read_text()
 
-    expected_fixture = os.path.join(FIXTURES, expected_fixture)
-    with open(expected_fixture, "r") as f:
-        expected_contents = f.read()
-        expected_contents = expected_contents.replace("\n", "")
-
-    assert expected_contents == actual_contents
+    assert multiline_str_is_equal(expected_contents, actual_contents)
