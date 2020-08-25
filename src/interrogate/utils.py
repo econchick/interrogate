@@ -27,6 +27,8 @@ def multiline_str_is_equal(lhs, rhs):
 
     :return: Whether or not the strings are equal.
     :rtype: bool
+
+    .. versionadded:: 1.4.0
     """
     lhs = lhs.replace("\n", "").replace("\r", "")
     rhs = rhs.replace("\n", "").replace("\r", "")

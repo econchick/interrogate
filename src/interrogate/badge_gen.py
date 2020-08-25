@@ -39,8 +39,11 @@ def save_badge(badge, output):
 
     :param str badge: SVG contents of badge.
     :param str output: path to output badge file.
+
     :return: path to output badge file.
     :rtype: str
+
+    .. versionchanged:: 1.4.0 Badge only is written if content changes.
     """
     badge_path = Path(output)
     if not badge_path.suffixes:
