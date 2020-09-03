@@ -436,7 +436,10 @@ To view all options available, run ``interrogate --help``:
                                       stdout.  [default: True]
 
       -g, --generate-badge PATH       Generate a 'shields.io' status badge (an SVG
-                                      image) in at a given file or directory.
+                                      image) in at a given file or directory. Will
+                                      not generate a badge if results did not
+                                      change from an existing badge of the same
+                                      path.
 
       -h, --help                      Show this message and exit.
       -c, --config FILE               Read configuration from `pyproject.toml` or
