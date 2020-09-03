@@ -1,7 +1,9 @@
 Changelog
 =========
 
-1.3.1 (UNRELEASED)
+.. short-log
+
+1.3.1 (2020-09-03)
 ------------------
 
 Fixed
@@ -24,8 +26,6 @@ Added
 Fixed
 ^^^^^
 * ``-e`` / ``--exclude`` doesn't error if a non-existent file/directory is passed (`#38 <https://github.com/econchick/interrogate/issues/38>`_ - thank you `MarcoGorelli <https://github.com/MarcoGorelli>`_!).
-
-.. short-log
 
 1.2.0 (2020-05-19)
 ------------------
