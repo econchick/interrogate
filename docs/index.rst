@@ -96,7 +96,9 @@ Command Line Options
 
 .. option:: -g, --generate-badge PATH
 
-    Generate a `shields.io <https://shields.io/>`_ status badge (an SVG image) in at a given file or directory.
+    Generate a `shields.io <https://shields.io/>`_ status badge (an SVG image) in at a given file
+    or directory. Will not generate a badge if results did not change from an existing badge of
+    the same path.
 
 
 .. include:: ../README.rst

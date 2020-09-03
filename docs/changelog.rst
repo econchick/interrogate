@@ -1,6 +1,14 @@
 Changelog
 =========
 
+1.3.1 (UNRELEASED)
+------------------
+
+Fixed
+^^^^^
+
+* Only generate a status badge if results have changed from an existing badge (`#40 <https://github.com/econchick/interrogate/issues/40>`_).
+
 .. short-log
 
 1.3.0 (2020-08-23)

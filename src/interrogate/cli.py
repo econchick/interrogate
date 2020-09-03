@@ -187,7 +187,8 @@ from interrogate import utils
     default=None,
     help=(
         "Generate a 'shields.io' status badge (an SVG image) in at a given "
-        "file or directory."
+        "file or directory. Will not generate a badge if results did not "
+        "change from an existing badge of the same path."
     ),
 )
 @click.help_option("-h", "--help")
@@ -229,6 +230,9 @@ def main(ctx, paths, **kwargs):
     .. versionadded:: 1.2.0 ``--color``/``--no-color``
     .. versionadded:: 1.3.0 ``--ignore-property-decorators``
     .. versionadded:: 1.3.0 config parsing support for setup.cfg
+
+    .. versionchanged:: 1.3.1 only generate badge if results change from
+        an existing badge.
     """
     if not paths:
         paths = (os.path.abspath(os.getcwd()),)

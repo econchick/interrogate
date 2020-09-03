@@ -15,47 +15,29 @@ IS_WINDOWS = sys.platform in ("cygwin", "win32")
 
 
 @pytest.mark.skipif(IS_WINDOWS, reason="unix-only tests")
-@pytest.mark.parametrize(
-    "output,is_dir,expected",
-    (
-        ("foo/bar", True, "foo/bar/interrogate_badge.svg"),
-        ("foo/bar/my_badge.svg", False, "foo/bar/my_badge.svg"),
-    ),
-)
-def test_save_badge(output, is_dir, expected, mocker, monkeypatch):
+def test_save_badge(mocker):
     """Badge is saved in the expected location."""
-    monkeypatch.setattr(badge_gen.os.path, "isdir", lambda x: is_dir)
-
     mock_open = mocker.mock_open()
     m = mocker.patch("interrogate.badge_gen.open", mock_open)
-
+    output = "foo/bar/my_badge.svg"
     badge_contents = "<svg>foo</svg>"
 
     actual = badge_gen.save_badge(badge_contents, output)
-    assert expected == actual
-    m.assert_called_once_with(expected, "w")
+    assert output == actual
+    m.assert_called_once_with(output, "w")
 
 
 @pytest.mark.skipif(not IS_WINDOWS, reason="windows-only tests")
-@pytest.mark.parametrize(
-    "output,is_dir,expected",
-    (
-        ("C:\\foo\\bar", True, "C:\\foo\\bar\\interrogate_badge.svg"),
-        ("C:\\foo\\bar\\my_badge.svg", False, "C:\\foo\\bar\\my_badge.svg"),
-    ),
-)
-def test_save_badge_windows(output, is_dir, expected, mocker, monkeypatch):
+def test_save_badge_windows(mocker):
     """Badge is saved in the expected location."""
-    monkeypatch.setattr(badge_gen.os.path, "isdir", lambda x: is_dir)
-
     mock_open = mocker.mock_open()
     m = mocker.patch("interrogate.badge_gen.open", mock_open)
-
+    output = "C:\\foo\\bar\\my_badge.svg"
     badge_contents = "<svg>foo</svg>"
 
     actual = badge_gen.save_badge(badge_contents, output)
-    assert expected == actual
-    m.assert_called_once_with(expected, "w")
+    assert output == actual
+    m.assert_called_once_with(output, "w")
 
 
 def test_get_badge():
@@ -68,6 +50,22 @@ def test_get_badge():
         expected = expected.replace("\n", "").replace("\r", "")
 
     assert expected == actual
+
+
+@pytest.mark.parametrize(
+    "fixture,color,result,expected",
+    (
+        ("99.svg", "#4c1", 99.9, False),
+        ("99.svg", "#97CA00", 99.9, True),
+        ("99.svg", "#4c1", 80.0, True),
+        ("does_not_exist.svg", "#4c1", 80.0, True),
+    ),
+)
+def test_should_generate(fixture, color, result, expected):
+    """Only return True if existing badge needs updating"""
+    output = os.path.join(FIXTURES, fixture)
+    actual = badge_gen.should_generate_badge(output, color, result)
+    assert actual is expected
 
 
 @pytest.mark.parametrize(
@@ -88,21 +86,41 @@ def test_get_color(result, expected):
 
 
 @pytest.mark.parametrize(
-    "result,expected_fixture",
+    "result,is_dir,should_generate,expected_fixture",
     (
-        (99.9, "99.svg"),
-        (90.0, "90.svg"),
-        (89.9, "89.svg"),
-        (60.0, "60.svg"),
-        (45.0, "45.svg"),
-        (0.0, "0.svg"),
-        (-1, "default.svg"),
+        (99.9, True, True, "99.svg"),
+        (90.0, True, True, "90.svg"),
+        (89.9, True, True, "89.svg"),
+        (60.0, True, True, "60.svg"),
+        (45.0, True, True, "45.svg"),
+        (0.0, True, True, "0.svg"),
+        (-1, True, True, "default.svg"),
+        (99.9, False, True, "99.svg"),
+        (99.9, False, False, "99.svg"),
     ),
 )
-def test_create(result, expected_fixture, mocker, monkeypatch, tmpdir):
+def test_create(
+    result,
+    is_dir,
+    should_generate,
+    expected_fixture,
+    mocker,
+    monkeypatch,
+    tmpdir,
+):
     """Status badges are created according to interrogation results."""
+    monkeypatch.setattr(badge_gen.os.path, "isdir", lambda x: is_dir)
+    output = tmpdir.mkdir("output")
+    if not is_dir:
+        output = output.join("badge.svg")
+
+    if not should_generate:
+        # pre-generate the badge
+        mock_result = mocker.Mock(perc_covered=result)
+        actual = badge_gen.create(str(output), mock_result)
+
     mock_result = mocker.Mock(perc_covered=result)
-    actual = badge_gen.create(str(tmpdir), mock_result)
+    actual = badge_gen.create(str(output), mock_result)
 
     with open(actual, "r") as f:
         actual_contents = f.read()
