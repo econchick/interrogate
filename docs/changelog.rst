@@ -1,6 +1,14 @@
 Changelog
 =========
 
+1.3.2 (UNRELEASED)
+------------------
+
+Added
+^^^^^
+
+* Add wicked cute Sloth logo to status badge (`#48 <https://github.com/econchick/interrogate/issues/48>`_).
+
 .. short-log
 
 1.3.1 (2020-09-03)

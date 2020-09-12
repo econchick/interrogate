@@ -97,11 +97,6 @@ def test_print_results(level, exp_fixture_file, capsys, monkeypatch):
     with open(expected_fixture, "r") as f:
         expected_out = f.read()
 
-    print("expected")
-    print(expected_out)
-    print("-----")
-    print("actual")
-    print(captured.out)
     assert expected_out in captured.out
 
 

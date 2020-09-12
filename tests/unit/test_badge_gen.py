@@ -59,6 +59,7 @@ def test_get_badge():
         ("99.svg", "#97CA00", 99.9, True),
         ("99.svg", "#4c1", 80.0, True),
         ("does_not_exist.svg", "#4c1", 80.0, True),
+        ("no_logo.svg", "#4c1", 99.9, True),
     ),
 )
 def test_should_generate(fixture, color, result, expected):

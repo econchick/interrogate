@@ -1,0 +1,20 @@
+<svg width="140" height="20" viewBox="0 0 140 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(1,0,0,1,22,0)">
+        <g id="backgrounds" transform="matrix(1.32789,0,0,1,-22.3892,0)">
+            <rect x="0" y="0" width="71" height="20" style="fill:rgb(85,85,85);"/>
+        </g>
+        <rect x="71" y="0" width="47" height="20" data-interrogate="color" style="fill:#4c1"/>
+        <g transform="matrix(1.19746,0,0,1,-22.3744,-4.85723e-16)">
+            <rect x="0" y="0" width="118" height="20" style="fill:url(#_Linear1);"/>
+        </g>
+    </g>
+    <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="110">
+        <text x="590" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="610">interrogate</text>
+        <text x="590" y="140" transform="scale(.1)" textLength="610">interrogate</text>
+        <text x="1160" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="370" data-interrogate="result">99.9%</text>
+        <text x="1160" y="140" transform="scale(.1)" textLength="370" data-interrogate="result">99.9%</text>
+    </g>
+    <defs>
+        <linearGradient id="_Linear1" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1.22465e-15,20,-20,1.22465e-15,0,0)"><stop offset="0" style="stop-color:rgb(187,187,187);stop-opacity:0.1"/><stop offset="1" style="stop-color:black;stop-opacity:0.1"/></linearGradient>
+    </defs>
+</svg>

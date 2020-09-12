@@ -69,6 +69,8 @@ def should_generate_badge(output, color, result):
     https://github.com/econchick/interrogate/issues/40
 
     .. versionadded:: 1.3.1 Function added
+    .. versionchanged:: 1.3.2 Added logo to badge, so regenerate badge if
+        logo doesn't exist.
 
     :param str output: path to output badge file
     :param float result: coverage % result.
@@ -80,13 +82,22 @@ def should_generate_badge(output, color, result):
         return True
 
     badge = minidom.parse(output)
+
+    # added the sloth logo in 1.3.2 - if it doesn't exist, we should
+    # go ahead and recreate the badge
+    gs = badge.getElementsByTagName("g")
+    gids = [g.getAttribute("id") for g in gs]
+    if "logo-pink" not in gids:
+        return True
+
     rects = badge.getElementsByTagName("rect")
     current_colors = [
-        r.getAttribute("fill")
+        r.getAttribute("style")
         for r in rects
         if r.hasAttribute("data-interrogate")
     ]
-    if color not in current_colors:
+    fill_color = "fill:{}".format(color)
+    if fill_color not in current_colors:
         return True
 
     texts = badge.getElementsByTagName("text")
