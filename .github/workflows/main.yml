@@ -13,6 +13,15 @@ on:
     types: rebuild
 
 jobs:
+  pre-commit:
+    name: "Pre-commit"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - name: Run pre-commit
+        uses: pre-commit/action@v2.0.0
+
   tests:
     name: "Python ${{ matrix.python-version }} on Ubuntu"
     runs-on: "ubuntu-latest"
