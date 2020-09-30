@@ -13,6 +13,17 @@ on:
     types: rebuild
 
 jobs:
+  pre-commit:
+    name: "Pre-commit"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - name: Locally install interrogate
+        run: python -m pip install .
+      - name: Run pre-commit
+        uses: pre-commit/action@v2.0.0
+
   tests:
     name: "Python ${{ matrix.python-version }} on Ubuntu"
     runs-on: "ubuntu-latest"
@@ -23,7 +34,7 @@ jobs:
         python-version: ["3.5", "3.6", "3.7", "3.8"]
     steps:
       - uses: "actions/checkout@v2"
-      - uses: "actions/setup-python@v1"
+      - uses: "actions/setup-python@v2"
         with:
           python-version: "${{ matrix.python-version }}"
       - name: "Install dependencies"
@@ -47,7 +58,7 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - uses: "actions/checkout@v2"
-      - uses: "actions/setup-python@v1"
+      - uses: "actions/setup-python@v2"
         with:
           python-version: "3.8"
       - name: "Install pep517 and twine"
@@ -67,7 +78,7 @@ jobs:
     runs-on: "${{ matrix.os }}"
     steps:
       - uses: "actions/checkout@v2"
-      - uses: "actions/setup-python@v1"
+      - uses: "actions/setup-python@v2"
         with:
           python-version: "3.8"
       - name: "Install in dev mode"
