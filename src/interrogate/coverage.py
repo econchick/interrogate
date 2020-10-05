@@ -128,11 +128,7 @@ class InterrogateCoverage:
                 basename = os.path.basename(f)
                 if basename == "__init__.py":
                     continue
-            maybe_excluded_dir = any(
-                [f.startswith(exc) for exc in self.excluded]
-            )
-            maybe_excluded_file = f in self.excluded
-            if any([maybe_excluded_dir, maybe_excluded_file]):
+            if any([f.startswith(os.path.normpath(exc)) for exc in self.excluded]):
                 continue
             yield f
 
