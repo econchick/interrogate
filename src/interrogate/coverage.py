@@ -128,7 +128,9 @@ class InterrogateCoverage:
                 basename = os.path.basename(f)
                 if basename == "__init__.py":
                     continue
-            if any([f.startswith(os.path.normpath(exc)) for exc in self.excluded]):
+            if any(
+                [f.startswith(os.path.normpath(exc)) for exc in self.excluded]
+            ):
                 continue
             yield f
 
