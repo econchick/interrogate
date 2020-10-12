@@ -5,6 +5,8 @@ import os
 import pathlib
 import sys
 
+from fnmatch import fnmatch
+
 import attr
 import click
 import tabulate
@@ -128,9 +130,7 @@ class InterrogateCoverage:
                 basename = os.path.basename(f)
                 if basename == "__init__.py":
                     continue
-            if any(
-                [f.startswith(os.path.normpath(exc)) for exc in self.excluded]
-            ):
+            if any(fnmatch(f, exc + "*") for exc in self.excluded):
                 continue
             yield f
 
