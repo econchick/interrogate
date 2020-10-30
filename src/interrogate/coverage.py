@@ -38,10 +38,10 @@ class BaseInterrogateResult:
         :return: percentage covered over total.
         :rtype: float
         """
-        # technically this shouldn't happen since empty files still have
-        # a total of one (module-level)
+        # Even though empty files each have a total of one,
+        # the ignore-module option may still lead to a total of zero.
         if self.total == 0:  # pragma: no cover
-            return 0
+            return 100
         return (float(self.covered) / float(self.total)) * 100
 
 
