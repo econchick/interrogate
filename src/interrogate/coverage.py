@@ -35,13 +35,16 @@ class BaseInterrogateResult:
     def perc_covered(self):
         """Percentage of node covered.
 
+        .. versionchanged:: 1.3.1
+        A total of 0 translates to 100% coverage now
+
         :return: percentage covered over total.
         :rtype: float
         """
-        # technically this shouldn't happen since empty files still have
-        # a total of one (module-level)
+        # Even though empty files each have a total of one,
+        # the ignore-module option may still lead to a total of zero.
         if self.total == 0:  # pragma: no cover
-            return 0
+            return 100.0
         return (float(self.covered) / float(self.total)) * 100
 
 

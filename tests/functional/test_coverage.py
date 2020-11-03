@@ -23,7 +23,7 @@ IS_WINDOWS = sys.platform in ("cygwin", "win32")
         (
             [os.path.join(SAMPLE_DIR, "empty.py"),],
             {"ignore_module": True},
-            (0, 0, 0, "0.0"),
+            (0, 0, 0, "100.0"),
         ),
         ([SAMPLE_DIR,], {}, (56, 26, 30, "46.4")),
         ([os.path.join(SAMPLE_DIR, "partial.py")], {}, (22, 7, 15, "31.8")),
