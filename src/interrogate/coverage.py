@@ -37,7 +37,7 @@ class BaseInterrogateResult:
     def perc_covered(self):
         """Percentage of node covered.
 
-        .. versionchanged:: 1.3.1
+        .. versionchanged:: 1.3.2
         A total of 0 translates to 100% coverage now
 
         :return: percentage covered over total.
