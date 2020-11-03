@@ -45,7 +45,7 @@ Let's get started.
 Requirements
 ============
 
-``interrogate`` supports Python 3.5 and above.
+``interrogate`` supports Python 3.6 and above.
 
 
 Installation
