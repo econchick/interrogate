@@ -5,6 +5,8 @@ import os
 import pathlib
 import sys
 
+from fnmatch import fnmatch
+
 import attr
 import click
 import tabulate
@@ -131,11 +133,7 @@ class InterrogateCoverage:
                 basename = os.path.basename(f)
                 if basename == "__init__.py":
                     continue
-            maybe_excluded_dir = any(
-                [f.startswith(exc) for exc in self.excluded]
-            )
-            maybe_excluded_file = f in self.excluded
-            if any([maybe_excluded_dir, maybe_excluded_file]):
+            if any(fnmatch(f, exc + "*") for exc in self.excluded):
                 continue
             yield f
 
