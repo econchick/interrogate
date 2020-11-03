@@ -1,13 +1,31 @@
 Changelog
 =========
 
-1.3.2 (UNRELEASED)
+1.3.3 (UNRELEASED)
+------------------
+
+.. short-log
+
+1.3.2 (2020-11-03)
 ------------------
 
 Added
 ^^^^^
 
 * Add wicked cute Sloth logo to status badge (`#48 <https://github.com/econchick/interrogate/issues/48>`_).
+* Testing/support for Python 3.9 – thank you `s-weigand <https://github.com/econchick/interrogate/pull/58>`_!
+
+Fixed
+^^^^^
+
+* Excluding paths are no longer OS-dependent (`#51 <https://github.com/econchick/interrogate/issues/51>`_) – thank you `oriash93 <https://github.com/econchick/interrogate/pull/56>`_!
+* Include Python trove classifiers in packaging (`#61 <https://github.com/econchick/interrogate/issues/61>`_) – thank you `mmtj <https://github.com/econchick/interrogate/pull/62>`_!
+
+Removed
+^^^^^^^
+
+* Support for Python 3.5 – thank you `s-weigand <https://github.com/econchick/interrogate/pull/58>`_!
+
 
 .. short-log
 
@@ -19,7 +37,6 @@ Fixed
 
 * Only generate a status badge if results have changed from an existing badge (`#40 <https://github.com/econchick/interrogate/issues/40>`_).
 
-.. short-log
 
 1.3.0 (2020-08-23)
 ------------------
