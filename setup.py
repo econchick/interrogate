@@ -48,6 +48,11 @@ META_PATH = os.path.join("src", PACKAGE_NAME, "__init__.py")
 
 META_FILE = read(META_PATH)
 KEYWORDS = ["documentation", "coverage", "quality"]
+PROJECT_URLS = {
+    "Documentation": "https://interrogate.readthedocs.io",
+    "Bug Tracker": "https://github.com/econchick/interrogate/issues",
+    "Source Code": "https://github.com/econchick/interrogate",
+}
 CLASSIFIERS = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -98,6 +103,7 @@ setup(
     long_description=LONG,
     long_description_content_type="text/x-rst",
     url=URL,
+    project_urls=PROJECT_URLS,
     author=find_meta("author"),
     author_email=find_meta("email"),
     maintainer=find_meta("author"),

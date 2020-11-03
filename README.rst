@@ -45,7 +45,7 @@ Let's get started.
 Requirements
 ============
 
-``interrogate`` supports Python 3.5 and above.
+``interrogate`` supports Python 3.6 and above.
 
 
 Installation
@@ -286,7 +286,7 @@ Or use it with `pre-commit <https://pre-commit.com/>`_:
 
     repos:
       - repo: https://github.com/econchick/interrogate
-        rev: 1.3.1  # or master if you're bold
+        rev: 1.3.2  # or master if you're bold
         hooks:
           - id: interrogate
             args: [--quiet, --fail-under=95]
