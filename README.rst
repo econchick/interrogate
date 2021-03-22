@@ -496,6 +496,25 @@ To view all options available, run ``interrogate --help``:
       -c, --config FILE               Read configuration from `pyproject.toml` or
                                       `setup.cfg`.
 
+
+.. start-uses-this
+
+Users of Interrogate
+====================
+
+* `attrs <https://github.com/python-attrs/attrs>`_
+* `OpenMMLab <https://github.com/open-mmlab>`_'s ecosystem
+* `pyjanitor <https://github.com/ericmjl/pyjanitor>`_
+* `klio <https://github.com/spotify/klio>`_
+
+Interrogate in the Wild
+-----------------------
+
+* `Why You Should Document Your Tests <https://hynek.me/articles/document-your-tests/>`_ by `Hynek Schlawack <https://twitter.com/hynek>`_
+* `Episode #181: It's time to interrogate your Python code <https://pythonbytes.fm/episodes/show/181/it-s-time-to-interrogate-your-python-code>`_ - `PythonBytes podcast <https://pythonbytes.fm/>`_
+
+.. end-uses-this
+
 .. start-credits
 
 Credits
