@@ -22,7 +22,7 @@ jobs:
       - name: Locally install interrogate
         run: python -m pip install .
       - name: Run pre-commit
-        uses: pre-commit/action@v2.0.0
+        uses: pre-commit/action@v2.0.3
 
   tests:
     name: "Python ${{ matrix.python-version }} on Ubuntu"
