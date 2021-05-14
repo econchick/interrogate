@@ -104,6 +104,14 @@ from interrogate import utils
     help="Ignore nested functions and methods.",
 )
 @click.option(
+    "-C",
+    "--ignore-nested-classes",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help="Ignore nested classes.",
+)
+@click.option(
     "-p",
     "--ignore-private",
     is_flag=True,
@@ -243,6 +251,7 @@ def main(ctx, paths, **kwargs):
     .. versionadded:: 1.3.0 ``--ignore-property-decorators``
     .. versionadded:: 1.3.0 config parsing support for setup.cfg
     .. versionadded:: 1.4.0 ``--badge-format``
+    .. versionadded:: 1.4.0 ``--ignore-nested-classes``
 
     .. versionchanged:: 1.3.1 only generate badge if results change from
         an existing badge.
@@ -271,6 +280,7 @@ def main(ctx, paths, **kwargs):
         ignore_magic=kwargs["ignore_magic"],
         ignore_module=kwargs["ignore_module"],
         ignore_nested_functions=kwargs["ignore_nested_functions"],
+        ignore_nested_classes=kwargs["ignore_nested_classes"],
         ignore_property_decorators=kwargs["ignore_property_decorators"],
         ignore_private=kwargs["ignore_private"],
         ignore_regex=kwargs["ignore_regex"],

@@ -56,6 +56,10 @@ def test_run_no_paths(runner, monkeypatch, tmpdir):
         (["-m"], 46.2, 1),
         # ignore init method docs
         (["-i"], 45.3, 1),
+        # ignore nested funcs
+        (["-n"], 45.3, 1),
+        # ignore nested classes
+        (["-C"], 47.2, 1),
         # ignore regex
         (["-r", "^get$"], 46.2, 1),
         # whitelist regex
@@ -88,6 +92,8 @@ def test_run_shortflags(flags, exp_result, exp_exit_code, runner):
         (["--ignore-property-decorators"], 46.2, 1),
         (["--ignore-magic"], 46.2, 1),
         (["--ignore-init-method"], 45.3, 1),
+        (["--ignore-nested-functions"], 45.3, 1),
+        (["--ignore-nested-classes"], 47.2, 1),
         (["--ignore-regex", "^get$"], 46.2, 1),
         (["--whitelist-regex", "^get$"], 50.0, 1),
         (["--exclude", os.path.join(SAMPLE_DIR, "partial.py")], 55.9, 1),
