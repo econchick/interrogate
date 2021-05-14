@@ -11,7 +11,13 @@ from xml.dom import minidom
 import pkg_resources
 
 
-DEFAULT_FILENAME = "interrogate_badge.svg"
+try:
+    import cairosvg
+except ImportError:  # pragma: no cover
+    cairosvg = None
+
+
+DEFAULT_FILENAME = "interrogate_badge"
 COLORS = {
     "brightgreen": "#4c1",
     "green": "#97CA00",
@@ -30,18 +36,50 @@ COLOR_RANGES = [
     (40, "orange"),
     (0, "red"),
 ]
+SUPPORTED_OUTPUT_FORMATS = ["svg", "png"]
 
 
-def save_badge(badge, output):
+def save_badge(badge, output, output_format=None):
     """Save badge to the specified path.
+
+    .. versionadded:: 1.4.0 new ``output_format`` keyword argument
 
     :param str badge: SVG contents of badge.
     :param str output: path to output badge file.
+    :param str output_format: format for output; either ``svg`` or
+        ``png``. Defaults to ``svg``.
     :return: path to output badge file.
     :rtype: str
     """
-    with open(output, "w") as f:
-        f.write(badge)
+    if output_format is None:
+        output_format = "svg"
+
+    if output_format == "svg":
+        with open(output, "w") as f:
+            f.write(badge)
+
+        return output
+
+    if cairosvg is None:
+        raise ImportError(
+            "The required `cairosvg` dependency in order to generate a PNG "
+            "file was not found. Please install `interrogate[png]`."
+        )
+
+    # need to write the badge as an svg first in order to convert it to
+    # another format
+    tmp_output_file = f"{os.path.splitext(output)[0]}.tmp.svg"
+    try:
+        with open(tmp_output_file, "w") as f:
+            f.write(badge)
+
+        cairosvg.svg2png(url=tmp_output_file, write_to=output, scale=2)
+
+    finally:
+        try:
+            os.remove(tmp_output_file)
+        except Exception:  # pragma: no cover
+            pass
 
     return output
 
@@ -68,6 +106,10 @@ def should_generate_badge(output, color, result):
     This is to help avoid unnecessary newline updates. See
     https://github.com/econchick/interrogate/issues/40
 
+    .. caution::
+
+        A badge will always be generated for PNG format.
+
     .. versionadded:: 1.3.1 Function added
     .. versionchanged:: 1.3.2 Added logo to badge, so regenerate badge if
         logo doesn't exist.
@@ -79,6 +121,9 @@ def should_generate_badge(output, color, result):
     :rtype: bool
     """
     if not os.path.exists(output):
+        return True
+
+    if not output.endswith(".svg"):
         return True
 
     badge = minidom.parse(output)
@@ -125,7 +170,7 @@ def get_color(result):
     return COLORS["lightgrey"]
 
 
-def create(output, result):
+def create(output, result, output_format=None):
     """Create a status badge.
 
     The badge file will only be written if it doesn't exist, or if the
@@ -133,6 +178,8 @@ def create(output, result):
 
     .. versionchanged:: 1.3.1 Only generate badge file if its contents
         change.
+    .. versionadded:: 1.4.0 Optional ``output_format`` keyword to support
+        file types other than SVG.
 
     :param str output: path to output badge file.
     :param coverage.InterrogateResults result: results of coverage
@@ -140,8 +187,11 @@ def create(output, result):
     :return: path to output badge file.
     :rtype: str
     """
+    if output_format is None:
+        output_format = "svg"
     if os.path.isdir(output):
-        output = os.path.join(output, DEFAULT_FILENAME)
+        filename = DEFAULT_FILENAME + "." + output_format
+        output = os.path.join(output, filename)
 
     result_perc = result.perc_covered
     color = get_color(result_perc)
@@ -149,5 +199,5 @@ def create(output, result):
     should_generate = should_generate_badge(output, color, result_perc)
     if should_generate:
         badge = get_badge(result_perc, color)
-        return save_badge(badge, output)
+        return save_badge(badge, output, output_format)
     return output

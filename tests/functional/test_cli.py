@@ -156,3 +156,14 @@ def test_generate_badge(quiet, runner, tmp_path):
         actual_output = actual_output.replace("\n", "")
 
     assert expected_output == actual_output
+
+
+def test_incompatible_options(runner):
+    """Raise an error when mutually exclusive options are used together."""
+    result = runner.invoke(cli.main, ["--badge-format", "svg"])
+    assert 2 == result.exit_code
+    exp_error = (
+        "Invalid value: The `--badge-format` option must be used along "
+        "with the `-g/--generate-badge option."
+    )
+    assert exp_error in result.output

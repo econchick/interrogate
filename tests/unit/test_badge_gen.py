@@ -15,29 +15,77 @@ IS_WINDOWS = sys.platform in ("cygwin", "win32")
 
 
 @pytest.mark.skipif(IS_WINDOWS, reason="unix-only tests")
-def test_save_badge(mocker):
+@pytest.mark.parametrize(
+    "out_format,out_file,exp_called_with",
+    (
+        (None, "fixtures/my_badge.svg", "fixtures/my_badge.svg"),
+        ("svg", "fixtures/my_badge.svg", "fixtures/my_badge.svg"),
+        ("png", "fixtures/my_badge.png", "fixtures/my_badge.tmp.svg"),
+    ),
+)
+def test_save_badge(
+    out_format, out_file, exp_called_with, mocker, monkeypatch
+):
     """Badge is saved in the expected location."""
+    mock_svg2png = mocker.Mock()
+    monkeypatch.setattr(badge_gen.cairosvg, "svg2png", mock_svg2png)
+
     mock_open = mocker.mock_open()
     m = mocker.patch("interrogate.badge_gen.open", mock_open)
-    output = "foo/bar/my_badge.svg"
+    mock_rm = mocker.patch("interrogate.badge_gen.os.remove", mocker.Mock())
+
     badge_contents = "<svg>foo</svg>"
 
-    actual = badge_gen.save_badge(badge_contents, output)
-    assert output == actual
-    m.assert_called_once_with(output, "w")
+    actual = badge_gen.save_badge(badge_contents, out_file, out_format)
+    assert out_file == actual
+    m.assert_called_once_with(exp_called_with, "w")
+    if out_format == "png":
+        mock_svg2png.assert_called_once_with(
+            url=exp_called_with, write_to=out_file, scale=2
+        )
+        mock_rm.assert_called_once_with(exp_called_with)
 
 
 @pytest.mark.skipif(not IS_WINDOWS, reason="windows-only tests")
-def test_save_badge_windows(mocker):
+@pytest.mark.parametrize(
+    "out_format,out_file,exp_called_with",
+    (
+        (None, "fixtures\\my_badge.svg", "fixtures\\my_badge.svg"),
+        ("svg", "fixtures\\my_badge.svg", "fixtures\\my_badge.svg"),
+        ("png", "fixtures\\my_badge.png", "fixtures\\my_badge.tmp.svg"),
+    ),
+)
+def test_save_badge_windows(
+    out_format, out_file, exp_called_with, mocker, monkeypatch
+):
     """Badge is saved in the expected location."""
+    mock_svg2png = mocker.Mock()
+    monkeypatch.setattr(badge_gen.cairosvg, "svg2png", mock_svg2png)
     mock_open = mocker.mock_open()
     m = mocker.patch("interrogate.badge_gen.open", mock_open)
-    output = "C:\\foo\\bar\\my_badge.svg"
+    mock_rm = mocker.patch("interrogate.badge_gen.os.remove", mocker.Mock())
+
     badge_contents = "<svg>foo</svg>"
 
-    actual = badge_gen.save_badge(badge_contents, output)
-    assert output == actual
-    m.assert_called_once_with(output, "w")
+    actual = badge_gen.save_badge(badge_contents, out_file, out_format)
+    assert out_file == actual
+    m.assert_called_once_with(exp_called_with, "w")
+    if out_format == "png":
+        mock_svg2png.assert_called_once_with(
+            url=exp_called_with, write_to=out_file, scale=2
+        )
+        mock_rm.assert_called_once_with(exp_called_with)
+
+
+def test_save_badge_no_cairo(monkeypatch):
+    """PNG can't be generated without extra dependencies installed."""
+    monkeypatch.setattr("interrogate.badge_gen.cairosvg", None)
+    badge_contents = "<svg>foo</svg>"
+
+    with pytest.raises(ImportError, match="The required `cairosvg` "):
+        badge_gen.save_badge(
+            badge_contents, "fixtures/my_badge.png", output_format="png"
+        )
 
 
 def test_get_badge():
@@ -60,6 +108,7 @@ def test_get_badge():
         ("99.svg", "#4c1", 80.0, True),
         ("does_not_exist.svg", "#4c1", 80.0, True),
         ("no_logo.svg", "#4c1", 99.9, True),
+        ("99.png", None, None, True),
     ),
 )
 def test_should_generate(fixture, color, result, expected):
@@ -87,17 +136,19 @@ def test_get_color(result, expected):
 
 
 @pytest.mark.parametrize(
-    "result,is_dir,should_generate,expected_fixture",
+    "result,is_dir,should_generate,expected_fixture,out_format",
     (
-        (99.9, True, True, "99.svg"),
-        (90.0, True, True, "90.svg"),
-        (89.9, True, True, "89.svg"),
-        (60.0, True, True, "60.svg"),
-        (45.0, True, True, "45.svg"),
-        (0.0, True, True, "0.svg"),
-        (-1, True, True, "default.svg"),
-        (99.9, False, True, "99.svg"),
-        (99.9, False, False, "99.svg"),
+        (99.9, True, True, "99.svg", None),
+        (90.0, True, True, "90.svg", None),
+        (89.9, True, True, "89.svg", None),
+        (60.0, True, True, "60.svg", None),
+        (45.0, True, True, "45.svg", None),
+        (0.0, True, True, "0.svg", None),
+        (-1, True, True, "default.svg", None),
+        (99.9, False, True, "99.svg", None),
+        (99.9, False, False, "99.svg", None),
+        # TODO: fixme: this fails on Github CI (ubuntu)
+        # (99.9, True, True, "99.png", "png"),
     ),
 )
 def test_create(
@@ -105,6 +156,7 @@ def test_create(
     is_dir,
     should_generate,
     expected_fixture,
+    out_format,
     mocker,
     monkeypatch,
     tmpdir,
@@ -121,15 +173,18 @@ def test_create(
         actual = badge_gen.create(str(output), mock_result)
 
     mock_result = mocker.Mock(perc_covered=result)
-    actual = badge_gen.create(str(output), mock_result)
+    actual = badge_gen.create(str(output), mock_result, out_format)
 
-    with open(actual, "r") as f:
+    flag = "rb" if out_format == "png" else "r"
+    with open(actual, flag) as f:
         actual_contents = f.read()
-        actual_contents = actual_contents.replace("\n", "")
+        if out_format is None:
+            actual_contents = actual_contents.replace("\n", "")
 
     expected_fixture = os.path.join(FIXTURES, expected_fixture)
-    with open(expected_fixture, "r") as f:
+    with open(expected_fixture, flag) as f:
         expected_contents = f.read()
-        expected_contents = expected_contents.replace("\n", "")
+        if out_format is None:
+            expected_contents = expected_contents.replace("\n", "")
 
     assert expected_contents == actual_contents

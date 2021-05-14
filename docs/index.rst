@@ -100,6 +100,12 @@ Command Line Options
     or directory. Will not generate a badge if results did not change from an existing badge of
     the same path.
 
+.. option:: --badge-format [svg|png]
+
+    File format for the generated badge. Used with the ``-g/--generate-badge`` flag.  [default: ``svg``]
+
+    NOTE: To generate a PNG file, interrogate must be installed with ``interrogate[png]``, i.e.
+    ``pip install interrogate[png]``.
 
 .. include:: ../README.rst
    :start-after: start-credits
