@@ -52,6 +52,8 @@ def test_run_no_paths(runner, monkeypatch, tmpdir):
         (["-p"], 48.0, 1),
         # ignore property getter/setter decorators
         (["-P"], 46.2, 1),
+        # ignore property setter decorators
+        (["-S"], 46.3, 1),
         # ignore magic method docs
         (["-m"], 46.2, 1),
         # ignore init method docs
@@ -90,6 +92,7 @@ def test_run_shortflags(flags, exp_result, exp_exit_code, runner):
         (["--ignore-semiprivate"], 46.9, 1),
         (["--ignore-private"], 48.0, 1),
         (["--ignore-property-decorators"], 46.2, 1),
+        (["--ignore-setters"], 46.3, 1),
         (["--ignore-magic"], 46.2, 1),
         (["--ignore-init-method"], 45.3, 1),
         (["--ignore-nested-functions"], 45.3, 1),
