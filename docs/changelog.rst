@@ -8,7 +8,8 @@ Added
 ^^^^^
 
 * Support for generating the status badge as a PNG file with a new ``--badge-format`` flag (`#70 <https://github.com/econchick/interrogate/issues/70>`_).
-* Add new option ``-C`` / ``--ignore-nested-classess` to ignore – you guessed it – nested classes (`#65 <https://github.com/econchick/interrogate/issues/65>`_).
+* Add new option ``-C`` / ``--ignore-nested-classes` to ignore – you guessed it – nested classes (`#65 <https://github.com/econchick/interrogate/issues/65>`_).
+* Add new option ``-S`` / ``--ignore-setters`` to ignore property setter decorators (`#68 <https://github.com/econchick/interrogate/issues/68>`_).
 
 .. short-log
 

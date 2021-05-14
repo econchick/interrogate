@@ -354,6 +354,7 @@ Configure within your ``pyproject.toml`` (``interrogate`` will automatically det
     ignore-module = false
     ignore-nested-functions = false
     ignore-nested-classes = true
+    ignore-setters = false
     fail-under = 95
     exclude = ["setup.py", "docs", "build"]
     ignore-regex = ["^get$", "^mock_.*", ".*BaseClass.*"]
@@ -383,6 +384,7 @@ Or configure within your ``setup.cfg`` (``interrogate`` will automatically detec
     ignore-module = false
     ignore-nested-functions = false
     ignore-nested-classes = true
+    ignore-setters = false
     fail-under = 95
     exclude = setup.py,docs,build
     ignore-regex = ^get$,^mock_.*,.*BaseClass.*
@@ -452,6 +454,9 @@ To view all options available, run ``interrogate --help``:
 
       -P, --ignore-property-decorators
                                       Ignore methods with property setter/getter
+                                      decorators.  [default: False]
+
+      -S, --ignore-setters            Ignore methods with property setter
                                       decorators.  [default: False]
 
       -s, --ignore-semiprivate        Ignore semiprivate classes, methods, and

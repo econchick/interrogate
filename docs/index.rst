@@ -74,6 +74,10 @@ Command Line Options
 
     Ignore methods with property setter/getter decorators.  [default: ``False``]
 
+.. option:: -S, --ignore-setters
+
+    Ignore methods with property setter decorators.  [default: ``False``]
+
 .. option:: -s, --ignore-semiprivate
 
     Ignore semiprivate classes, methods, and functions starting with a single underscore. [default: ``False``]

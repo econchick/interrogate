@@ -133,6 +133,14 @@ from interrogate import utils
     help="Ignore methods with property setter/getter decorators.",
 )
 @click.option(
+    "-S",
+    "--ignore-setters",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help="Ignore methods with property setter decorators.",
+)
+@click.option(
     "-s",
     "--ignore-semiprivate",
     is_flag=True,
@@ -252,6 +260,7 @@ def main(ctx, paths, **kwargs):
     .. versionadded:: 1.3.0 config parsing support for setup.cfg
     .. versionadded:: 1.4.0 ``--badge-format``
     .. versionadded:: 1.4.0 ``--ignore-nested-classes``
+    .. versionadded:: 1.4.0 ``--ignore-setters``
 
     .. versionchanged:: 1.3.1 only generate badge if results change from
         an existing badge.
@@ -282,6 +291,7 @@ def main(ctx, paths, **kwargs):
         ignore_nested_functions=kwargs["ignore_nested_functions"],
         ignore_nested_classes=kwargs["ignore_nested_classes"],
         ignore_property_decorators=kwargs["ignore_property_decorators"],
+        ignore_property_setters=kwargs["ignore_setters"],
         ignore_private=kwargs["ignore_private"],
         ignore_regex=kwargs["ignore_regex"],
         ignore_semiprivate=kwargs["ignore_semiprivate"],
