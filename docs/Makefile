@@ -24,7 +24,7 @@ html:
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html"
 
 livehtml:
-	sphinx-autobuild -p $(PORT) -b html $(SOURCEDIR) $(BUILDDIR)/html $(O)
+	sphinx-autobuild --port $(PORT) -b html $(SOURCEDIR) $(BUILDDIR)/html $(O)
 
 linkcheck:
 	$(SPHINXBUILD) -b linkcheck $(ALLSPHINXOPTS) $(BUILDDIR)/linkcheck
