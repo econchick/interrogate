@@ -1,8 +1,13 @@
 Changelog
 =========
 
-1.3.3 (UNRELEASED)
+1.4.0 (UNRELEASED)
 ------------------
+
+Added
+^^^^^
+
+* Support for generating the status badge as a PNG file with a new ``--badge-format`` flag (`#70 <https://github.com/econchick/interrogate/issues/70>`_).
 
 .. short-log
 

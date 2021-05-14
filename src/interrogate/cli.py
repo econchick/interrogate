@@ -191,6 +191,18 @@ from interrogate import utils
         "change from an existing badge of the same path."
     ),
 )
+@click.option(
+    "--badge-format",
+    type=click.Choice(["svg", "png"], case_sensitive=False),
+    default=None,
+    show_default="svg",
+    help=(
+        "File format for the generated badge. Used with the "
+        "`-g/--generate-badge` flag. [default: svg]"
+        "\n\nNOTE: To generate a PNG file, interrogate must be installed "
+        "with `interrogate[png]`, i.e. `pip install interrogate[png]`."
+    ),
+)
 @click.help_option("-h", "--help")
 @click.argument(
     "paths",
@@ -230,10 +242,18 @@ def main(ctx, paths, **kwargs):
     .. versionadded:: 1.2.0 ``--color``/``--no-color``
     .. versionadded:: 1.3.0 ``--ignore-property-decorators``
     .. versionadded:: 1.3.0 config parsing support for setup.cfg
+    .. versionadded:: 1.4.0 ``--badge-format``
 
     .. versionchanged:: 1.3.1 only generate badge if results change from
         an existing badge.
     """
+    gen_badge = kwargs["generate_badge"]
+    if kwargs["badge_format"] is not None and gen_badge is None:
+        raise click.BadParameter(
+            "The `--badge-format` option must be used along with the `-g/"
+            "--generate-badge option."
+        )
+
     if not paths:
         paths = (os.path.abspath(os.getcwd()),)
 
@@ -271,8 +291,11 @@ def main(ctx, paths, **kwargs):
             results, kwargs["output"], kwargs["verbose"]
         )
 
-    if kwargs["generate_badge"] is not None:
-        output_path = badge_gen.create(kwargs["generate_badge"], results)
+    if gen_badge is not None:
+        badge_format = kwargs["badge_format"]
+        output_path = badge_gen.create(
+            gen_badge, results, output_format=badge_format
+        )
         if not is_quiet:
             click.echo("Generated badge to {}".format(output_path))
 
