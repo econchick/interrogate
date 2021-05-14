@@ -26,6 +26,7 @@ class CovNode:
         "function").
     :param bool is_nested_func: if the node itself is a nested function
         or method.
+    :param bool is_nested_cls: if the node itself is a nested class.
     :param CovNode _parent: parent node of current CovNode, if any.
     """
 
@@ -36,7 +37,8 @@ class CovNode:
     covered = attr.ib()
     node_type = attr.ib()
     is_nested_func = attr.ib()
-    _parent = attr.ib()
+    is_nested_cls = attr.ib()
+    parent = attr.ib()
 
 
 class CoverageVisitor(ast.NodeVisitor):
@@ -96,8 +98,9 @@ class CoverageVisitor(ast.NodeVisitor):
             level=len(self.stack),
             node_type=node_type,
             lineno=lineno,
+            is_nested_func=self._is_nested_func(parent, node_type),
+            is_nested_cls=self._is_nested_cls(parent, node_type),
             parent=parent,
-            is_nested_func=self._is_nested(parent, node_type),
         )
         self.stack.append(cov_node)
         self.nodes.append(cov_node)
@@ -106,12 +109,24 @@ class CoverageVisitor(ast.NodeVisitor):
 
         self.stack.pop()
 
-    def _is_nested(self, parent, node_type):
+    def _is_nested_func(self, parent, node_type):
         """Is node a nested func/method of another func/method."""
         if parent is None:
             return False
         # is it a nested function?
         if parent.node_type == "FunctionDef" and node_type == "FunctionDef":
+            return True
+        return False
+
+    def _is_nested_cls(self, parent, node_type):
+        """Is node a nested func/method of another func/method."""
+        if parent is None:
+            return False
+        # is it a nested class?
+        if (
+            parent.node_type in ("ClassDef", "FunctionDef")
+            and node_type == "ClassDef"
+        ):
             return True
         return False
 

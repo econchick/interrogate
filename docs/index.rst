@@ -60,6 +60,10 @@ Command Line Options
 
     Ignore nested functions and methods.  [default: ``False``]
 
+.. option:: -C, --ignore-nested-classes
+
+    Ignore nested classes.  [default: ``False``]
+
 .. option:: -p, --ignore-private
 
     Ignore private classes, methods, and functions starting with two underscores.  [default: ``False``]
