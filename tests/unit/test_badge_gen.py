@@ -27,8 +27,8 @@ def test_save_badge(
     out_format, out_file, exp_called_with, mocker, monkeypatch
 ):
     """Badge is saved in the expected location."""
-    mock_svg2png = mocker.Mock()
-    monkeypatch.setattr(badge_gen.cairosvg, "svg2png", mock_svg2png)
+    mock_cairosvg = mocker.Mock()
+    monkeypatch.setattr(badge_gen, "cairosvg", mock_cairosvg)
 
     mock_open = mocker.mock_open()
     m = mocker.patch("interrogate.badge_gen.open", mock_open)
@@ -40,41 +40,23 @@ def test_save_badge(
     assert out_file == actual
     m.assert_called_once_with(exp_called_with, "w")
     if out_format == "png":
-        mock_svg2png.assert_called_once_with(
+        mock_cairosvg.svg2png.assert_called_once_with(
             url=exp_called_with, write_to=out_file, scale=2
         )
         mock_rm.assert_called_once_with(exp_called_with)
 
 
 @pytest.mark.skipif(not IS_WINDOWS, reason="windows-only tests")
-@pytest.mark.parametrize(
-    "out_format,out_file,exp_called_with",
-    (
-        (None, "fixtures\\my_badge.svg", "fixtures\\my_badge.svg"),
-        ("svg", "fixtures\\my_badge.svg", "fixtures\\my_badge.svg"),
-        ("png", "fixtures\\my_badge.png", "fixtures\\my_badge.tmp.svg"),
-    ),
-)
-def test_save_badge_windows(
-    out_format, out_file, exp_called_with, mocker, monkeypatch
-):
+def test_save_badge_windows(mocker):
     """Badge is saved in the expected location."""
-    mock_svg2png = mocker.Mock()
-    monkeypatch.setattr(badge_gen.cairosvg, "svg2png", mock_svg2png)
     mock_open = mocker.mock_open()
     m = mocker.patch("interrogate.badge_gen.open", mock_open)
-    mock_rm = mocker.patch("interrogate.badge_gen.os.remove", mocker.Mock())
-
+    output = "C:\\foo\\bar\\my_badge.svg"
     badge_contents = "<svg>foo</svg>"
 
-    actual = badge_gen.save_badge(badge_contents, out_file, out_format)
-    assert out_file == actual
-    m.assert_called_once_with(exp_called_with, "w")
-    if out_format == "png":
-        mock_svg2png.assert_called_once_with(
-            url=exp_called_with, write_to=out_file, scale=2
-        )
-        mock_rm.assert_called_once_with(exp_called_with)
+    actual = badge_gen.save_badge(badge_contents, output)
+    assert output == actual
+    m.assert_called_once_with(output, "w")
 
 
 def test_save_badge_no_cairo(monkeypatch):
