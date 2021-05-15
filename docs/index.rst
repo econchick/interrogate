@@ -115,6 +115,11 @@ Command Line Options
     NOTE: To generate a PNG file, interrogate must be installed with ``interrogate[png]``, i.e.
     ``pip install interrogate[png]``.
 
+
+.. include:: ../README.rst
+   :start-after: start-uses-this
+   :end-before: end-uses-this
+
 .. include:: ../README.rst
    :start-after: start-credits
    :end-before: end-credits
