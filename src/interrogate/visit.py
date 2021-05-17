@@ -26,6 +26,7 @@ class CovNode:
         "function").
     :param bool is_nested_func: if the node itself is a nested function
         or method.
+    :param bool is_nested_cls: if the node itself is a nested class.
     :param CovNode _parent: parent node of current CovNode, if any.
     """
 
@@ -36,7 +37,8 @@ class CovNode:
     covered = attr.ib()
     node_type = attr.ib()
     is_nested_func = attr.ib()
-    _parent = attr.ib()
+    is_nested_cls = attr.ib()
+    parent = attr.ib()
 
 
 class CoverageVisitor(ast.NodeVisitor):
@@ -96,8 +98,9 @@ class CoverageVisitor(ast.NodeVisitor):
             level=len(self.stack),
             node_type=node_type,
             lineno=lineno,
+            is_nested_func=self._is_nested_func(parent, node_type),
+            is_nested_cls=self._is_nested_cls(parent, node_type),
             parent=parent,
-            is_nested_func=self._is_nested(parent, node_type),
         )
         self.stack.append(cov_node)
         self.nodes.append(cov_node)
@@ -106,12 +109,24 @@ class CoverageVisitor(ast.NodeVisitor):
 
         self.stack.pop()
 
-    def _is_nested(self, parent, node_type):
+    def _is_nested_func(self, parent, node_type):
         """Is node a nested func/method of another func/method."""
         if parent is None:
             return False
         # is it a nested function?
         if parent.node_type == "FunctionDef" and node_type == "FunctionDef":
+            return True
+        return False
+
+    def _is_nested_cls(self, parent, node_type):
+        """Is node a nested func/method of another func/method."""
+        if parent is None:
+            return False
+        # is it a nested class?
+        if (
+            parent.node_type in ("ClassDef", "FunctionDef")
+            and node_type == "ClassDef"
+        ):
             return True
         return False
 
@@ -164,6 +179,17 @@ class CoverageVisitor(ast.NodeVisitor):
                     return True
         return False
 
+    def _has_setters(self, node):
+        """Detect if node has property get/setter decorators."""
+        if not hasattr(node, "decorator_list"):
+            return False
+
+        for dec in node.decorator_list:
+            if hasattr(dec, "attr"):
+                if dec.attr == "setter":
+                    return True
+        return False
+
     def _is_func_ignored(self, node):
         """Should the AST visitor ignore this func/method node."""
         is_init = node.name == "__init__"
@@ -175,12 +201,15 @@ class CoverageVisitor(ast.NodeVisitor):
             ]
         )
         has_property_decorators = self._has_property_decorators(node)
+        has_setters = self._has_setters(node)
 
         if self.config.ignore_init_method and is_init:
             return True
         if self.config.ignore_magic and is_magic:
             return True
         if self.config.ignore_property_decorators and has_property_decorators:
+            return True
+        if self.config.ignore_property_setters and has_setters:
             return True
 
         return self._is_ignored_common(node)

@@ -57,6 +57,24 @@ Installation
 
     $ pip install interrogate
 
+Extras
+------
+
+``interrogate`` provides a way to generate a `shields.io-like coverage badge <#other-usage>`_ as an **SVG file**.
+To generate a **PNG file** instead, install ``interrogate`` with the extras ``[png]``:
+
+.. code-block:: console
+
+    $ pip install interrogate[png]
+
+**NOTICE:** Additional system libraries/tools may be required in order to generate a PNG file of the coverage badge:
+
+* on Windows, install Visual C++ compiler for Cairo;
+* on macOS, install ``cairo`` and ``libffi`` (with Homebrew for example);
+* on Linux, install the ``cairo``, ``python3-dev`` and ``libffi-dev`` packages (names may vary depending on distribution).
+
+Refer to the ``cairosvg`` `documentation <https://cairosvg.org/documentation/>`_ for more information.
+
 Usage
 =====
 
@@ -267,8 +285,18 @@ Generate a `shields.io <https://shields.io/>`_ badge (like this one! |interrogat
 .. code-block:: console
 
     $ interrogate --generate-badge PATH
-    RESULT: PASSED (minimum: 80.0%, actual: 100.0%)
+    RESULT: PASSED (minimum: 95.0%, actual: 100.0%)
     Generated badge to /Users/lynn/dev/interrogate/docs/_static/interrogate_badge.svg
+
+The default file format is ``svg``. Use the ``--badge-format`` flag to create a ``png`` file instead.
+**Note**: ``interrogate`` must be installed with ``interrogate[png]`` in order to generate ``png`` files (see `above <#extras>`_).
+
+.. code-block:: console
+
+    $ interrogate --generate-badge PATH --badge-format png
+    RESULT: PASSED (minimum: 95.0%, actual: 100.0%)
+    Generated badge to /Users/lynn/dev/interrogate/docs/_static/interrogate_badge.png
+
 
 Add it to your ``tox.ini`` file to enforce a level of coverage:
 
@@ -286,7 +314,7 @@ Or use it with `pre-commit <https://pre-commit.com/>`_:
 
     repos:
       - repo: https://github.com/econchick/interrogate
-        rev: 1.3.2  # or master if you're bold
+        rev: 1.4.0  # or master if you're bold
         hooks:
           - id: interrogate
             args: [--quiet, --fail-under=95]
@@ -324,6 +352,9 @@ Configure within your ``pyproject.toml`` (``interrogate`` will automatically det
     ignore-private = false
     ignore-property-decorators = false
     ignore-module = false
+    ignore-nested-functions = false
+    ignore-nested-classes = true
+    ignore-setters = false
     fail-under = 95
     exclude = ["setup.py", "docs", "build"]
     ignore-regex = ["^get$", "^mock_.*", ".*BaseClass.*"]
@@ -331,6 +362,8 @@ Configure within your ``pyproject.toml`` (``interrogate`` will automatically det
     quiet = false
     whitelist-regex = []
     color = true
+    generate-badge = "."
+    badge-format = "svg"
 
 
 Or configure within your ``setup.cfg`` (``interrogate`` will automatically detect a ``setup.cfg`` file and pick up default values for the command line options):
@@ -349,6 +382,9 @@ Or configure within your ``setup.cfg`` (``interrogate`` will automatically detec
     ignore-private = false
     ignore-property-decorators = false
     ignore-module = false
+    ignore-nested-functions = false
+    ignore-nested-classes = true
+    ignore-setters = false
     fail-under = 95
     exclude = setup.py,docs,build
     ignore-regex = ^get$,^mock_.*,.*BaseClass.*
@@ -356,6 +392,8 @@ Or configure within your ``setup.cfg`` (``interrogate`` will automatically detec
     quiet = false
     whitelist-regex =
     color = true
+    generate-badge = .
+    badge-format = svg
 
 
 .. warning::
@@ -404,6 +442,8 @@ To view all options available, run ``interrogate --help``:
       -n, --ignore-nested-functions   Ignore nested functions and methods.
                                       [default: False]
 
+      -C, --ignore-nested-classes     Ignore nested classes.  [default: False]
+
       -p, --ignore-private            Ignore private classes, methods, and
                                       functions starting with two underscores.
                                       [default: False]
@@ -414,6 +454,9 @@ To view all options available, run ``interrogate --help``:
 
       -P, --ignore-property-decorators
                                       Ignore methods with property setter/getter
+                                      decorators.  [default: False]
+
+      -S, --ignore-setters            Ignore methods with property setter
                                       decorators.  [default: False]
 
       -s, --ignore-semiprivate        Ignore semiprivate classes, methods, and
@@ -441,9 +484,36 @@ To view all options available, run ``interrogate --help``:
                                       change from an existing badge of the same
                                       path.
 
+      --badge-format [svg|png]        File format for the generated badge. Used
+                                      with the `-g/--generate-badge` flag.
+                                      [default: svg]
+
+                                      NOTE: To generate a PNG file, interrogate
+                                      must be installed with `interrogate[png]`,
+                                      i.e. `pip install interrogate[png]`.
+
       -h, --help                      Show this message and exit.
       -c, --config FILE               Read configuration from `pyproject.toml` or
                                       `setup.cfg`.
+
+
+.. start-uses-this
+
+Users of Interrogate
+====================
+
+* `attrs <https://github.com/python-attrs/attrs>`_
+* `OpenMMLab <https://github.com/open-mmlab>`_'s ecosystem
+* `pyjanitor <https://github.com/ericmjl/pyjanitor>`_
+* `klio <https://github.com/spotify/klio>`_
+
+Interrogate in the Wild
+-----------------------
+
+* `Why You Should Document Your Tests <https://hynek.me/articles/document-your-tests/>`_ by `Hynek Schlawack <https://twitter.com/hynek>`_
+* `Episode #181: It's time to interrogate your Python code <https://pythonbytes.fm/episodes/show/181/it-s-time-to-interrogate-your-python-code>`_ - `PythonBytes podcast <https://pythonbytes.fm/>`_
+
+.. end-uses-this
 
 .. start-credits
 

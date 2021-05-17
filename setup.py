@@ -79,11 +79,15 @@ INSTALL_REQUIRES = [
     "toml",
 ]
 EXTRAS_REQUIRE = {
+    "png": ["cairosvg"],
     "docs": ["sphinx", "sphinx-autobuild"],
     "tests": ["pytest", "pytest-cov", "pytest-mock"],
 }
 EXTRAS_REQUIRE["dev"] = (
-    EXTRAS_REQUIRE["docs"] + EXTRAS_REQUIRE["tests"] + ["wheel", "pre-commit"]
+    EXTRAS_REQUIRE["png"]
+    + EXTRAS_REQUIRE["docs"]
+    + EXTRAS_REQUIRE["tests"]
+    + ["wheel", "pre-commit"]
 )
 URL = find_meta("uri")
 LONG = (

@@ -190,6 +190,15 @@ class InterrogateCoverage:
             filtered.insert(0, module_node)
         return filtered
 
+    def _filter_inner_nested(self, nodes):
+        """Filter out children of ignored nested funcs/classes."""
+        nested_cls = [n for n in nodes if n.is_nested_cls]
+        inner_nested_nodes = [n for n in nodes if n.parent in nested_cls]
+
+        filtered_nodes = [n for n in nodes if n not in inner_nested_nodes]
+        filtered_nodes = [n for n in filtered_nodes if n not in nested_cls]
+        return filtered_nodes
+
     def _get_file_coverage(self, filename):
         """Get coverage results for a particular file."""
         with open(filename, "r", encoding="utf-8") as f:
@@ -207,6 +216,8 @@ class InterrogateCoverage:
             filtered_nodes = [
                 n for n in filtered_nodes if not n.is_nested_func
             ]
+        if self.config.ignore_nested_classes:
+            filtered_nodes = self._filter_inner_nested(filtered_nodes)
 
         results = InterrogateFileResult(
             filename=filename,

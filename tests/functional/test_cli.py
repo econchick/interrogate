@@ -52,10 +52,16 @@ def test_run_no_paths(runner, monkeypatch, tmpdir):
         (["-p"], 48.0, 1),
         # ignore property getter/setter decorators
         (["-P"], 46.2, 1),
+        # ignore property setter decorators
+        (["-S"], 46.3, 1),
         # ignore magic method docs
         (["-m"], 46.2, 1),
         # ignore init method docs
         (["-i"], 45.3, 1),
+        # ignore nested funcs
+        (["-n"], 45.3, 1),
+        # ignore nested classes
+        (["-C"], 47.2, 1),
         # ignore regex
         (["-r", "^get$"], 46.2, 1),
         # whitelist regex
@@ -86,8 +92,11 @@ def test_run_shortflags(flags, exp_result, exp_exit_code, runner):
         (["--ignore-semiprivate"], 46.9, 1),
         (["--ignore-private"], 48.0, 1),
         (["--ignore-property-decorators"], 46.2, 1),
+        (["--ignore-setters"], 46.3, 1),
         (["--ignore-magic"], 46.2, 1),
         (["--ignore-init-method"], 45.3, 1),
+        (["--ignore-nested-functions"], 45.3, 1),
+        (["--ignore-nested-classes"], 47.2, 1),
         (["--ignore-regex", "^get$"], 46.2, 1),
         (["--whitelist-regex", "^get$"], 50.0, 1),
         (["--exclude", os.path.join(SAMPLE_DIR, "partial.py")], 55.9, 1),
@@ -156,3 +165,14 @@ def test_generate_badge(quiet, runner, tmp_path):
         actual_output = actual_output.replace("\n", "")
 
     assert expected_output == actual_output
+
+
+def test_incompatible_options(runner):
+    """Raise an error when mutually exclusive options are used together."""
+    result = runner.invoke(cli.main, ["--badge-format", "svg"])
+    assert 2 == result.exit_code
+    exp_error = (
+        "Invalid value: The `--badge-format` option must be used along "
+        "with the `-g/--generate-badge option."
+    )
+    assert exp_error in result.output

@@ -60,6 +60,10 @@ Command Line Options
 
     Ignore nested functions and methods.  [default: ``False``]
 
+.. option:: -C, --ignore-nested-classes
+
+    Ignore nested classes.  [default: ``False``]
+
 .. option:: -p, --ignore-private
 
     Ignore private classes, methods, and functions starting with two underscores.  [default: ``False``]
@@ -69,6 +73,10 @@ Command Line Options
 .. option:: -P, --ignore-property-decorators
 
     Ignore methods with property setter/getter decorators.  [default: ``False``]
+
+.. option:: -S, --ignore-setters
+
+    Ignore methods with property setter decorators.  [default: ``False``]
 
 .. option:: -s, --ignore-semiprivate
 
@@ -100,6 +108,17 @@ Command Line Options
     or directory. Will not generate a badge if results did not change from an existing badge of
     the same path.
 
+.. option:: --badge-format [svg|png]
+
+    File format for the generated badge. Used with the ``-g/--generate-badge`` flag.  [default: ``svg``]
+
+    NOTE: To generate a PNG file, interrogate must be installed with ``interrogate[png]``, i.e.
+    ``pip install interrogate[png]``.
+
+
+.. include:: ../README.rst
+   :start-after: start-uses-this
+   :end-before: end-uses-this
 
 .. include:: ../README.rst
    :start-after: start-credits
