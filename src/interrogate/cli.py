@@ -5,7 +5,6 @@ import os
 import sys
 
 import click
-
 import colorama
 
 from interrogate import __version__ as version

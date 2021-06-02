@@ -21,7 +21,7 @@ repos:
         exclude: ^(tests/functional/sample)
 
   - repo: https://github.com/pre-commit/mirrors-isort
-    rev: v4.3.21
+    rev: v5.8.0
     hooks:
       - id: isort
         additional_dependencies: [toml]

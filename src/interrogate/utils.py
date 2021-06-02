@@ -9,11 +9,10 @@ import re
 import shutil
 import sys
 
+import colorama
 import tabulate
 
 from py import io as py_io
-
-import colorama
 
 
 IS_WINDOWS = sys.platform == "win32"
