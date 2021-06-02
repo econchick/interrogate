@@ -40,7 +40,10 @@ def test_find_project_root(srcs, patch_func, expected, monkeypatch):
 
 @pytest.mark.parametrize(
     "is_file,expected",
-    ((True, str(pathlib.Path("/usr/src/pyproject.toml"))), (False, None),),
+    (
+        (True, str(pathlib.Path("/usr/src/pyproject.toml"))),
+        (False, None),
+    ),
 )
 def test_find_project_config(is_file, expected, mocker, monkeypatch):
     """Return absolute path if pyproject.toml or setup.cfg is detected."""

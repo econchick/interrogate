@@ -19,21 +19,39 @@ IS_WINDOWS = sys.platform in ("cygwin", "win32")
 @pytest.mark.parametrize(
     "paths,conf,exp_results",
     (
-        ([os.path.join(SAMPLE_DIR, "empty.py"),], {}, (1, 0, 1, "0.0")),
         (
-            [os.path.join(SAMPLE_DIR, "empty.py"),],
+            [
+                os.path.join(SAMPLE_DIR, "empty.py"),
+            ],
+            {},
+            (1, 0, 1, "0.0"),
+        ),
+        (
+            [
+                os.path.join(SAMPLE_DIR, "empty.py"),
+            ],
             {"ignore_module": True},
             (0, 0, 0, "100.0"),
         ),
-        ([SAMPLE_DIR,], {}, (56, 26, 30, "46.4")),
+        (
+            [
+                SAMPLE_DIR,
+            ],
+            {},
+            (56, 26, 30, "46.4"),
+        ),
         ([os.path.join(SAMPLE_DIR, "partial.py")], {}, (22, 7, 15, "31.8")),
         (
-            [os.path.join(SAMPLE_DIR, "full.py"),],
+            [
+                os.path.join(SAMPLE_DIR, "full.py"),
+            ],
             {"ignore_nested_functions": True},
             (17, 17, 0, "100.0"),
         ),
         (
-            [os.path.join(SAMPLE_DIR, "partial.py"),],
+            [
+                os.path.join(SAMPLE_DIR, "partial.py"),
+            ],
             {"ignore_nested_functions": True},
             (20, 6, 14, "30.0"),
         ),

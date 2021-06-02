@@ -300,7 +300,9 @@ def main(ctx, paths, **kwargs):
         color=kwargs["color"],
     )
     interrogate_coverage = coverage.InterrogateCoverage(
-        paths=paths, conf=conf, excluded=kwargs["exclude"],
+        paths=paths,
+        conf=conf,
+        excluded=kwargs["exclude"],
     )
     results = interrogate_coverage.get_coverage()
 
