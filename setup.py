@@ -120,6 +120,8 @@ setup(
     python_requires=">=3.6",
     install_requires=INSTALL_REQUIRES,
     extras_require=EXTRAS_REQUIRE,
-    entry_points={"console_scripts": ["interrogate = interrogate.cli:main"],},
+    entry_points={
+        "console_scripts": ["interrogate = interrogate.cli:main"],
+    },
     classifiers=CLASSIFIERS,
 )
