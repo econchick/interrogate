@@ -72,7 +72,7 @@ CLASSIFIERS = [
 ]
 INSTALL_REQUIRES = [
     "attrs",
-    "click>=7.0",
+    "click>=7.1",
     "colorama",
     "py",
     "tabulate",
