@@ -93,8 +93,8 @@ def test_coverage_errors(capsys):
 @pytest.mark.parametrize(
     "level,exp_fixture_file",
     (
-        # (0, "expected_no_verbosity.txt"),
-        # (1, "expected_summary.txt"),
+        (0, "expected_no_verbosity.txt"),
+        (1, "expected_summary.txt"),
         (2, "expected_detailed.txt"),
     ),
 )
