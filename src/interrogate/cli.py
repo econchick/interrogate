@@ -145,8 +145,10 @@ from interrogate import utils
     is_flag=True,
     default=False,
     show_default=True,
-    help="Ignore semiprivate classes, methods, and functions starting with a "
-    "single underscore.",
+    help=(
+        "Ignore semiprivate classes, methods, and functions starting with a "
+        "single underscore."
+    ),
 )
 @click.option(
     "-r",
