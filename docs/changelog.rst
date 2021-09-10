@@ -1,14 +1,22 @@
 Changelog
 =========
 
-1.5.0 (UNRELEASED)
+.. short-log
+
+1.5.0 (2021-09-10)
 ------------------
+
+Added
+^^^^^
 
 * Set minimum ``click`` version (thank you bildzeitung! `#81 <https://github.com/econchick/interrogate/issues/81>`_, `#82 <https://github.com/econchick/interrogate/pull/82>`_).
 * Add ``--omit-covered-files`` flag to skip reporting fully-covered files (`#85 <https://github.com/econchick/interrogate/issues/85>`_).
-* Clarify ``verbose`` configuration (`#83 <https://github.com/econchick/interrogate/issues/83>`_).
+* Add support for different badge styles via new ``--badge-style`` flag (`#86 <https://github.com/econchick/interrogate/issues/86>`_).
 * Add 3.10 support!
-* Add support for different badge styles (`#86 <https://github.com/econchick/interrogate/issues/86>`_).
+
+Fixed
+^^^^^
+* Clarify ``verbose`` configuration (`#83 <https://github.com/econchick/interrogate/issues/83>`_).
 
 .. short-log
 
@@ -21,8 +29,6 @@ Added
 * Support for generating the status badge as a PNG file with a new ``--badge-format`` flag (`#70 <https://github.com/econchick/interrogate/issues/70>`_).
 * Add new option ``-C`` / ``--ignore-nested-classes`` to ignore – you guessed it – nested classes (`#65 <https://github.com/econchick/interrogate/issues/65>`_).
 * Add new option ``-S`` / ``--ignore-setters`` to ignore property setter decorators (`#68 <https://github.com/econchick/interrogate/issues/68>`_).
-
-.. short-log
 
 1.3.2 (2020-11-03)
 ------------------
