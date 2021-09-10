@@ -145,8 +145,10 @@ from interrogate import utils
     is_flag=True,
     default=False,
     show_default=True,
-    help="Ignore semiprivate classes, methods, and functions starting with a "
-    "single underscore.",
+    help=(
+        "Ignore semiprivate classes, methods, and functions starting with a "
+        "single underscore."
+    ),
 )
 @click.option(
     "-r",
@@ -188,6 +190,16 @@ from interrogate import utils
     show_default=True,
     envvar="INTERROGATE_COLOR",
     help="Toggle color output on/off when printing to stdout.",
+)
+@click.option(
+    "--omit-covered-files",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help=(
+        "Omit reporting files that have 100% documentation coverage. This "
+        "option is ignored if verbosity is not set."
+    ),
 )
 @click.option(
     "-g",
@@ -260,6 +272,7 @@ def main(ctx, paths, **kwargs):
     .. versionadded:: 1.4.0 ``--badge-format``
     .. versionadded:: 1.4.0 ``--ignore-nested-classes``
     .. versionadded:: 1.4.0 ``--ignore-setters``
+    .. versionadded:: 1.5.0 ``--omit-covered-files``
 
     .. versionchanged:: 1.3.1 only generate badge if results change from
         an existing badge.
@@ -283,20 +296,21 @@ def main(ctx, paths, **kwargs):
         kwargs["ignore_module"] = True
 
     conf = config.InterrogateConfig(
-        ignore_init_method=kwargs["ignore_init_method"],
-        ignore_init_module=kwargs["ignore_init_module"],
+        color=kwargs["color"],
+        fail_under=kwargs["fail_under"],
+        ignore_regex=kwargs["ignore_regex"],
         ignore_magic=kwargs["ignore_magic"],
         ignore_module=kwargs["ignore_module"],
-        ignore_nested_functions=kwargs["ignore_nested_functions"],
-        ignore_nested_classes=kwargs["ignore_nested_classes"],
-        ignore_property_decorators=kwargs["ignore_property_decorators"],
-        ignore_property_setters=kwargs["ignore_setters"],
         ignore_private=kwargs["ignore_private"],
-        ignore_regex=kwargs["ignore_regex"],
         ignore_semiprivate=kwargs["ignore_semiprivate"],
-        fail_under=kwargs["fail_under"],
+        ignore_init_method=kwargs["ignore_init_method"],
+        ignore_init_module=kwargs["ignore_init_module"],
+        ignore_nested_classes=kwargs["ignore_nested_classes"],
+        ignore_nested_functions=kwargs["ignore_nested_functions"],
+        ignore_property_setters=kwargs["ignore_setters"],
+        ignore_property_decorators=kwargs["ignore_property_decorators"],
         include_regex=kwargs["whitelist_regex"],
-        color=kwargs["color"],
+        omit_covered_files=kwargs["omit_covered_files"],
     )
     interrogate_coverage = coverage.InterrogateCoverage(
         paths=paths,

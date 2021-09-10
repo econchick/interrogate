@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.5.0 (UNRELEASED)
+------------------
+
+* Set minimum ``click`` version (thank you bildzeitung! `#81 <https://github.com/econchick/interrogate/issues/81>`_, `#82 <https://github.com/econchick/interrogate/pull/82>`_)
+* Add ``--omit-covered-files`` flag to skip reporting fully-covered files (`#85 <https://github.com/econchick/interrogate/issues/85>`_)
+
 .. short-log
 
 1.4.0 (2021-05-14)

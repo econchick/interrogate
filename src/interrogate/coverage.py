@@ -116,6 +116,7 @@ class InterrogateCoverage:
         self.common_base = pathlib.Path("/")
         self.output_formatter = None
         self._add_common_exclude()
+        self.skipped_file_count = 0
 
     def _add_common_exclude(self):
         """Ignore common directories by default"""
@@ -297,6 +298,11 @@ class InterrogateCoverage:
         verbose_tbl.append(header)
         verbose_tbl.append(self.output_formatter.TABLE_SEPARATOR)
         for file_result in combined_results.file_results:
+            if (
+                self.config.omit_covered_files
+                and file_result.perc_covered == 100
+            ):
+                continue
             nodes = file_result.nodes
             nodes = sorted(nodes, key=_sort_nodes)
             for n in nodes:
@@ -309,6 +315,11 @@ class InterrogateCoverage:
     def _print_detailed_table(self, results):
         """Print detailed table to the given output stream."""
         detailed_table = self._create_detailed_table(results)
+
+        # don't print an empty table if --omit-covered & all files have 100%
+        if len(detailed_table) < 3:
+            return
+
         to_print = tabulate.tabulate(
             detailed_table,
             tablefmt=self.output_formatter.get_table_formatter(
@@ -336,6 +347,11 @@ class InterrogateCoverage:
 
         for file_result in combined_results.file_results:
             filename = self._get_filename(file_result.filename)
+            if (
+                self.config.omit_covered_files
+                and file_result.perc_covered == 100
+            ):
+                continue
             perc_covered = "{:.0f}%".format(file_result.perc_covered)
             row = [
                 filename,
@@ -346,7 +362,11 @@ class InterrogateCoverage:
             ]
             table.append(row)
 
-        table.append(self.output_formatter.TABLE_SEPARATOR)
+        # avoid printing an unneeded second separator if there are
+        # no summary results from --omit-covered
+        if len(table) > 2:
+            table.append(self.output_formatter.TABLE_SEPARATOR)
+
         total_perc_covered = "{:.1f}%".format(combined_results.perc_covered)
         total_row = [
             "TOTAL",
@@ -415,6 +435,37 @@ class InterrogateCoverage:
             return base + "\\"
         return base + "/"
 
+    def _print_omitted_file_count(self, results):
+        """Print # of files omitted due to 100% coverage and --omit-covered.
+
+        :param InterrogateResults results: results of docstring coverage
+            interrogation.
+        """
+        if not self.config.omit_covered_files:
+            return
+
+        omitted_files = [
+            r for r in results.file_results if r.perc_covered == 100
+        ]
+        omitted_file_count = len(omitted_files)
+        if omitted_file_count == 0:
+            return
+
+        total_files_scanned = len(results.file_results)
+        files_humanized = "files" if total_files_scanned > 1 else "file"
+        files_skipped = (
+            f"({omitted_file_count} of {total_files_scanned} {files_humanized} "
+            "omitted due to complete coverage)"
+        )
+        to_print = tabulate.tabulate(
+            [self.output_formatter.TABLE_SEPARATOR, [files_skipped]],
+            tablefmt=self.output_formatter.get_table_formatter(
+                table_type="summary"
+            ),
+            colalign=("center",),
+        )
+        self.output_formatter.tw.line(to_print)
+
     def print_results(self, results, output, verbosity):
         """Print results to a given output stream.
 
@@ -453,11 +504,13 @@ class InterrogateCoverage:
                 status, self.config.fail_under, results.perc_covered
             )
             if verbosity > 0:
+                self._print_omitted_file_count(results)
+
                 self.output_formatter.tw.sep(
                     "-",
                     title=status_line,
                     fullwidth=self.output_formatter.TERMINAL_WIDTH,
-                    **color
+                    **color,
                 )
             else:
                 self.output_formatter.tw.line(status_line)

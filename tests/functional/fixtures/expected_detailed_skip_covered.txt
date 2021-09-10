@@ -1,0 +1,44 @@
+------------------------------ Detailed Coverage -------------------------------
+| Name                                                             |    Status |
+|------------------------------------------------------------------|-----------|
+| empty.py (module)                                                |    MISSED |
+|------------------------------------------------------------------|-----------|
+| partial.py (module)                                              |   COVERED |
+|   Foo (L5)                                                       |   COVERED |
+|     Foo.__init__ (L8)                                            |   COVERED |
+|     Foo.__str__ (L12)                                            |   COVERED |
+|     Foo.__repr__ (L16)                                           |    MISSED |
+|     Foo._semiprivate_documented (L19)                            |   COVERED |
+|     Foo._semiprivate_undocumented (L23)                          |    MISSED |
+|     Foo.__private (L26)                                          |    MISSED |
+|     Foo.method_foo (L29)                                         |    MISSED |
+|     Foo.get (L32)                                                |    MISSED |
+|     Foo.get (L35)                                                |    MISSED |
+|     Foo.a_prop (L39)                                             |    MISSED |
+|     Foo.a_prop (L43)                                             |    MISSED |
+|   documented_top_level_func (L47)                                |   COVERED |
+|     documented_top_level_func.documented_inner_func (L50)        |   COVERED |
+|   undocumented_top_level_func (L55)                              |    MISSED |
+|     undocumented_top_level_func.undocumented_inner_func (L56)    |    MISSED |
+|   Bar (L60)                                                      |    MISSED |
+|     Bar.method_bar (L61)                                         |    MISSED |
+|       Bar.method_bar.InnerBar (L62)                              |    MISSED |
+|   _SemiprivateClass (L66)                                        |    MISSED |
+|   __PrivateClass (L70)                                           |    MISSED |
+|------------------------------------------------------------------|-----------|
+| child_sample/__init__.py (module)                                |    MISSED |
+|------------------------------------------------------------------|-----------|
+| child_sample/child_sample_module.py (module)                     |    MISSED |
+|   ChildFoo (L5)                                                  |    MISSED |
+|     ChildFoo.__init__ (L6)                                       |    MISSED |
+|     ChildFoo.__str__ (L9)                                        |    MISSED |
+|     ChildFoo._ignore_me (L12)                                    |    MISSED |
+|     ChildFoo.__ignore_me_too (L15)                               |    MISSED |
+|     ChildFoo.method_foo (L18)                                    |    MISSED |
+|   a_child_func (L22)                                             |    MISSED |
+|   ChildBar (L26)                                                 |    MISSED |
+|     ChildBar.method_bar (L27)                                    |    MISSED |
+|       ChildBar.method_bar.InnerBar (L28)                         |    MISSED |
+|   _ChildBaz (L34)                                                |    MISSED |
+|   __ChildBla (L38)                                               |    MISSED |
+|------------------------------------------------------------------|-----------|

@@ -98,22 +98,22 @@ Add verbosity to see a summary:
     |---------------------------------------|---------|--------|---------|----------|
     | src/interrogate/__init__.py           |       1 |      0 |       1 |     100% |
     | src/interrogate/__main__.py           |       1 |      0 |       1 |     100% |
-    | src/interrogate/badge_gen.py          |       5 |      0 |       5 |     100% |
+    | src/interrogate/badge_gen.py          |       6 |      0 |       6 |     100% |
     | src/interrogate/cli.py                |       2 |      0 |       2 |     100% |
     | src/interrogate/config.py             |       8 |      0 |       8 |     100% |
-    | src/interrogate/coverage.py           |      25 |      0 |      25 |     100% |
+    | src/interrogate/coverage.py           |      27 |      0 |      27 |     100% |
     | src/interrogate/utils.py              |      10 |      0 |      10 |     100% |
-    | src/interrogate/visit.py              |      16 |      0 |      16 |     100% |
+    | src/interrogate/visit.py              |      18 |      0 |      18 |     100% |
     | tests/functional/__init__.py          |       1 |      0 |       1 |     100% |
-    | tests/functional/test_cli.py          |       7 |      0 |       7 |     100% |
-    | tests/functional/test_coverage.py     |       6 |      0 |       6 |     100% |
+    | tests/functional/test_cli.py          |       8 |      0 |       8 |     100% |
+    | tests/functional/test_coverage.py     |      10 |      0 |      10 |     100% |
     | tests/unit/__init__.py                |       1 |      0 |       1 |     100% |
-    | tests/unit/test_badge_gen.py          |       6 |      0 |       6 |     100% |
+    | tests/unit/test_badge_gen.py          |       8 |      0 |       8 |     100% |
     | tests/unit/test_config.py             |      10 |      0 |      10 |     100% |
     | tests/unit/test_utils.py              |      13 |      0 |      13 |     100% |
     |---------------------------------------|---------|--------|---------|----------|
-    | TOTAL                                 |     112 |      0 |     112 |   100.0% |
-    ---------------- RESULT: PASSED (minimum: 95.0%, actual: 100.0%) ----------------
+    | TOTAL                                 |     124 |      0 |     124 |   100.0% |
+    ---------------- RESULT: PASSED (minimum: 80.0%, actual: 100.0%) ----------------
 
 
 Add even *more* verbosity:
@@ -132,113 +132,125 @@ Add even *more* verbosity:
     | src/interrogate/__main__.py (module)                                | COVERED |
     |---------------------------------------------------------------------|---------|
     | src/interrogate/badge_gen.py (module)                               | COVERED |
-    |   save_badge (L33)                                                  | COVERED |
-    |   get_badge (L50)                                                   | COVERED |
-    |   get_color (L66)                                                   | COVERED |
-    |   create (L79)                                                      | COVERED |
+    |   save_badge (L42)                                                  | COVERED |
+    |   get_badge (L87)                                                   | COVERED |
+    |   should_generate_badge (L103)                                      | COVERED |
+    |   get_color (L160)                                                  | COVERED |
+    |   create (L173)                                                     | COVERED |
     |---------------------------------------------------------------------|---------|
     | src/interrogate/cli.py (module)                                     | COVERED |
-    |   main (L218)                                                       | COVERED |
+    |   main (L258)                                                       | COVERED |
     |---------------------------------------------------------------------|---------|
     | src/interrogate/config.py (module)                                  | COVERED |
-    |   InterrogateConfig (L17)                                           | COVERED |
-    |   find_project_root (L52)                                           | COVERED |
-    |   find_project_config (L80)                                         | COVERED |
-    |   parse_pyproject_toml (L91)                                        | COVERED |
-    |   sanitize_list_values (L107)                                       | COVERED |
-    |   parse_setup_cfg (L130)                                            | COVERED |
-    |   read_config_file (L164)                                           | COVERED |
+    |   InterrogateConfig (L19)                                           | COVERED |
+    |   find_project_root (L61)                                           | COVERED |
+    |   find_project_config (L89)                                         | COVERED |
+    |   parse_pyproject_toml (L100)                                       | COVERED |
+    |   sanitize_list_values (L116)                                       | COVERED |
+    |   parse_setup_cfg (L139)                                            | COVERED |
+    |   read_config_file (L173)                                           | COVERED |
     |---------------------------------------------------------------------|---------|
     | src/interrogate/coverage.py (module)                                | COVERED |
-    |   BaseInterrogateResult (L21)                                       | COVERED |
-    |     BaseInterrogateResult.perc_covered (L35)                        | COVERED |
-    |   InterrogateFileResult (L49)                                       | COVERED |
-    |     InterrogateFileResult.combine (L62)                             | COVERED |
-    |   InterrogateResults (L76)                                          | COVERED |
-    |     InterrogateResults.combine (L88)                                | COVERED |
-    |   InterrogateCoverage (L96)                                         | COVERED |
-    |     InterrogateCoverage._add_common_exclude (L115)                  | COVERED |
-    |     InterrogateCoverage._filter_files (L122)                        | COVERED |
-    |     InterrogateCoverage.get_filenames_from_paths (L139)             | COVERED |
-    |     InterrogateCoverage._filter_nodes (L166)                        | COVERED |
-    |     InterrogateCoverage._get_file_coverage (L192)                   | COVERED |
-    |     InterrogateCoverage._get_coverage (L218)                        | COVERED |
-    |     InterrogateCoverage.get_coverage (L235)                         | COVERED |
-    |     InterrogateCoverage._get_filename (L240)                        | COVERED |
-    |     InterrogateCoverage._get_detailed_row (L251)                    | COVERED |
-    |     InterrogateCoverage._create_detailed_table (L268)               | COVERED |
-    |       InterrogateCoverage._create_detailed_table._sort_nodes (L275) | COVERED |
-    |     InterrogateCoverage._print_detailed_table (L297)                | COVERED |
-    |     InterrogateCoverage._create_summary_table (L315)                | COVERED |
-    |     InterrogateCoverage._print_summary_table (L349)                 | COVERED |
-    |     InterrogateCoverage._sort_results (L367)                        | COVERED |
-    |     InterrogateCoverage._get_header_base (L397)                     | COVERED |
-    |     InterrogateCoverage.print_results (L406)                        | COVERED |
+    |   BaseInterrogateResult (L23)                                       | COVERED |
+    |     BaseInterrogateResult.perc_covered (L37)                        | COVERED |
+    |   InterrogateFileResult (L54)                                       | COVERED |
+    |     InterrogateFileResult.combine (L67)                             | COVERED |
+    |   InterrogateResults (L81)                                          | COVERED |
+    |     InterrogateResults.combine (L93)                                | COVERED |
+    |   InterrogateCoverage (L101)                                        | COVERED |
+    |     InterrogateCoverage._add_common_exclude (L121)                  | COVERED |
+    |     InterrogateCoverage._filter_files (L128)                        | COVERED |
+    |     InterrogateCoverage.get_filenames_from_paths (L141)             | COVERED |
+    |     InterrogateCoverage._filter_nodes (L168)                        | COVERED |
+    |     InterrogateCoverage._filter_inner_nested (L194)                 | COVERED |
+    |     InterrogateCoverage._get_file_coverage (L203)                   | COVERED |
+    |     InterrogateCoverage._get_coverage (L231)                        | COVERED |
+    |     InterrogateCoverage.get_coverage (L248)                         | COVERED |
+    |     InterrogateCoverage._get_filename (L253)                        | COVERED |
+    |     InterrogateCoverage._get_detailed_row (L264)                    | COVERED |
+    |     InterrogateCoverage._create_detailed_table (L281)               | COVERED |
+    |       InterrogateCoverage._create_detailed_table._sort_nodes (L288) | COVERED |
+    |     InterrogateCoverage._print_detailed_table (L315)                | COVERED |
+    |     InterrogateCoverage._create_summary_table (L338)                | COVERED |
+    |     InterrogateCoverage._print_summary_table (L381)                 | COVERED |
+    |     InterrogateCoverage._sort_results (L399)                        | COVERED |
+    |     InterrogateCoverage._get_header_base (L429)                     | COVERED |
+    |     InterrogateCoverage._print_omitted_file_count (L438)            | COVERED |
+    |     InterrogateCoverage.print_results (L469)                        | COVERED |
     |---------------------------------------------------------------------|---------|
     | src/interrogate/utils.py (module)                                   | COVERED |
-    |   parse_regex (L22)                                                 | COVERED |
-    |   smart_open (L41)                                                  | COVERED |
-    |   get_common_base (L61)                                             | COVERED |
-    |   OutputFormatter (L81)                                             | COVERED |
-    |     OutputFormatter.should_markup (L91)                             | COVERED |
-    |     OutputFormatter.set_detailed_markup (L106)                      | COVERED |
-    |     OutputFormatter.set_summary_markup (L130)                       | COVERED |
-    |     OutputFormatter._interrogate_line_formatter (L159)              | COVERED |
-    |     OutputFormatter.get_table_formatter (L222)                      | COVERED |
+    |   parse_regex (L21)                                                 | COVERED |
+    |   smart_open (L40)                                                  | COVERED |
+    |   get_common_base (L60)                                             | COVERED |
+    |   OutputFormatter (L80)                                             | COVERED |
+    |     OutputFormatter.should_markup (L90)                             | COVERED |
+    |     OutputFormatter.set_detailed_markup (L105)                      | COVERED |
+    |     OutputFormatter.set_summary_markup (L129)                       | COVERED |
+    |     OutputFormatter._interrogate_line_formatter (L158)              | COVERED |
+    |     OutputFormatter.get_table_formatter (L226)                      | COVERED |
     |---------------------------------------------------------------------|---------|
     | src/interrogate/visit.py (module)                                   | COVERED |
     |   CovNode (L15)                                                     | COVERED |
-    |   CoverageVisitor (L42)                                             | COVERED |
-    |     CoverageVisitor._has_doc (L56)                                  | COVERED |
-    |     CoverageVisitor._visit_helper (L63)                             | COVERED |
-    |     CoverageVisitor._is_nested (L109)                               | COVERED |
-    |     CoverageVisitor._is_private (L118)                              | COVERED |
-    |     CoverageVisitor._is_semiprivate (L126)                          | COVERED |
-    |     CoverageVisitor._is_ignored_common (L136)                       | COVERED |
-    |     CoverageVisitor._has_property_decorators (L153)                 | COVERED |
-    |     CoverageVisitor._is_func_ignored (L167)                         | COVERED |
-    |     CoverageVisitor._is_class_ignored (L188)                        | COVERED |
-    |     CoverageVisitor.visit_Module (L192)                             | COVERED |
-    |     CoverageVisitor.visit_ClassDef (L199)                           | COVERED |
-    |     CoverageVisitor.visit_FunctionDef (L208)                        | COVERED |
-    |     CoverageVisitor.visit_AsyncFunctionDef (L217)                   | COVERED |
+    |   CoverageVisitor (L44)                                             | COVERED |
+    |     CoverageVisitor._has_doc (L58)                                  | COVERED |
+    |     CoverageVisitor._visit_helper (L65)                             | COVERED |
+    |     CoverageVisitor._is_nested_func (L112)                          | COVERED |
+    |     CoverageVisitor._is_nested_cls (L121)                           | COVERED |
+    |     CoverageVisitor._is_private (L133)                              | COVERED |
+    |     CoverageVisitor._is_semiprivate (L141)                          | COVERED |
+    |     CoverageVisitor._is_ignored_common (L151)                       | COVERED |
+    |     CoverageVisitor._has_property_decorators (L168)                 | COVERED |
+    |     CoverageVisitor._has_setters (L182)                             | COVERED |
+    |     CoverageVisitor._is_func_ignored (L193)                         | COVERED |
+    |     CoverageVisitor._is_class_ignored (L217)                        | COVERED |
+    |     CoverageVisitor.visit_Module (L221)                             | COVERED |
+    |     CoverageVisitor.visit_ClassDef (L228)                           | COVERED |
+    |     CoverageVisitor.visit_FunctionDef (L237)                        | COVERED |
+    |     CoverageVisitor.visit_AsyncFunctionDef (L246)                   | COVERED |
     |---------------------------------------------------------------------|---------|
     | tests/functional/__init__.py (module)                               | COVERED |
     |---------------------------------------------------------------------|---------|
     | tests/functional/test_cli.py (module)                               | COVERED |
     |   runner (L22)                                                      | COVERED |
     |   test_run_no_paths (L30)                                           | COVERED |
-    |   test_run_shortflags (L71)                                         | COVERED |
-    |   test_run_longflags (L97)                                          | COVERED |
-    |   test_run_multiple_flags (L115)                                    | COVERED |
-    |   test_generate_badge (L126)                                        | COVERED |
+    |   test_run_shortflags (L77)                                         | COVERED |
+    |   test_run_longflags (L106)                                         | COVERED |
+    |   test_run_multiple_flags (L124)                                    | COVERED |
+    |   test_generate_badge (L135)                                        | COVERED |
+    |   test_incompatible_options (L170)                                  | COVERED |
     |---------------------------------------------------------------------|---------|
     | tests/functional/test_coverage.py (module)                          | COVERED |
-    |   test_coverage_simple (L42)                                        | COVERED |
-    |   test_coverage_errors (L55)                                        | COVERED |
-    |   test_print_results (L83)                                          | COVERED |
-    |   test_print_results_ignore_module (L117)                           | COVERED |
-    |   test_print_results_single_file (L144)                             | COVERED |
+    |   test_coverage_simple (L60)                                        | COVERED |
+    |   test_coverage_errors (L73)                                        | COVERED |
+    |   test_print_results (L101)                                         | COVERED |
+    |   test_print_results_omit_covered (L130)                            | COVERED |
+    |   test_print_results_omit_none (L156)                               | COVERED |
+    |   test_print_results_omit_all_summary (L174)                        | COVERED |
+    |   test_print_results_omit_all_detailed (L198)                       | COVERED |
+    |   test_print_results_ignore_module (L226)                           | COVERED |
+    |   test_print_results_single_file (L253)                             | COVERED |
     |---------------------------------------------------------------------|---------|
     | tests/unit/__init__.py (module)                                     | COVERED |
     |---------------------------------------------------------------------|---------|
     | tests/unit/test_badge_gen.py (module)                               | COVERED |
-    |   test_save_badge (L25)                                             | COVERED |
-    |   test_save_badge_windows (L47)                                     | COVERED |
-    |   test_get_badge (L61)                                              | COVERED |
-    |   test_get_color (L85)                                              | COVERED |
-    |   test_create (L102)                                                | COVERED |
+    |   test_save_badge (L26)                                             | COVERED |
+    |   test_save_badge_windows (L50)                                     | COVERED |
+    |   test_save_badge_no_cairo (L62)                                    | COVERED |
+    |   test_get_badge (L73)                                              | COVERED |
+    |   test_should_generate (L96)                                        | COVERED |
+    |   test_get_color (L115)                                             | COVERED |
+    |   test_create (L136)                                                | COVERED |
     |---------------------------------------------------------------------|---------|
     | tests/unit/test_config.py (module)                                  | COVERED |
     |   test_find_project_root (L29)                                      | COVERED |
-    |   test_find_project_config (L45)                                    | COVERED |
-    |   test_parse_pyproject_toml (L54)                                   | COVERED |
-    |   test_sanitize_list_values (L84)                                   | COVERED |
-    |   test_parse_setup_cfg (L89)                                        | COVERED |
-    |   test_parse_setup_cfg_raises (L114)                                | COVERED |
-    |   test_read_config_file_none (L125)                                 | COVERED |
-    |   test_read_config_file (L184)                                      | COVERED |
-    |   test_read_config_file_raises (L198)                               | COVERED |
+    |   test_find_project_config (L48)                                    | COVERED |
+    |   test_parse_pyproject_toml (L57)                                   | COVERED |
+    |   test_sanitize_list_values (L93)                                   | COVERED |
+    |   test_parse_setup_cfg (L98)                                        | COVERED |
+    |   test_parse_setup_cfg_raises (L123)                                | COVERED |
+    |   test_read_config_file_none (L134)                                 | COVERED |
+    |   test_read_config_file (L193)                                      | COVERED |
+    |   test_read_config_file_raises (L207)                               | COVERED |
     |---------------------------------------------------------------------|---------|
     | tests/unit/test_utils.py (module)                                   | COVERED |
     |   test_parse_regex (L32)                                            | COVERED |
@@ -260,22 +272,22 @@ Add even *more* verbosity:
     |---------------------------------------|---------|--------|---------|----------|
     | src/interrogate/__init__.py           |       1 |      0 |       1 |     100% |
     | src/interrogate/__main__.py           |       1 |      0 |       1 |     100% |
-    | src/interrogate/badge_gen.py          |       5 |      0 |       5 |     100% |
+    | src/interrogate/badge_gen.py          |       6 |      0 |       6 |     100% |
     | src/interrogate/cli.py                |       2 |      0 |       2 |     100% |
     | src/interrogate/config.py             |       8 |      0 |       8 |     100% |
-    | src/interrogate/coverage.py           |      25 |      0 |      25 |     100% |
+    | src/interrogate/coverage.py           |      27 |      0 |      27 |     100% |
     | src/interrogate/utils.py              |      10 |      0 |      10 |     100% |
-    | src/interrogate/visit.py              |      16 |      0 |      16 |     100% |
+    | src/interrogate/visit.py              |      18 |      0 |      18 |     100% |
     | tests/functional/__init__.py          |       1 |      0 |       1 |     100% |
-    | tests/functional/test_cli.py          |       7 |      0 |       7 |     100% |
-    | tests/functional/test_coverage.py     |       6 |      0 |       6 |     100% |
+    | tests/functional/test_cli.py          |       8 |      0 |       8 |     100% |
+    | tests/functional/test_coverage.py     |      10 |      0 |      10 |     100% |
     | tests/unit/__init__.py                |       1 |      0 |       1 |     100% |
-    | tests/unit/test_badge_gen.py          |       6 |      0 |       6 |     100% |
+    | tests/unit/test_badge_gen.py          |       8 |      0 |       8 |     100% |
     | tests/unit/test_config.py             |      10 |      0 |      10 |     100% |
     | tests/unit/test_utils.py              |      13 |      0 |      13 |     100% |
     |---------------------------------------|---------|--------|---------|----------|
-    | TOTAL                                 |     112 |      0 |     112 |   100.0% |
-    ---------------- RESULT: PASSED (minimum: 95.0%, actual: 100.0%) ----------------
+    | TOTAL                                 |     124 |      0 |     124 |   100.0% |
+    ---------------- RESULT: PASSED (minimum: 80.0%, actual: 100.0%) ----------------
 
 Other Usage
 ===========
@@ -285,7 +297,7 @@ Generate a `shields.io <https://shields.io/>`_ badge (like this one! |interrogat
 .. code-block:: console
 
     $ interrogate --generate-badge PATH
-    RESULT: PASSED (minimum: 95.0%, actual: 100.0%)
+    RESULT: PASSED (minimum: 80.0%, actual: 100.0%)
     Generated badge to /Users/lynn/dev/interrogate/docs/_static/interrogate_badge.svg
 
 The default file format is ``svg``. Use the ``--badge-format`` flag to create a ``png`` file instead.
@@ -294,7 +306,7 @@ The default file format is ``svg``. Use the ``--badge-format`` flag to create a 
 .. code-block:: console
 
     $ interrogate --generate-badge PATH --badge-format png
-    RESULT: PASSED (minimum: 95.0%, actual: 100.0%)
+    RESULT: PASSED (minimum: 80.0%, actual: 100.0%)
     Generated badge to /Users/lynn/dev/interrogate/docs/_static/interrogate_badge.png
 
 
@@ -362,6 +374,7 @@ Configure within your ``pyproject.toml`` (``interrogate`` will automatically det
     quiet = false
     whitelist-regex = []
     color = true
+    omit-covered-files = false
     generate-badge = "."
     badge-format = "svg"
 
@@ -392,6 +405,7 @@ Or configure within your ``setup.cfg`` (``interrogate`` will automatically detec
     quiet = false
     whitelist-regex =
     color = true
+    omit-covered-files = false
     generate-badge = .
     badge-format = svg
 
@@ -477,6 +491,11 @@ To view all options available, run ``interrogate --help``:
 
       --color / --no-color            Toggle color output on/off when printing to
                                       stdout.  [default: True]
+
+      --omit-covered-files            Omit reporting files that have 100%
+                                      documentation coverage. This option is
+                                      ignored if verbosity is not set.  [default:
+                                      False]
 
       -g, --generate-badge PATH       Generate a 'shields.io' status badge (an SVG
                                       image) in at a given file or directory. Will
