@@ -192,6 +192,16 @@ from interrogate import utils
     help="Toggle color output on/off when printing to stdout.",
 )
 @click.option(
+    "--omit-covered-files",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help=(
+        "Omit reporting files that have 100% documentation coverage. This "
+        "option is ignored if verbosity is not set."
+    ),
+)
+@click.option(
     "-g",
     "--generate-badge",
     type=click.Path(
@@ -262,6 +272,7 @@ def main(ctx, paths, **kwargs):
     .. versionadded:: 1.4.0 ``--badge-format``
     .. versionadded:: 1.4.0 ``--ignore-nested-classes``
     .. versionadded:: 1.4.0 ``--ignore-setters``
+    .. versionadded:: 1.5.0 ``--omit-covered-files``
 
     .. versionchanged:: 1.3.1 only generate badge if results change from
         an existing badge.
@@ -299,6 +310,7 @@ def main(ctx, paths, **kwargs):
         ignore_property_setters=kwargs["ignore_setters"],
         ignore_property_decorators=kwargs["ignore_property_decorators"],
         include_regex=kwargs["whitelist_regex"],
+        omit_covered_files=kwargs["omit_covered_files"],
     )
     interrogate_coverage = coverage.InterrogateCoverage(
         paths=paths,

@@ -13,6 +13,8 @@ import click
 import toml
 
 
+# TODO: idea: break out InterrogateConfig into two classes: one for
+# running the tool, one for reporting the results
 @attr.s
 class InterrogateConfig:
     """Configuration related to interrogating a given codebase.
@@ -33,6 +35,8 @@ class InterrogateConfig:
     :param bool ignore_nested_functions: Ignore nested functions and
         methods.
     :param bool ignore_init_module: Ignore ``__init__.py`` modules.
+    :param bool omit_covered_files: Omit reporting files that have 100%
+        documentation coverage.
     """
 
     color = attr.ib(default=False)
@@ -49,6 +53,7 @@ class InterrogateConfig:
     ignore_property_setters = attr.ib(default=False)
     ignore_property_decorators = attr.ib(default=False)
     include_regex = attr.ib(default=False)
+    omit_covered_files = attr.ib(default=False)
 
 
 def find_project_root(srcs):
