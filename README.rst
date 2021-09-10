@@ -370,6 +370,7 @@ Configure within your ``pyproject.toml`` (``interrogate`` will automatically det
     fail-under = 95
     exclude = ["setup.py", "docs", "build"]
     ignore-regex = ["^get$", "^mock_.*", ".*BaseClass.*"]
+    # possible values: 0 (minimal output), 1 (-v), 2 (-vv)
     verbose = 0
     quiet = false
     whitelist-regex = []
@@ -401,6 +402,7 @@ Or configure within your ``setup.cfg`` (``interrogate`` will automatically detec
     fail-under = 95
     exclude = setup.py,docs,build
     ignore-regex = ^get$,^mock_.*,.*BaseClass.*
+    ; possible values: 0 (minimal output), 1 (-v), 2 (-vv)
     verbose = 0
     quiet = false
     whitelist-regex =
@@ -428,7 +430,13 @@ To view all options available, run ``interrogate --help``:
 
     Options:
       --version                       Show the version and exit.
-      -v, --verbose                   Level of verbosity  [default: 0]
+      -v, --verbose                   Level of verbosity.
+
+                                      NOTE: When configuring verbosity in
+                                      pyproject.toml or setup.cfg, `verbose=1`
+                                      maps to `-v`, and `verbose=2` maps to `-vv`.
+                                      `verbose=0` is the equivalent of no verbose
+                                      flags used, producing minimal output.
       -q, --quiet                     Do not print output  [default: False]
       -f, --fail-under INT | FLOAT    Fail when coverage % is less than a given
                                       amount.  [default: 80.0]

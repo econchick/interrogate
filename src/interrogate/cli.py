@@ -21,8 +21,14 @@ from interrogate import utils
     "--verbose",
     default=0,
     count=True,
-    show_default=True,
-    help="Level of verbosity",
+    show_default=False,
+    help=(
+        "Level of verbosity."
+        "\n\nNOTE: When configuring verbosity in pyproject.toml or setup.cfg, "
+        "`verbose=1` maps to `-v`, and `verbose=2` maps to `-vv`. "
+        "`verbose=0` is the equivalent of no verbose flags used, producing "
+        "minimal output."
+    ),
 )
 @click.option(
     "-q",
