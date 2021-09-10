@@ -8,6 +8,7 @@ Changelog
 * Add ``--omit-covered-files`` flag to skip reporting fully-covered files (`#85 <https://github.com/econchick/interrogate/issues/85>`_).
 * Clarify ``verbose`` configuration (`#83 <https://github.com/econchick/interrogate/issues/83>`_).
 * Add 3.10 support!
+* Add support for different badge styles (`#86 <https://github.com/econchick/interrogate/issues/86>`_).
 
 .. short-log
 
