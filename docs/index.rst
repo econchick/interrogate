@@ -24,7 +24,11 @@ Command Line Options
 
 .. option:: -v, --verbose
 
-    Level of verbosity  [default: ``0``]
+    Level of verbosity.
+
+    NOTE: When configuring verbosity in ``pyproject.toml`` or ``setup.cfg``,
+    ``verbose=1`` maps to ``-v``, and ``verbose=2`` maps to ``-vv``.
+    ``verbose=0`` is the equivalent of no verbose flags used, producing minimal output.
 
 .. option:: -q, --quiet
 
@@ -100,12 +104,12 @@ Command Line Options
 
 .. option:: --color, --no-color
 
-  Toggle color output on/off when printing to stdout.  [default: color]
+    Toggle color output on/off when printing to stdout.  [default: color]
 
 .. option:: --omit-covered-files
 
-  Omit reporting files that have 100% documentation coverage.
-  This option is ignored if verbosity is not set.  [default: ``False``]
+    Omit reporting files that have 100% documentation coverage.
+    This option is ignored if verbosity is not set.  [default: ``False``]
 
 .. option:: -g, --generate-badge PATH
 
