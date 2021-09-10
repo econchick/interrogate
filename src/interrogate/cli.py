@@ -285,20 +285,20 @@ def main(ctx, paths, **kwargs):
         kwargs["ignore_module"] = True
 
     conf = config.InterrogateConfig(
-        ignore_init_method=kwargs["ignore_init_method"],
-        ignore_init_module=kwargs["ignore_init_module"],
+        color=kwargs["color"],
+        fail_under=kwargs["fail_under"],
+        ignore_regex=kwargs["ignore_regex"],
         ignore_magic=kwargs["ignore_magic"],
         ignore_module=kwargs["ignore_module"],
-        ignore_nested_functions=kwargs["ignore_nested_functions"],
-        ignore_nested_classes=kwargs["ignore_nested_classes"],
-        ignore_property_decorators=kwargs["ignore_property_decorators"],
-        ignore_property_setters=kwargs["ignore_setters"],
         ignore_private=kwargs["ignore_private"],
-        ignore_regex=kwargs["ignore_regex"],
         ignore_semiprivate=kwargs["ignore_semiprivate"],
-        fail_under=kwargs["fail_under"],
+        ignore_init_method=kwargs["ignore_init_method"],
+        ignore_init_module=kwargs["ignore_init_module"],
+        ignore_nested_classes=kwargs["ignore_nested_classes"],
+        ignore_nested_functions=kwargs["ignore_nested_functions"],
+        ignore_property_setters=kwargs["ignore_setters"],
+        ignore_property_decorators=kwargs["ignore_property_decorators"],
         include_regex=kwargs["whitelist_regex"],
-        color=kwargs["color"],
     )
     interrogate_coverage = coverage.InterrogateCoverage(
         paths=paths,
