@@ -236,6 +236,25 @@ from interrogate import utils
         "with `interrogate[png]`, i.e. `pip install interrogate[png]`."
     ),
 )
+@click.option(
+    "--badge-style",
+    type=click.Choice(
+        [
+            "flat",
+            "flat-square",
+            "flat-square-modified",
+            "for-the-badge",
+            "plastic",
+            "social",
+        ],
+        case_sensitive=False,
+    ),
+    default=None,
+    help=(
+        "Desired style of shields.io badge. Used with the "
+        "`-g/--generate-badge` flag. [default: flat-square-modified]"
+    ),
+)
 @click.help_option("-h", "--help")
 @click.argument(
     "paths",
@@ -269,6 +288,8 @@ def main(ctx, paths, **kwargs):
 
     .. versionchanged:: 1.1.3 ``--ignore-regex`` may now accept multiple
         values.
+    .. versionchanged:: 1.3.1 only generate badge if results change from
+        an existing badge.
 
     .. versionadded:: 1.1.3 ``--whitelist-regex``
     .. versionadded:: 1.2.0 ``--ignore-nested-functions``
@@ -279,6 +300,7 @@ def main(ctx, paths, **kwargs):
     .. versionadded:: 1.4.0 ``--ignore-nested-classes``
     .. versionadded:: 1.4.0 ``--ignore-setters``
     .. versionadded:: 1.5.0 ``--omit-covered-files``
+    .. versionadded:: 1.5.0 ``--badge-style``
 
     .. versionchanged:: 1.3.1 only generate badge if results change from
         an existing badge.
@@ -289,7 +311,11 @@ def main(ctx, paths, **kwargs):
             "The `--badge-format` option must be used along with the `-g/"
             "--generate-badge option."
         )
-
+    if kwargs["badge_style"] is not None and gen_badge is None:
+        raise click.BadParameter(
+            "The `--badge-style` option must be used along with the `-g/"
+            "--generate-badge option."
+        )
     if not paths:
         paths = (os.path.abspath(os.getcwd()),)
 
@@ -334,8 +360,12 @@ def main(ctx, paths, **kwargs):
 
     if gen_badge is not None:
         badge_format = kwargs["badge_format"]
+        badge_style = kwargs["badge_style"]
         output_path = badge_gen.create(
-            gen_badge, results, output_format=badge_format
+            gen_badge,
+            results,
+            output_format=badge_format,
+            output_style=badge_style,
         )
         if not is_quiet:
             click.echo("Generated badge to {}".format(output_path))

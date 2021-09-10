@@ -1,12 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="135" height="20" role="img" aria-label="interrogate: 100%">
-    <title>interrogate: 100%</title>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="140" height="20" role="img" aria-label="interrogate: 60.0%">
+    <title>interrogate: 60.0%</title>
     <g shape-rendering="crispEdges">
         <rect width="93" height="20" fill="#555"/>
-        <rect x="93" width="42" height="20" fill="#4c1"/>
+        <rect x="93" width="47" height="20" fill="#dfb317"/>
     </g>
     <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110">
         <text x="590" y="140" transform="scale(.1)" fill="#fff" textLength="610">interrogate</text>
-        <text x="1140" y="140" transform="scale(.1)" fill="#fff" textLength="330" data-interrogate="result">100%</text>
+        <text x="1160" y="140" transform="scale(.1)" fill="#fff" textLength="370" data-interrogate="result">60.0%</text>
     </g>
     <g id="logo-pink" transform="matrix(0.854876,0,0,0.854876,-6.73514,0.877124)">
         <g transform="matrix(0.299012,0,0,0.299012,9.70229,-6.68582)">

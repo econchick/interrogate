@@ -300,15 +300,7 @@ Generate a `shields.io <https://shields.io/>`_ badge (like this one! |interrogat
     RESULT: PASSED (minimum: 80.0%, actual: 100.0%)
     Generated badge to /Users/lynn/dev/interrogate/docs/_static/interrogate_badge.svg
 
-The default file format is ``svg``. Use the ``--badge-format`` flag to create a ``png`` file instead.
-**Note**: ``interrogate`` must be installed with ``interrogate[png]`` in order to generate ``png`` files (see `above <#extras>`_).
-
-.. code-block:: console
-
-    $ interrogate --generate-badge PATH --badge-format png
-    RESULT: PASSED (minimum: 80.0%, actual: 100.0%)
-    Generated badge to /Users/lynn/dev/interrogate/docs/_static/interrogate_badge.png
-
+`See below <#badge-options>`_ for more badge configuration.
 
 Add it to your ``tox.ini`` file to enforce a level of coverage:
 
@@ -416,6 +408,43 @@ Or configure within your ``setup.cfg`` (``interrogate`` will automatically detec
 
     The use of ``setup.cfg`` is not recommended unless for very simple use cases. ``.cfg`` files use a different parser than ``pyproject.toml`` which might cause hard to track down problems. When possible, it is recommended to use ``pyproject.toml`` to define your interrogate configuration.
 
+.. _badge-opts:
+
+Badge Options
+=============
+
+Badge Format
+------------
+
+The default file format is ``svg``. Use the ``--badge-format`` flag to create a ``png`` file instead.
+**Note**: ``interrogate`` must be installed with ``interrogate[png]`` in order to generate ``png`` files (see `above <#extras>`_).
+
+.. code-block:: console
+
+    $ interrogate --generate-badge PATH --badge-format png
+    RESULT: PASSED (minimum: 80.0%, actual: 100.0%)
+    Generated badge to /Users/lynn/dev/interrogate/docs/_static/interrogate_badge.png
+
+Badge Style
+-----------
+
+The following badge styles are available via the ``--badge-style`` flag:
+
++------------------------------------+--------------------------------+
+| option                             | example                        |
++====================================+================================+
+| ``flat``                           | |flat-example|                 |
++------------------------------------+--------------------------------+
+| ``flat-square``                    | |flat-square-example|          |
++------------------------------------+--------------------------------+
+| ``flat-square-modified`` (default) | |interrogate-badge|            |
++------------------------------------+--------------------------------+
+| ``for-the-badge``                  | |for-the-badge-example|        |
++------------------------------------+--------------------------------+
+| ``plastic``                        | |plastic-example|              |
++------------------------------------+--------------------------------+
+| ``social``                         | |social-example|               |
++------------------------------------+--------------------------------+
 
 .. end-readme
 
@@ -519,6 +548,11 @@ To view all options available, run ``interrogate --help``:
                                       must be installed with `interrogate[png]`,
                                       i.e. `pip install interrogate[png]`.
 
+      --badge-style [flat|flat-square|flat-square-modified|for-the-badge|plastic|social]
+                                      Desired style of shields.io badge. Used with
+                                      the `-g/--generate-badge` flag. [default:
+                                      flat-square-modified]
+
       -h, --help                      Show this message and exit.
       -c, --config FILE               Read configuration from `pyproject.toml` or
                                       `setup.cfg`.
@@ -555,6 +589,11 @@ The cute |sloth| logo is by `JustineW <https://thenounproject.com/wojcik.justine
 
 
 .. |interrogate-badge|  image:: https://interrogate.readthedocs.io/en/latest/_static/interrogate_badge.svg
+.. |flat-example| image:: https://interrogate.readthedocs.io/en/latest/_static/badge_examples/interrogate_badge_f.svg
+.. |flat-square-example| image:: https://interrogate.readthedocs.io/en/latest/_static/badge_examples/interrogate_badge_fs.svg
+.. |for-the-badge-example| image:: https://interrogate.readthedocs.io/en/latest/_static/badge_examples/interrogate_badge_ftb.svg
+.. |plastic-example| image:: https://interrogate.readthedocs.io/en/latest/_static/badge_examples/interrogate_badge_p.svg
+.. |social-example| image:: https://interrogate.readthedocs.io/en/latest/_static/badge_examples/interrogate_badge_s.svg
 .. |sloth| image:: https://interrogate.readthedocs.io/en/latest/_static/logo_smol.png
 
 .. |docstr-coverage| replace:: ``docstr-coverage``

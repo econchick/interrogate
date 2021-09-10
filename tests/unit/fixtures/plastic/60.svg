@@ -1,21 +1,26 @@
-<svg width="140" height="20" viewBox="0 0 140 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
-    <title>interrogate: 46.4%</title>
-    <g transform="matrix(1,0,0,1,22,0)">
-        <g id="backgrounds" transform="matrix(1.32789,0,0,1,-22.3892,0)">
-            <rect x="0" y="0" width="71" height="20" style="fill:rgb(85,85,85);"/>
-        </g>
-        <rect x="71" y="0" width="47" height="20" data-interrogate="color" style="fill:#fe7d37"/>
-        <g transform="matrix(1.19746,0,0,1,-22.3744,-4.85723e-16)">
-            <rect x="0" y="0" width="118" height="20" style="fill:url(#_Linear1);"/>
-        </g>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="135" height="18" role="img" aria-label="interrogate: 60.0%">
+    <title>interrogate: 60.0%</title>
+    <linearGradient id="s" x2="0" y2="100%">
+        <stop offset="0"  stop-color="#fff" stop-opacity=".7"/>
+        <stop offset=".1" stop-color="#aaa" stop-opacity=".1"/>
+        <stop offset=".9" stop-color="#000" stop-opacity=".3"/>
+        <stop offset="1"  stop-color="#000" stop-opacity=".5"/>
+    </linearGradient>
+    <clipPath id="r">
+        <rect width="135" height="18" rx="4" fill="#fff"/>
+    </clipPath>
+    <g clip-path="url(#r)">
+        <rect width="92" height="18" fill="#555"/>
+        <rect x="92" width="43" height="18" fill="#dfb317"/>
+        <rect width="135" height="18" fill="url(#s)"/>
     </g>
-    <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="110">
-        <text x="590" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="610">interrogate</text>
-        <text x="590" y="140" transform="scale(.1)" textLength="610">interrogate</text>
-        <text x="1160" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="370" data-interrogate="result">46.4%</text>
-        <text x="1160" y="140" transform="scale(.1)" textLength="370" data-interrogate="result">46.4%</text>
+    <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110">
+        <text aria-hidden="true" x="570" y="140" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="610">interrogate</text>
+        <text x="570" y="130" transform="scale(.1)" fill="#fff" textLength="610">interrogate</text>
+        <text aria-hidden="true" x="1140" y="140" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="370">60.0%</text>
+        <text x="1140" y="130" transform="scale(.1)" fill="#fff" textLength="370">60.0%</text>
     </g>
-    <g id="logo-shadow" serif:id="logo shadow" transform="matrix(0.854876,0,0,0.854876,-6.73514,1.732)">
+    <g id="logo-shadow" transform="matrix(0.854876,0,0,0.854876,-6.73514,1.232)">
         <g transform="matrix(0.299012,0,0,0.299012,9.70229,-6.68582)">
             <path d="M50,64.25C52.76,64.25 55,61.13 55,59.75C55,58.37 52.76,57.25 50,57.25C47.24,57.25 45,58.37 45,59.75C45,61.13 47.24,64.25 50,64.25Z" style="fill:rgb(1,1,1);fill-opacity:0.3;fill-rule:nonzero;"/>
         </g>
@@ -32,7 +37,7 @@
             <path d="M58,66C55.912,68.161 53.003,69.339 50,69.24C46.997,69.339 44.088,68.161 42,66C41.714,65.677 41.302,65.491 40.87,65.491C40.042,65.491 39.361,66.172 39.361,67C39.361,67.368 39.496,67.724 39.74,68C42.403,70.804 46.134,72.35 50,72.25C53.862,72.347 57.59,70.802 60.25,68C60.495,67.725 60.63,67.369 60.63,67C60.63,66.174 59.951,65.495 59.125,65.495C58.695,65.495 58.285,65.679 58,66Z" style="fill:rgb(1,1,1);fill-opacity:0.3;fill-rule:nonzero;"/>
         </g>
     </g>
-    <g id="logo-pink" serif:id="logo pink" transform="matrix(0.854876,0,0,0.854876,-6.73514,0.877124)">
+    <g id="logo-pink" transform="matrix(0.854876,0,0,0.854876,-6.73514,0.377124)">
         <g transform="matrix(0.299012,0,0,0.299012,9.70229,-6.68582)">
             <path d="M50,64.25C52.76,64.25 55,61.13 55,59.75C55,58.37 52.76,57.25 50,57.25C47.24,57.25 45,58.37 45,59.75C45,61.13 47.24,64.25 50,64.25Z" style="fill:rgb(222,120,160);fill-rule:nonzero;"/>
         </g>
@@ -49,10 +54,4 @@
             <path d="M58,66C55.912,68.161 53.003,69.339 50,69.24C46.997,69.339 44.088,68.161 42,66C41.714,65.677 41.302,65.491 40.87,65.491C40.042,65.491 39.361,66.172 39.361,67C39.361,67.368 39.496,67.724 39.74,68C42.403,70.804 46.134,72.35 50,72.25C53.862,72.347 57.59,70.802 60.25,68C60.495,67.725 60.63,67.369 60.63,67C60.63,66.174 59.951,65.495 59.125,65.495C58.695,65.495 58.285,65.679 58,66Z" style="fill:rgb(222,120,160);fill-rule:nonzero;"/>
         </g>
     </g>
-    <defs>
-        <linearGradient id="_Linear1" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1.22465e-15,20,-20,1.22465e-15,0,0)">
-            <stop offset="0" style="stop-color:rgb(187,187,187);stop-opacity:0.1"/>
-            <stop offset="1" style="stop-color:black;stop-opacity:0.1"/>
-        </linearGradient>
-    </defs>
 </svg>

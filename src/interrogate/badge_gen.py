@@ -37,6 +37,38 @@ COLOR_RANGES = [
     (0, "red"),
 ]
 SUPPORTED_OUTPUT_FORMATS = ["svg", "png"]
+# depending on the character length of the result (e.g. 100, 99.9, 9.9)
+# a few values in the svg template need to adjust so it's readable.
+# Tuple of values: (svg_width, rect_width, text_x, text_length)
+SVG_WIDTH_VALUES = {
+    # integer
+    "100": {
+        "plastic": (135, 43, 1140, 330),
+        "social": (133, 37, 1140, 290),
+        "flat": (114, 43, 915, 330),
+        "flat-square": (135, 42, 1140, 330),
+        "flat-square-modified": (114, 43, 915, 330),
+        "for-the-badge": (0, 0, 1670.75, 390),
+    },
+    # 10.0 - 99.9, float
+    "99.9": {
+        "plastic": (135, 43, 1140, 370),
+        "social": (137, 41, 1175, 330),
+        "flat": (118, 47, 935, 370),
+        "flat-square": (140, 47, 1160, 370),
+        "flat-square-modified": (114, 43, 915, 370),
+        "for-the-badge": (0, 0, 1660.75, 432.5),
+    },
+    # <= 9.9, float
+    "9.9": {
+        "plastic": (135, 43, 1140, 290),
+        "social": (131, 35, 1145, 270),
+        "flat": (110, 39, 895, 290),
+        "flat-square": (132, 39, 1120, 290),
+        "flat-square-modified": (114, 43, 915, 300),
+        "for-the-badge": (0, 0, 1680.75, 350),
+    },
+}
 
 
 def save_badge(badge, output, output_format=None):
@@ -84,7 +116,32 @@ def save_badge(badge, output, output_format=None):
     return output
 
 
-def get_badge(result, color):
+def _get_badge_measurements(result, style):
+    """Lookup templated style values based on result number."""
+    if result == 100:
+        width_values = SVG_WIDTH_VALUES["100"]
+    elif result >= 10:
+        width_values = SVG_WIDTH_VALUES["99.9"]
+    else:
+        width_values = SVG_WIDTH_VALUES["9.9"]
+    style_width_values = width_values[style]
+    return {
+        "svg_width": style_width_values[0],
+        "rect_width": style_width_values[1],
+        "text_x": style_width_values[2],
+        "text_length": style_width_values[3],
+    }
+
+
+def _format_result(result):
+    """Format result into string for templating."""
+    # do not include decimal if it's 100
+    if result == 100:
+        return "100"
+    return "{:.1f}".format(result)
+
+
+def get_badge(result, color, style=None):
     """Generate an SVG from template.
 
     :param float result: coverage % result.
@@ -93,11 +150,19 @@ def get_badge(result, color):
     :return: SVG contents of badge.
     :rtype: str
     """
-    result = "{:.1f}".format(result)
-    template_path = os.path.join("badge", "template.svg")
+    if style is None:
+        style = "flat-square-modified"
+    template_file = f"{style}-style.svg"
+    badge_template_values = _get_badge_measurements(result, style)
+    result = _format_result(result)
+    badge_template_values["result"] = result
+    badge_template_values["color"] = color
+    template_path = os.path.join("badge", template_file)
     tmpl = pkg_resources.resource_string(__name__, template_path)
     tmpl = tmpl.decode("utf8")
-    return tmpl.replace("{{ result }}", result).replace("{{ color }}", color)
+    for key, value in badge_template_values.items():
+        tmpl = tmpl.replace("{{ %s }}" % key, str(value))
+    return tmpl
 
 
 def should_generate_badge(output, color, result):
@@ -126,7 +191,13 @@ def should_generate_badge(output, color, result):
     if not output.endswith(".svg"):
         return True
 
-    badge = minidom.parse(output)
+    try:
+        badge = minidom.parse(output)
+    except Exception:
+        # an exception might happen when a file is not an SVG file but has
+        # `.svg` extension (perhaps a png image was generated with the wrong
+        # file extension, for example)
+        return True
 
     # added the sloth logo in 1.3.2 - if it doesn't exist, we should
     # go ahead and recreate the badge
@@ -170,7 +241,7 @@ def get_color(result):
     return COLORS["lightgrey"]
 
 
-def create(output, result, output_format=None):
+def create(output, result, output_format=None, output_style=None):
     """Create a status badge.
 
     The badge file will only be written if it doesn't exist, or if the
@@ -180,6 +251,8 @@ def create(output, result, output_format=None):
         change.
     .. versionadded:: 1.4.0 Optional ``output_format`` keyword to support
         file types other than SVG.
+    .. versionadded:: 1.5.0 Optional ``output_style`` keyword to support
+        different styles of the shields.io badge.
 
     :param str output: path to output badge file.
     :param coverage.InterrogateResults result: results of coverage
@@ -198,6 +271,6 @@ def create(output, result, output_format=None):
 
     should_generate = should_generate_badge(output, color, result_perc)
     if should_generate:
-        badge = get_badge(result_perc, color)
+        badge = get_badge(result_perc, color, output_style)
         return save_badge(badge, output, output_format)
     return output
