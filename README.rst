@@ -448,6 +448,9 @@ The following badge styles are available via the ``--badge-style`` flag:
 
 .. end-readme
 
+Command Line Options
+====================
+
 To view all options available, run ``interrogate --help``:
 
 .. code-block:: console
