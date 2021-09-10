@@ -16,6 +16,12 @@ FIXTURES = os.path.join(HERE, "fixtures")
 IS_WINDOWS = sys.platform in ("cygwin", "win32")
 
 
+@pytest.fixture(autouse=True)
+def patch_term_width(monkeypatch):
+    """Set fixed terminal width when testing output"""
+    monkeypatch.setattr(coverage.utils.OutputFormatter, "TERMINAL_WIDTH", 80)
+
+
 @pytest.mark.parametrize(
     "paths,conf,exp_results",
     (
@@ -100,8 +106,6 @@ def test_coverage_errors(capsys):
 )
 def test_print_results(level, exp_fixture_file, capsys, monkeypatch):
     """Output of test results differ by verbosity."""
-    monkeypatch.setattr(coverage.utils.OutputFormatter, "TERMINAL_WIDTH", 80)
-
     interrogate_coverage = coverage.InterrogateCoverage(paths=[SAMPLE_DIR])
     results = interrogate_coverage.get_coverage()
     interrogate_coverage.print_results(
@@ -131,8 +135,6 @@ def test_print_results_omit_covered(
     level, exp_fixture_file, capsys, monkeypatch
 ):
     """Output of results differ by verbosity, omitting fully covered files."""
-    monkeypatch.setattr(coverage.utils.OutputFormatter, "TERMINAL_WIDTH", 80)
-
     interrogate_config = config.InterrogateConfig(omit_covered_files=True)
     interrogate_coverage = coverage.InterrogateCoverage(
         paths=[SAMPLE_DIR], conf=interrogate_config
@@ -155,8 +157,6 @@ def test_print_results_omit_covered(
 @pytest.mark.parametrize("level", (1, 2))
 def test_print_results_omit_none(level, capsys, monkeypatch):
     """Output of test results by verbosity, no fully covered files."""
-    monkeypatch.setattr(coverage.utils.OutputFormatter, "TERMINAL_WIDTH", 80)
-
     interrogate_config = config.InterrogateConfig(omit_covered_files=True)
     interrogate_coverage = coverage.InterrogateCoverage(
         paths=[os.path.join(SAMPLE_DIR, "child_sample")],
@@ -173,8 +173,6 @@ def test_print_results_omit_none(level, capsys, monkeypatch):
 
 def test_print_results_omit_all_summary(capsys, monkeypatch):
     """Output of test results for summary view, omitting all covered files."""
-    monkeypatch.setattr(coverage.utils.OutputFormatter, "TERMINAL_WIDTH", 80)
-
     interrogate_config = config.InterrogateConfig(omit_covered_files=True)
     interrogate_coverage = coverage.InterrogateCoverage(
         paths=[os.path.join(SAMPLE_DIR, "full.py")], conf=interrogate_config
@@ -197,8 +195,6 @@ def test_print_results_omit_all_summary(capsys, monkeypatch):
 
 def test_print_results_omit_all_detailed(capsys, monkeypatch):
     """Show no detail view when all files are omitted from skipping covered"""
-    monkeypatch.setattr(coverage.utils.OutputFormatter, "TERMINAL_WIDTH", 80)
-
     interrogate_config = config.InterrogateConfig(omit_covered_files=True)
     interrogate_coverage = coverage.InterrogateCoverage(
         paths=[os.path.join(SAMPLE_DIR, "full.py")], conf=interrogate_config
@@ -227,8 +223,6 @@ def test_print_results_ignore_module(
     ignore_module, level, exp_fixture_file, capsys, monkeypatch
 ):
     """Do not print module info if ignore_module is True."""
-    monkeypatch.setattr(coverage.utils.OutputFormatter, "TERMINAL_WIDTH", 80)
-
     conf = {"ignore_module": ignore_module}
     conf = config.InterrogateConfig(**conf)
 
@@ -252,8 +246,6 @@ def test_print_results_ignore_module(
 
 def test_print_results_single_file(capsys, monkeypatch):
     """Results for a single file should still list the filename."""
-
-    monkeypatch.setattr(coverage.utils.OutputFormatter, "TERMINAL_WIDTH", 80)
     single_file = os.path.join(SAMPLE_DIR, "full.py")
     interrogate_coverage = coverage.InterrogateCoverage(paths=[single_file])
     results = interrogate_coverage.get_coverage()
