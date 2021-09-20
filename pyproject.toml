@@ -39,6 +39,7 @@ ignore-property-decorators = false
 fail-under = 95
 exclude = ["tests/functional/sample", "setup.py", "docs"]
 verbose = 0
+omit-covered-files = false
 quiet = false
 whitelist-regex = []
 ignore-regex = []

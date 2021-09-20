@@ -74,7 +74,7 @@ def test_get_badge():
     """SVG badge is templated as expected."""
     actual = badge_gen.get_badge(99.9, "#4c1")
     actual = actual.replace("\n", "").replace("\r", "")
-    expected_fixture = os.path.join(FIXTURES, "99.svg")
+    expected_fixture = os.path.join(FIXTURES, "default-style", "99.svg")
     with open(expected_fixture, "r") as f:
         expected = f.read()
         expected = expected.replace("\n", "").replace("\r", "")
@@ -95,9 +95,19 @@ def test_get_badge():
 )
 def test_should_generate(fixture, color, result, expected):
     """Only return True if existing badge needs updating"""
-    output = os.path.join(FIXTURES, fixture)
+    output = os.path.join(FIXTURES, "default-style", fixture)
     actual = badge_gen.should_generate_badge(output, color, result)
     assert actual is expected
+
+
+def test_should_generate_xml_error(mocker, monkeypatch):
+    """Return True if parsing svg returns an error."""
+    mock_minidom_parse = mocker.Mock()
+    mock_minidom_parse.side_effect = Exception("fuuuu")
+    monkeypatch.setattr(badge_gen.minidom, "parse", mock_minidom_parse)
+    output = os.path.join(FIXTURES, "default-style", "99.svg")
+    actual = badge_gen.should_generate_badge(output, "#123456", 99.9)
+    assert actual is True
 
 
 @pytest.mark.parametrize(
@@ -120,6 +130,7 @@ def test_get_color(result, expected):
 @pytest.mark.parametrize(
     "result,is_dir,should_generate,expected_fixture,out_format",
     (
+        (100, True, True, "100.svg", None),
         (99.9, True, True, "99.svg", None),
         (90.0, True, True, "90.svg", None),
         (89.9, True, True, "89.svg", None),
@@ -133,6 +144,18 @@ def test_get_color(result, expected):
         # (99.9, True, True, "99.png", "png"),
     ),
 )
+@pytest.mark.parametrize(
+    "style",
+    (
+        "plastic",
+        "flat",
+        "flat-square",
+        "flat-square-modified",
+        "for-the-badge",
+        "social",
+        None,
+    ),
+)
 def test_create(
     result,
     is_dir,
@@ -140,6 +163,7 @@ def test_create(
     expected_fixture,
     out_format,
     mocker,
+    style,
     monkeypatch,
     tmpdir,
 ):
@@ -152,10 +176,12 @@ def test_create(
     if not should_generate:
         # pre-generate the badge
         mock_result = mocker.Mock(perc_covered=result)
-        actual = badge_gen.create(str(output), mock_result)
+        actual = badge_gen.create(str(output), mock_result, output_style=style)
 
     mock_result = mocker.Mock(perc_covered=result)
-    actual = badge_gen.create(str(output), mock_result, out_format)
+    actual = badge_gen.create(
+        str(output), mock_result, out_format, output_style=style
+    )
 
     flag = "rb" if out_format == "png" else "r"
     with open(actual, flag) as f:
@@ -163,6 +189,9 @@ def test_create(
         if out_format is None:
             actual_contents = actual_contents.replace("\n", "")
 
+    if style is None:
+        style = "default-style"
+    expected_fixture = os.path.join(style, expected_fixture)
     expected_fixture = os.path.join(FIXTURES, expected_fixture)
     with open(expected_fixture, flag) as f:
         expected_contents = f.read()

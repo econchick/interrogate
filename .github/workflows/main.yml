@@ -28,10 +28,10 @@ jobs:
     name: "Python ${{ matrix.python-version }} on Ubuntu"
     runs-on: "ubuntu-latest"
     env:
-      USING_COVERAGE: '3.7,3.8,3.9'
+      USING_COVERAGE: '3.7,3.8,3.9,3.10.0-rc.2'
     strategy:
       matrix:
-        python-version: ["3.6", "3.7", "3.8", "3.9"]
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10.0-rc.2"]
     steps:
       - uses: "actions/checkout@v2"
       - uses: "actions/setup-python@v2"
@@ -48,7 +48,7 @@ jobs:
         run: "python -m tox"
       - name: "Upload coverage to Codecov"
         if: "contains(env.USING_COVERAGE, matrix.python-version)"
-        uses: "codecov/codecov-action@v1"
+        uses: "codecov/codecov-action@v2.0.3"
         with:
           file: ./coverage.xml
           fail_ci_if_error: true

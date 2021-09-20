@@ -21,8 +21,14 @@ from interrogate import utils
     "--verbose",
     default=0,
     count=True,
-    show_default=True,
-    help="Level of verbosity",
+    show_default=False,
+    help=(
+        "Level of verbosity."
+        "\n\nNOTE: When configuring verbosity in pyproject.toml or setup.cfg, "
+        "`verbose=1` maps to `-v`, and `verbose=2` maps to `-vv`. "
+        "`verbose=0` is the equivalent of no verbose flags used, producing "
+        "minimal output."
+    ),
 )
 @click.option(
     "-q",
@@ -145,8 +151,10 @@ from interrogate import utils
     is_flag=True,
     default=False,
     show_default=True,
-    help="Ignore semiprivate classes, methods, and functions starting with a "
-    "single underscore.",
+    help=(
+        "Ignore semiprivate classes, methods, and functions starting with a "
+        "single underscore."
+    ),
 )
 @click.option(
     "-r",
@@ -190,6 +198,16 @@ from interrogate import utils
     help="Toggle color output on/off when printing to stdout.",
 )
 @click.option(
+    "--omit-covered-files",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help=(
+        "Omit reporting files that have 100% documentation coverage. This "
+        "option is ignored if verbosity is not set."
+    ),
+)
+@click.option(
     "-g",
     "--generate-badge",
     type=click.Path(
@@ -216,6 +234,25 @@ from interrogate import utils
         "`-g/--generate-badge` flag. [default: svg]"
         "\n\nNOTE: To generate a PNG file, interrogate must be installed "
         "with `interrogate[png]`, i.e. `pip install interrogate[png]`."
+    ),
+)
+@click.option(
+    "--badge-style",
+    type=click.Choice(
+        [
+            "flat",
+            "flat-square",
+            "flat-square-modified",
+            "for-the-badge",
+            "plastic",
+            "social",
+        ],
+        case_sensitive=False,
+    ),
+    default=None,
+    help=(
+        "Desired style of shields.io badge. Used with the "
+        "`-g/--generate-badge` flag. [default: flat-square-modified]"
     ),
 )
 @click.help_option("-h", "--help")
@@ -251,6 +288,8 @@ def main(ctx, paths, **kwargs):
 
     .. versionchanged:: 1.1.3 ``--ignore-regex`` may now accept multiple
         values.
+    .. versionchanged:: 1.3.1 only generate badge if results change from
+        an existing badge.
 
     .. versionadded:: 1.1.3 ``--whitelist-regex``
     .. versionadded:: 1.2.0 ``--ignore-nested-functions``
@@ -260,6 +299,8 @@ def main(ctx, paths, **kwargs):
     .. versionadded:: 1.4.0 ``--badge-format``
     .. versionadded:: 1.4.0 ``--ignore-nested-classes``
     .. versionadded:: 1.4.0 ``--ignore-setters``
+    .. versionadded:: 1.5.0 ``--omit-covered-files``
+    .. versionadded:: 1.5.0 ``--badge-style``
 
     .. versionchanged:: 1.3.1 only generate badge if results change from
         an existing badge.
@@ -270,7 +311,11 @@ def main(ctx, paths, **kwargs):
             "The `--badge-format` option must be used along with the `-g/"
             "--generate-badge option."
         )
-
+    if kwargs["badge_style"] is not None and gen_badge is None:
+        raise click.BadParameter(
+            "The `--badge-style` option must be used along with the `-g/"
+            "--generate-badge option."
+        )
     if not paths:
         paths = (os.path.abspath(os.getcwd()),)
 
@@ -283,20 +328,21 @@ def main(ctx, paths, **kwargs):
         kwargs["ignore_module"] = True
 
     conf = config.InterrogateConfig(
-        ignore_init_method=kwargs["ignore_init_method"],
-        ignore_init_module=kwargs["ignore_init_module"],
+        color=kwargs["color"],
+        fail_under=kwargs["fail_under"],
+        ignore_regex=kwargs["ignore_regex"],
         ignore_magic=kwargs["ignore_magic"],
         ignore_module=kwargs["ignore_module"],
-        ignore_nested_functions=kwargs["ignore_nested_functions"],
-        ignore_nested_classes=kwargs["ignore_nested_classes"],
-        ignore_property_decorators=kwargs["ignore_property_decorators"],
-        ignore_property_setters=kwargs["ignore_setters"],
         ignore_private=kwargs["ignore_private"],
-        ignore_regex=kwargs["ignore_regex"],
         ignore_semiprivate=kwargs["ignore_semiprivate"],
-        fail_under=kwargs["fail_under"],
+        ignore_init_method=kwargs["ignore_init_method"],
+        ignore_init_module=kwargs["ignore_init_module"],
+        ignore_nested_classes=kwargs["ignore_nested_classes"],
+        ignore_nested_functions=kwargs["ignore_nested_functions"],
+        ignore_property_setters=kwargs["ignore_setters"],
+        ignore_property_decorators=kwargs["ignore_property_decorators"],
         include_regex=kwargs["whitelist_regex"],
-        color=kwargs["color"],
+        omit_covered_files=kwargs["omit_covered_files"],
     )
     interrogate_coverage = coverage.InterrogateCoverage(
         paths=paths,
@@ -314,8 +360,12 @@ def main(ctx, paths, **kwargs):
 
     if gen_badge is not None:
         badge_format = kwargs["badge_format"]
+        badge_style = kwargs["badge_style"]
         output_path = badge_gen.create(
-            gen_badge, results, output_format=badge_format
+            gen_badge,
+            results,
+            output_format=badge_format,
+            output_style=badge_style,
         )
         if not is_quiet:
             click.echo("Generated badge to {}".format(output_path))

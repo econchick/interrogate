@@ -177,7 +177,6 @@ class OutputFormatter:
             # windows may pad the output a bit unknowingly (see
             # https://github.com/econchick/interrogate/issues/20)
             final_row_width += 1
-
         extra_padding = max(self.TERMINAL_WIDTH - final_row_width, 0)
 
         if padded_cells[0].strip() == self.TABLE_SEPARATOR[0]:
@@ -210,6 +209,12 @@ class OutputFormatter:
                 cell_padding += remaining_padding
             if alignment == "right":
                 to_append = (padder * cell_padding) + cell
+            elif alignment == "center":
+                left_padding = cell_padding // 2
+                right_padding = cell_padding - left_padding
+                to_append = (
+                    (padder * left_padding) + cell + (padder * right_padding)
+                )
             else:  # default to left
                 to_append = cell + (padder * cell_padding)
 

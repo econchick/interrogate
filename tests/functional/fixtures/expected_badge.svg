@@ -1,4 +1,5 @@
 <svg width="140" height="20" viewBox="0 0 140 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <title>interrogate: 46.4%</title>
     <g transform="matrix(1,0,0,1,22,0)">
         <g id="backgrounds" transform="matrix(1.32789,0,0,1,-22.3892,0)">
             <rect x="0" y="0" width="71" height="20" style="fill:rgb(85,85,85);"/>
@@ -49,6 +50,9 @@
         </g>
     </g>
     <defs>
-        <linearGradient id="_Linear1" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1.22465e-15,20,-20,1.22465e-15,0,0)"><stop offset="0" style="stop-color:rgb(187,187,187);stop-opacity:0.1"/><stop offset="1" style="stop-color:black;stop-opacity:0.1"/></linearGradient>
+        <linearGradient id="_Linear1" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1.22465e-15,20,-20,1.22465e-15,0,0)">
+            <stop offset="0" style="stop-color:rgb(187,187,187);stop-opacity:0.1"/>
+            <stop offset="1" style="stop-color:black;stop-opacity:0.1"/>
+        </linearGradient>
     </defs>
 </svg>
