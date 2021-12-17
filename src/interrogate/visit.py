@@ -190,6 +190,26 @@ class CoverageVisitor(ast.NodeVisitor):
                     return True
         return False
 
+    def _has_overload_decorator(self, node):
+        """Detect if node has a typing.overload decorator."""
+        if not hasattr(node, "decorator_list"):
+            return False
+
+        for dec in node.decorator_list:
+            if (
+                hasattr(dec, "attr")
+                and hasattr(dec, "value")
+                and hasattr(dec.value, "id")
+                and dec.value.id == "typing"
+                and dec.attr == "overload"
+            ):
+                # @typing.overload decorator
+                return True
+            if hasattr(dec, "id") and dec.id == "overload":
+                # @overload decorator
+                return True
+        return False
+
     def _is_func_ignored(self, node):
         """Should the AST visitor ignore this func/method node."""
         is_init = node.name == "__init__"
@@ -202,6 +222,7 @@ class CoverageVisitor(ast.NodeVisitor):
         )
         has_property_decorators = self._has_property_decorators(node)
         has_setters = self._has_setters(node)
+        has_overload = self._has_overload_decorator(node)
 
         if self.config.ignore_init_method and is_init:
             return True
@@ -210,6 +231,8 @@ class CoverageVisitor(ast.NodeVisitor):
         if self.config.ignore_property_decorators and has_property_decorators:
             return True
         if self.config.ignore_property_setters and has_setters:
+            return True
+        if self.config.ignore_overloaded_functions and has_overload:
             return True
 
         return self._is_ignored_common(node)

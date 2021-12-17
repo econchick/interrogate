@@ -33,7 +33,7 @@ def test_run_no_paths(runner, monkeypatch, tmpdir):
 
     result = runner.invoke(cli.main, [])
 
-    assert "actual: 46.4%" in result.output
+    assert "actual: 50.0%" in result.output
     assert 1 == result.exit_code
 
 
@@ -41,37 +41,39 @@ def test_run_no_paths(runner, monkeypatch, tmpdir):
     "flags,exp_result,exp_exit_code",
     (
         # no flags
-        ([], 46.4, 1),
+        ([], 50.0, 1),
         # ignore init module
-        (["-I"], 46.3, 1),
+        (["-I"], 50.0, 1),
         # ignore module docs
-        (["-M"], 46.0, 1),
+        (["-M"], 50.0, 1),
         # ignore semiprivate docs
-        (["-s"], 46.9, 1),
+        (["-s"], 50.8, 1),
         # ignore private docs
-        (["-p"], 48.0, 1),
+        (["-p"], 51.6, 1),
         # ignore property getter/setter decorators
-        (["-P"], 46.2, 1),
+        (["-P"], 50.0, 1),
         # ignore property setter decorators
-        (["-S"], 46.3, 1),
+        (["-S"], 50.0, 1),
         # ignore magic method docs
-        (["-m"], 46.2, 1),
+        (["-m"], 50.0, 1),
         # ignore init method docs
-        (["-i"], 45.3, 1),
+        (["-i"], 49.2, 1),
         # ignore nested funcs
-        (["-n"], 45.3, 1),
+        (["-n"], 49.2, 1),
         # ignore nested classes
-        (["-C"], 47.2, 1),
+        (["-C"], 50.8, 1),
+        # ignore @typing.overload-decorated functions
+        (["-O"], 50.0, 1),
         # ignore regex
-        (["-r", "^get$"], 46.2, 1),
+        (["-r", "^get$"], 50.0, 1),
         # whitelist regex
         (["-w", "^get$"], 50.0, 1),
         # exclude file
-        (["-e", os.path.join(SAMPLE_DIR, "partial.py")], 55.9, 1),
+        (["-e", os.path.join(SAMPLE_DIR, "partial.py")], 62.5, 1),
         # exclude file which doesn't exist
-        (["-e", os.path.join(SAMPLE_DIR, "does.not.exist")], 46.4, 1),
+        (["-e", os.path.join(SAMPLE_DIR, "does.not.exist")], 50.0, 1),
         # fail under
-        (["-f", "40"], 46.4, 0),
+        (["-f", "40"], 50.0, 0),
     ),
 )
 def test_run_shortflags(flags, exp_result, exp_exit_code, runner):
@@ -87,20 +89,21 @@ def test_run_shortflags(flags, exp_result, exp_exit_code, runner):
 @pytest.mark.parametrize(
     "flags,exp_result,exp_exit_code",
     (
-        (["--ignore-init-module"], 46.3, 1),
-        (["--ignore-module"], 46.0, 1),
-        (["--ignore-semiprivate"], 46.9, 1),
-        (["--ignore-private"], 48.0, 1),
-        (["--ignore-property-decorators"], 46.2, 1),
-        (["--ignore-setters"], 46.3, 1),
-        (["--ignore-magic"], 46.2, 1),
-        (["--ignore-init-method"], 45.3, 1),
-        (["--ignore-nested-functions"], 45.3, 1),
-        (["--ignore-nested-classes"], 47.2, 1),
-        (["--ignore-regex", "^get$"], 46.2, 1),
+        (["--ignore-init-module"], 50.0, 1),
+        (["--ignore-module"], 50.0, 1),
+        (["--ignore-semiprivate"], 50.8, 1),
+        (["--ignore-private"], 51.6, 1),
+        (["--ignore-property-decorators"], 50.0, 1),
+        (["--ignore-setters"], 50.0, 1),
+        (["--ignore-magic"], 50.0, 1),
+        (["--ignore-init-method"], 49.2, 1),
+        (["--ignore-nested-functions"], 49.2, 1),
+        (["--ignore-nested-classes"], 50.8, 1),
+        (["--ignore-overloaded-functions"], 50.0, 1),
+        (["--ignore-regex", "^get$"], 50.0, 1),
         (["--whitelist-regex", "^get$"], 50.0, 1),
-        (["--exclude", os.path.join(SAMPLE_DIR, "partial.py")], 55.9, 1),
-        (["--fail-under", "40"], 46.4, 0),
+        (["--exclude", os.path.join(SAMPLE_DIR, "partial.py")], 62.5, 1),
+        (["--fail-under", "40"], 50.0, 0),
     ),
 )
 def test_run_longflags(flags, exp_result, exp_exit_code, runner):
@@ -116,9 +119,9 @@ def test_run_longflags(flags, exp_result, exp_exit_code, runner):
 @pytest.mark.parametrize(
     "flags,exp_result,exp_exit_code",
     (
-        (["-i", "-I", "-r" "^method_foo$"], 45.8, 1),
-        (["-s", "-p", "-M"], 48.6, 1),
-        (["-m", "-f", "45"], 46.2, 0),
+        (["-i", "-I", "-r" "^method_foo$"], 50.0, 1),
+        (["-s", "-p", "-M"], 53.1, 1),
+        (["-m", "-f", "45"], 50.0, 0),
     ),
 )
 def test_run_multiple_flags(flags, exp_result, exp_exit_code, runner):

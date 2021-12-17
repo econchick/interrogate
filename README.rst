@@ -359,6 +359,7 @@ Configure within your ``pyproject.toml`` (``interrogate`` will automatically det
     ignore-nested-functions = false
     ignore-nested-classes = true
     ignore-setters = false
+    ignore-overloaded-functions = false
     fail-under = 95
     exclude = ["setup.py", "docs", "build"]
     ignore-regex = ["^get$", "^mock_.*", ".*BaseClass.*"]
@@ -391,6 +392,7 @@ Or configure within your ``setup.cfg`` (``interrogate`` will automatically detec
     ignore-nested-functions = false
     ignore-nested-classes = true
     ignore-setters = false
+    ignore-overloaded-functions = false
     fail-under = 95
     exclude = setup.py,docs,build
     ignore-regex = ^get$,^mock_.*,.*BaseClass.*
@@ -497,6 +499,10 @@ To view all options available, run ``interrogate --help``:
                                       [default: False]
 
       -C, --ignore-nested-classes     Ignore nested classes.  [default: False]
+
+      -O, --ignore-overloaded-functions
+                                      Ignore `@typing.overload`-decorated functions.
+                                      [default: False]
 
       -p, --ignore-private            Ignore private classes, methods, and
                                       functions starting with two underscores.

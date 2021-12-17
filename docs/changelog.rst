@@ -3,6 +3,15 @@ Changelog
 
 .. short-log
 
+1.6.0 (UNRELEASED)
+------------------
+
+Added
+^^^^^
+
+* Add ``--ignore-overloaded-functions`` flag to ignore overload decorators (`#97 <https://github.com/econchick/interrogate/issues/97>`_).
+
+
 1.5.0 (2021-09-10)
 ------------------
 
