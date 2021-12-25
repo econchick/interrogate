@@ -28,14 +28,15 @@ from interrogate import config
 )
 def test_find_project_root(srcs, patch_func, expected, monkeypatch):
     """Return expected directory of project root."""
-    expected = pathlib.Path(expected)
-    if patch_func:
-        monkeypatch.setattr(config.pathlib.Path, patch_func, lambda x: True)
-    monkeypatch.setattr(config.pathlib.Path, "resolve", lambda x: x)
+    with monkeypatch.context() as mp:
+        expected = pathlib.Path(expected)
+        if patch_func:
+            mp.setattr(config.pathlib.Path, patch_func, lambda x: True)
+        mp.setattr(config.pathlib.Path, "resolve", lambda x: x)
 
-    actual = config.find_project_root(srcs)
+        actual = config.find_project_root(srcs)
 
-    assert expected == actual
+        assert expected == actual
 
 
 @pytest.mark.parametrize(
@@ -47,11 +48,12 @@ def test_find_project_root(srcs, patch_func, expected, monkeypatch):
 )
 def test_find_project_config(is_file, expected, mocker, monkeypatch):
     """Return absolute path if pyproject.toml or setup.cfg is detected."""
-    monkeypatch.setattr(config.pathlib.Path, "is_file", lambda x: is_file)
-    monkeypatch.setattr(config.pathlib.Path, "resolve", lambda x: x)
+    with monkeypatch.context() as mp:
+        mp.setattr(config.pathlib.Path, "is_file", lambda x: is_file)
+        mp.setattr(config.pathlib.Path, "resolve", lambda x: x)
 
-    actual = config.find_project_config(("/usr/src/app",))
-    assert expected == actual
+        actual = config.find_project_config(("/usr/src/app",))
+        assert expected == actual
 
 
 def test_parse_pyproject_toml(tmpdir):
