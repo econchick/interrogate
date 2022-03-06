@@ -20,7 +20,7 @@ jobs:
       matrix:
         python-version: ["3.6", "3.7", "3.8", "3.9", "3.10.0-rc.2"]
     steps:
-      - uses: "actions/checkout@v2"
+      - uses: "actions/checkout@v3"
       - uses: "actions/setup-python@v2"
         with:
           python-version: "${{ matrix.python-version }}"
@@ -38,7 +38,7 @@ jobs:
     name: "Build & Verify Package on Ubuntu"
     runs-on: "ubuntu-latest"
     steps:
-      - uses: "actions/checkout@v2"
+      - uses: "actions/checkout@v3"
       - uses: "actions/setup-python@v2"
         with:
           python-version: "3.8"
@@ -55,7 +55,7 @@ jobs:
     name: "Verify Dev Env on Ubuntu"
     runs-on: "ubuntu-latest"
     steps:
-      - uses: "actions/checkout@v2"
+      - uses: "actions/checkout@v3"
       - uses: "actions/setup-python@v2"
         with:
           python-version: "3.8"
