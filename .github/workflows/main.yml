@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v3
       - name: Locally install interrogate
         run: python -m pip install .
       - name: Run pre-commit
@@ -34,7 +34,7 @@ jobs:
         python-version: ["3.6", "3.7", "3.8", "3.9", "3.10.0-rc.2"]
     steps:
       - uses: "actions/checkout@v2"
-      - uses: "actions/setup-python@v2"
+      - uses: "actions/setup-python@v3"
         with:
           python-version: "${{ matrix.python-version }}"
       - name: "Install dependencies"
@@ -58,7 +58,7 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - uses: "actions/checkout@v2"
-      - uses: "actions/setup-python@v2"
+      - uses: "actions/setup-python@v3"
         with:
           python-version: "3.8"
       - name: "Install pep517 and twine"
@@ -78,7 +78,7 @@ jobs:
     runs-on: "${{ matrix.os }}"
     steps:
       - uses: "actions/checkout@v2"
-      - uses: "actions/setup-python@v2"
+      - uses: "actions/setup-python@v3"
         with:
           python-version: "3.8"
       - name: "Install in dev mode"
