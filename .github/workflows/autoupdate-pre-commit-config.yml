@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3.1.0
       - uses: actions/cache@v2.1.6
         with:
           path: ~/.cache/pre-commit
