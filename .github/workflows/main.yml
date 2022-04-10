@@ -48,7 +48,7 @@ jobs:
         run: "python -m tox"
       - name: "Upload coverage to Codecov"
         if: "contains(env.USING_COVERAGE, matrix.python-version)"
-        uses: "codecov/codecov-action@v2.0.3"
+        uses: "codecov/codecov-action@v3.0.0"
         with:
           file: ./coverage.xml
           fail_ci_if_error: true
