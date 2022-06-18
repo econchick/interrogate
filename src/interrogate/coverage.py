@@ -300,7 +300,7 @@ class InterrogateCoverage:
         for file_result in combined_results.file_results:
             if (
                 self.config.omit_covered_files
-                and file_result.perc_covered == 100
+                and file_result.perc_covered >= self.config.fail_under
             ):
                 continue
             nodes = file_result.nodes
@@ -350,7 +350,7 @@ class InterrogateCoverage:
             filename = self._get_filename(file_result.filename)
             if (
                 self.config.omit_covered_files
-                and file_result.perc_covered == 100
+                and file_result.perc_covered >= self.config.fail_under
             ):
                 continue
             perc_covered = "{:.0f}%".format(file_result.perc_covered)

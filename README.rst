@@ -532,7 +532,7 @@ To view all options available, run ``interrogate --help``:
       --color / --no-color            Toggle color output on/off when printing to
                                       stdout.  [default: True]
 
-      --omit-covered-files            Omit reporting files that have 100%
+      --omit-covered-files            Omit reporting files that meet --fail-under
                                       documentation coverage. This option is
                                       ignored if verbosity is not set.  [default:
                                       False]
