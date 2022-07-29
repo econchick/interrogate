@@ -35,7 +35,7 @@ author = "Lynn Root"
 
 # The short X.Y version.
 release = find_version("../src/interrogate/__init__.py")
-version = release.rsplit(u".", 1)[0]
+version = release.rsplit(".", 1)[0]
 
 master_doc = "index"
 

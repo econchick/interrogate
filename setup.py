@@ -66,6 +66,7 @@ CLASSIFIERS = [
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: Implementation :: CPython",
     "Topic :: Software Development :: Documentation",
     "Topic :: Software Development :: Libraries :: Python Modules",
@@ -82,7 +83,7 @@ INSTALL_REQUIRES = [
 EXTRAS_REQUIRE = {
     "png": ["cairosvg"],
     "docs": ["sphinx", "sphinx-autobuild"],
-    "tests": ["pytest", "pytest-cov", "pytest-mock"],
+    "tests": ["pytest", "pytest-cov", "pytest-mock", "coverage[toml]"],
 }
 EXTRAS_REQUIRE["dev"] = (
     EXTRAS_REQUIRE["png"]
