@@ -83,7 +83,7 @@ INSTALL_REQUIRES = [
 EXTRAS_REQUIRE = {
     "png": ["cairosvg"],
     "docs": ["sphinx", "sphinx-autobuild"],
-    "tests": ["pytest", "pytest-cov", "pytest-mock"],
+    "tests": ["pytest", "pytest-cov", "pytest-mock", "coverage[toml]"],
 }
 EXTRAS_REQUIRE["dev"] = (
     EXTRAS_REQUIRE["png"]
