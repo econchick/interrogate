@@ -138,6 +138,19 @@ from interrogate import utils
     help="Ignore methods with property setter/getter decorators.",
 )
 @click.option(
+    "-r",
+    "--ignore-regex",
+    type=str,
+    default=(),
+    multiple=True,
+    metavar="STR",
+    callback=utils.parse_regex,
+    help=(
+        "Regex identifying class, method, and function names to ignore. "
+        "Multiple `-r/--ignore-regex` invocations supported."
+    ),
+)
+@click.option(
     "-S",
     "--ignore-setters",
     is_flag=True,
@@ -157,17 +170,11 @@ from interrogate import utils
     ),
 )
 @click.option(
-    "-r",
-    "--ignore-regex",
-    type=str,
-    default=(),
-    multiple=True,
-    metavar="STR",
-    callback=utils.parse_regex,
-    help=(
-        "Regex identifying class, method, and function names to ignore. "
-        "Multiple `-r/--ignore-regex` invocations supported."
-    ),
+    "--pyi",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help="Include stub files that end in `.pyi`.",
 )
 @click.option(
     "-w",
@@ -301,6 +308,7 @@ def main(ctx, paths, **kwargs):
     .. versionadded:: 1.4.0 ``--ignore-setters``
     .. versionadded:: 1.5.0 ``--omit-covered-files``
     .. versionadded:: 1.5.0 ``--badge-style``
+    .. versionadded:: 1.6.0 ``--pyi``
 
     .. versionchanged:: 1.3.1 only generate badge if results change from
         an existing badge.
@@ -342,6 +350,7 @@ def main(ctx, paths, **kwargs):
         ignore_property_setters=kwargs["ignore_setters"],
         ignore_property_decorators=kwargs["ignore_property_decorators"],
         include_regex=kwargs["whitelist_regex"],
+        include_stubs=kwargs["pyi"],
         omit_covered_files=kwargs["omit_covered_files"],
     )
     interrogate_coverage = coverage.InterrogateCoverage(

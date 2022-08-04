@@ -90,6 +90,10 @@ Command Line Options
 
     Regex identifying class, method, and function names to ignore. Multiple ``-r/--ignore-regex`` invocations supported.
 
+.. option:: --pyi
+    
+    Include stub files that end in `.pyi`.
+
 .. option:: -w, --whitelist-regex STR
 
     Regex identifying class, method, and function names to include. Multiple ``-r/--ignore-regex`` invocations supported.
