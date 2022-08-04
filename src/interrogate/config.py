@@ -55,6 +55,7 @@ class InterrogateConfig:
     ignore_property_setters = attr.ib(default=False)
     ignore_property_decorators = attr.ib(default=False)
     include_regex = attr.ib(default=False)
+    include_stubs = attr.ib(default=False)
     omit_covered_files = attr.ib(default=False)
 
 

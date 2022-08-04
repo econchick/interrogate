@@ -117,6 +117,9 @@ class InterrogateCoverage:
         self.output_formatter = None
         self._add_common_exclude()
         self.skipped_file_count = 0
+        self.valid_file_exts = [".py"]
+        if self.config.include_stubs:
+            self.valid_file_exts.append(".pyi")
 
     def _add_common_exclude(self):
         """Ignore common directories by default"""
@@ -128,7 +131,10 @@ class InterrogateCoverage:
     def _filter_files(self, files):
         """Filter files that are explicitly excluded."""
         for f in files:
-            if not f.endswith(".py"):
+            has_valid_ext = any(
+                [f.endswith(ext) for ext in self.valid_file_exts]
+            )
+            if not has_valid_ext:
                 continue
             if self.config.ignore_init_module:
                 basename = os.path.basename(f)
@@ -143,10 +149,13 @@ class InterrogateCoverage:
         filenames = []
         for path in self.paths:
             if os.path.isfile(path):
-                if not path.endswith(".py"):
+                has_valid_ext = any(
+                    [path.endswith(ext) for ext in self.valid_file_exts]
+                )
+                if not has_valid_ext:
                     msg = (
-                        "E: Invalid file '{}'. Unable interrogate non-Python "
-                        "files.".format(path)
+                        f"E: Invalid file '{path}'. Unable to interrogate "
+                        "non-Python files or stubs."
                     )
                     click.echo(msg, err=True)
                     return sys.exit(1)
@@ -158,7 +167,7 @@ class InterrogateCoverage:
 
         if not filenames:
             p = ", ".join(self.paths)
-            msg = "E: No Python files found to interrogate in '{}'.".format(p)
+            msg = f"E: No Python files or stubs found to interrogate in '{p}'."
             click.echo(msg, err=True)
             return sys.exit(1)
 

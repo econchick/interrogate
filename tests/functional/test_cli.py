@@ -98,6 +98,7 @@ def test_run_shortflags(flags, exp_result, exp_exit_code, runner):
         (["--ignore-nested-functions"], 45.3, 1),
         (["--ignore-nested-classes"], 47.2, 1),
         (["--ignore-regex", "^get$"], 46.2, 1),
+        (["--pyi"], 59.5, 1),
         (["--whitelist-regex", "^get$"], 50.0, 1),
         (["--exclude", os.path.join(SAMPLE_DIR, "partial.py")], 55.9, 1),
         (["--fail-under", "40"], 46.4, 0),
