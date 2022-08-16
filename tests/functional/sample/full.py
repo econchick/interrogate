@@ -43,6 +43,11 @@ class Foo(object):
         """this method has a set property decorator"""
         pass
 
+    @prop.deleter
+    def prop(self):
+        """this method as a del property decorator"""
+        pass
+
 
 def top_level_func():
     """A top level function"""
