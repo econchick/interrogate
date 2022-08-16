@@ -1,6 +1,24 @@
 Changelog
 =========
 
+22.0 (UNRELEASED)
+-----------------
+
+Changed
+^^^^^^^
+
+* Switch to a calendar versioning scheme
+
+Added 
+^^^^^
+
+* Support Python stub files (``.pyi``) with new ``--pyi`` flag.
+
+Fixed
+^^^^^
+
+* Include deleters when using the ``--ignore-property-decorators`` flag (`#126 <https://github.com/econchick/interrogate/issues/126>`_). 
+
 .. short-log
 
 1.5.0 (2021-09-10)
