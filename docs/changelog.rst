@@ -9,15 +9,15 @@ Changed
 
 * Switch to a calendar versioning scheme
 
-Added 
+Added
 ^^^^^
 
 * Support Python stub files (``.pyi``) with new ``--pyi`` flag.
 
 Fixed
 ^^^^^
-
-* Include deleters when using the ``--ignore-property-decorators`` flag (`#126 <https://github.com/econchick/interrogate/issues/126>`_). 
+* Include deleters when using the ``--ignore-property-decorators`` flag (`#126 <https://github.com/econchick/interrogate/issues/126>`_).
+* Pass results when ``--fail-under`` float matches the rounded percentage covered (`#114 https://github.com/econchick/interrogate/issues/114>`_).
 
 .. short-log
 
