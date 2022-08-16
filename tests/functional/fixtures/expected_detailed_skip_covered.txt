@@ -16,15 +16,16 @@
 |     Foo.get (L35)                                                |    MISSED |
 |     Foo.a_prop (L39)                                             |    MISSED |
 |     Foo.a_prop (L43)                                             |    MISSED |
-|   documented_top_level_func (L47)                                |   COVERED |
-|     documented_top_level_func.documented_inner_func (L50)        |   COVERED |
-|   undocumented_top_level_func (L55)                              |    MISSED |
-|     undocumented_top_level_func.undocumented_inner_func (L56)    |    MISSED |
-|   Bar (L60)                                                      |    MISSED |
-|     Bar.method_bar (L61)                                         |    MISSED |
-|       Bar.method_bar.InnerBar (L62)                              |    MISSED |
-|   _SemiprivateClass (L66)                                        |    MISSED |
-|   __PrivateClass (L70)                                           |    MISSED |
+|     Foo.a_prop (L47)                                             |   COVERED |
+|   documented_top_level_func (L51)                                |   COVERED |
+|     documented_top_level_func.documented_inner_func (L54)        |   COVERED |
+|   undocumented_top_level_func (L59)                              |    MISSED |
+|     undocumented_top_level_func.undocumented_inner_func (L60)    |    MISSED |
+|   Bar (L64)                                                      |    MISSED |
+|     Bar.method_bar (L65)                                         |    MISSED |
+|       Bar.method_bar.InnerBar (L66)                              |    MISSED |
+|   _SemiprivateClass (L70)                                        |    MISSED |
+|   __PrivateClass (L74)                                           |    MISSED |
 |------------------------------------------------------------------|-----------|
 | child_sample/__init__.py (module)                                |    MISSED |
 |------------------------------------------------------------------|-----------|

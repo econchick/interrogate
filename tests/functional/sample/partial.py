@@ -43,6 +43,10 @@ class Foo(object):
     def a_prop(self, x):
         pass
 
+    @a_prop.deleter
+    def a_prop(self):
+        """A documented del property decorator"""
+
 
 def documented_top_level_func():
     """A documented top level function"""

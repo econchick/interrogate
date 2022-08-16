@@ -12,19 +12,20 @@
 |     Foo.get (L32)                                   |                COVERED |
 |     Foo.prop (L37)                                  |                COVERED |
 |     Foo.prop (L42)                                  |                COVERED |
-|   top_level_func (L47)                              |                COVERED |
-|     top_level_func.inner_func (L50)                 |                COVERED |
-|   Bar (L55)                                         |                COVERED |
-|     Bar.method_bar (L58)                            |                COVERED |
-|       Bar.method_bar.InnerBar (L61)                 |                COVERED |
-|   _SemiprivateClass (L67)                           |                COVERED |
-|   __PrivateClass (L73)                              |                COVERED |
+|     Foo.prop (L47)                                  |                COVERED |
+|   top_level_func (L52)                              |                COVERED |
+|     top_level_func.inner_func (L55)                 |                COVERED |
+|   Bar (L60)                                         |                COVERED |
+|     Bar.method_bar (L63)                            |                COVERED |
+|       Bar.method_bar.InnerBar (L66)                 |                COVERED |
+|   _SemiprivateClass (L72)                           |                COVERED |
+|   __PrivateClass (L78)                              |                COVERED |
 |-----------------------------------------------------|------------------------|
 
 ----------------------------------- Summary ------------------------------------
 | Name             |        Total |        Miss |        Cover |        Cover% |
 |------------------|--------------|-------------|--------------|---------------|
-| full.py          |           18 |           0 |           18 |          100% |
+| full.py          |           19 |           0 |           19 |          100% |
 |------------------|--------------|-------------|--------------|---------------|
-| TOTAL            |           18 |           0 |           18 |        100.0% |
+| TOTAL            |           19 |           0 |           19 |        100.0% |
 --------------- RESULT: PASSED (minimum: 80.0%, actual: 100.0%) ----------------
