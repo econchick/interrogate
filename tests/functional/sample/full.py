@@ -43,6 +43,11 @@ class Foo(object):
         """this method has a set property decorator"""
         pass
 
+    @prop.deleter
+    def prop(self):
+        """this method as a del property decorator"""
+        pass
+
 
 def top_level_func():
     """A top level function"""
@@ -62,6 +67,21 @@ class Bar(object):
             """an inner class"""
 
             pass
+
+
+# Coverage % for InitDocs should be the same as ClassDocs
+class InitDocs:
+    def __init__(self):
+        """A docstring for init"""
+        pass
+
+
+# Coverage % for ClassDocs should be the same as InitDocs
+class ClassDocs:
+    """A docstring for a class"""
+
+    def __init__(self):
+        self.foo = None
 
 
 class _SemiprivateClass(object):

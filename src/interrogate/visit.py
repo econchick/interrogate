@@ -177,6 +177,8 @@ class CoverageVisitor(ast.NodeVisitor):
             if hasattr(dec, "attr"):
                 if dec.attr == "setter":
                     return True
+                if dec.attr == "deleter":
+                    return True
         return False
 
     def _has_setters(self, node):

@@ -7,6 +7,7 @@ include tox.ini conftest.py
 recursive-include tests *.py
 recursive-include tests *.svg *.png
 recursive-include tests *.txt
+recursive-include tests *.pyi
 
 # Documentation
 include docs/Makefile docs/docutils.conf

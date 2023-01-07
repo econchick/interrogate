@@ -1,6 +1,7 @@
 # Copyright 2020 Lynn Root
 """Measure and report on documentation coverage in Python modules."""
 import ast
+import decimal
 import os
 import pathlib
 import sys
@@ -117,6 +118,9 @@ class InterrogateCoverage:
         self.output_formatter = None
         self._add_common_exclude()
         self.skipped_file_count = 0
+        self.valid_file_exts = [".py"]
+        if self.config.include_stubs:
+            self.valid_file_exts.append(".pyi")
 
     def _add_common_exclude(self):
         """Ignore common directories by default"""
@@ -128,7 +132,10 @@ class InterrogateCoverage:
     def _filter_files(self, files):
         """Filter files that are explicitly excluded."""
         for f in files:
-            if not f.endswith(".py"):
+            has_valid_ext = any(
+                [f.endswith(ext) for ext in self.valid_file_exts]
+            )
+            if not has_valid_ext:
                 continue
             if self.config.ignore_init_module:
                 basename = os.path.basename(f)
@@ -143,10 +150,13 @@ class InterrogateCoverage:
         filenames = []
         for path in self.paths:
             if os.path.isfile(path):
-                if not path.endswith(".py"):
+                has_valid_ext = any(
+                    [path.endswith(ext) for ext in self.valid_file_exts]
+                )
+                if not has_valid_ext:
                     msg = (
-                        "E: Invalid file '{}'. Unable interrogate non-Python "
-                        "files.".format(path)
+                        f"E: Invalid file '{path}'. Unable to interrogate "
+                        "non-Python files or stubs."
                     )
                     click.echo(msg, err=True)
                     return sys.exit(1)
@@ -158,7 +168,7 @@ class InterrogateCoverage:
 
         if not filenames:
             p = ", ".join(self.paths)
-            msg = "E: No Python files found to interrogate in '{}'.".format(p)
+            msg = f"E: No Python files or stubs found to interrogate in '{p}'."
             click.echo(msg, err=True)
             return sys.exit(1)
 
@@ -200,6 +210,23 @@ class InterrogateCoverage:
         filtered_nodes = [n for n in filtered_nodes if n not in nested_cls]
         return filtered_nodes
 
+    def _set_google_style(self, nodes):
+        """Apply Google-style docstrings for class coverage.
+
+        Update coverage of a class node if its __init__ method has a docstring,
+        or an __init__ method if its class has a docstring.
+
+        A class and its `__init__` method are considered covered if either one
+        contains a docstring. See <https://sphinxcontrib-napoleon.readthedocs.
+        io/en/latest/example_google.html>`_ for more info and an example.
+        """
+        for node in nodes:
+            if node.node_type == "FunctionDef" and node.name == "__init__":
+                if not node.covered and node.parent.covered:
+                    setattr(node, "covered", True)
+                elif node.covered and not node.parent.covered:
+                    setattr(node.parent, "covered", True)
+
     def _get_file_coverage(self, filename):
         """Get coverage results for a particular file."""
         with open(filename, "r", encoding="utf-8") as f:
@@ -219,7 +246,8 @@ class InterrogateCoverage:
             ]
         if self.config.ignore_nested_classes:
             filtered_nodes = self._filter_inner_nested(filtered_nodes)
-
+        if self.config.docstring_style == "google":
+            self._set_google_style(filtered_nodes)
         results = InterrogateFileResult(
             filename=filename,
             ignore_module=self.config.ignore_module,
@@ -240,7 +268,10 @@ class InterrogateCoverage:
 
         results.combine()
 
-        if self.config.fail_under > results.perc_covered:
+        fail_under_str = str(self.config.fail_under)
+        round_to = -decimal.Decimal(fail_under_str).as_tuple().exponent
+
+        if self.config.fail_under > round(results.perc_covered, round_to):
             results.ret_code = 1
 
         return results

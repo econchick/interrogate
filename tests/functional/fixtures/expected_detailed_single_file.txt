@@ -12,19 +12,24 @@
 |     Foo.get (L32)                                   |                COVERED |
 |     Foo.prop (L37)                                  |                COVERED |
 |     Foo.prop (L42)                                  |                COVERED |
-|   top_level_func (L47)                              |                COVERED |
-|     top_level_func.inner_func (L50)                 |                COVERED |
-|   Bar (L55)                                         |                COVERED |
-|     Bar.method_bar (L58)                            |                COVERED |
-|       Bar.method_bar.InnerBar (L61)                 |                COVERED |
-|   _SemiprivateClass (L67)                           |                COVERED |
-|   __PrivateClass (L73)                              |                COVERED |
+|     Foo.prop (L47)                                  |                COVERED |
+|   top_level_func (L52)                              |                COVERED |
+|     top_level_func.inner_func (L55)                 |                COVERED |
+|   Bar (L60)                                         |                COVERED |
+|     Bar.method_bar (L63)                            |                COVERED |
+|       Bar.method_bar.InnerBar (L66)                 |                COVERED |
+|   InitDocs (L73)                                    |                COVERED |
+|     InitDocs.__init__ (L74)                         |                COVERED |
+|   ClassDocs (L80)                                   |                COVERED |
+|     ClassDocs.__init__ (L83)                        |                COVERED |
+|   _SemiprivateClass (L87)                           |                COVERED |
+|   __PrivateClass (L93)                              |                COVERED |
 |-----------------------------------------------------|------------------------|
 
 ----------------------------------- Summary ------------------------------------
 | Name             |        Total |        Miss |        Cover |        Cover% |
 |------------------|--------------|-------------|--------------|---------------|
-| full.py          |           18 |           0 |           18 |          100% |
+| full.py          |           23 |           0 |           23 |          100% |
 |------------------|--------------|-------------|--------------|---------------|
-| TOTAL            |           18 |           0 |           18 |        100.0% |
+| TOTAL            |           23 |           0 |           23 |        100.0% |
 --------------- RESULT: PASSED (minimum: 80.0%, actual: 100.0%) ----------------

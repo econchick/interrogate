@@ -1,6 +1,25 @@
 Changelog
 =========
 
+23.0 (UNRELEASED)
+-----------------
+
+Changed
+^^^^^^^
+
+* Switch to a calendar versioning scheme – happy new year!
+
+Added
+^^^^^
+
+* Support Python stub files (``.pyi``) with new ``--pyi`` flag.
+* Support for Google-style docstrings for class ``__init__`` methods with new ``--style [sphinx|google]`` flag (`#128 <https://github.com/econchick/interrogate/issues/128>`_).
+
+Fixed
+^^^^^
+
+* Include deleters when using the ``--ignore-property-decorators`` flag (`#126 <https://github.com/econchick/interrogate/issues/126>`_).
+
 .. short-log
 
 1.5.0 (2021-09-10)

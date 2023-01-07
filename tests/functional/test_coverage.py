@@ -44,22 +44,22 @@ def patch_term_width(monkeypatch):
                 SAMPLE_DIR,
             ],
             {},
-            (56, 26, 30, "46.4"),
+            (62, 30, 32, "48.4"),
         ),
-        ([os.path.join(SAMPLE_DIR, "partial.py")], {}, (22, 7, 15, "31.8")),
+        ([os.path.join(SAMPLE_DIR, "partial.py")], {}, (23, 8, 15, "34.8")),
         (
             [
                 os.path.join(SAMPLE_DIR, "full.py"),
             ],
             {"ignore_nested_functions": True},
-            (17, 17, 0, "100.0"),
+            (22, 20, 2, "90.9"),
         ),
         (
             [
                 os.path.join(SAMPLE_DIR, "partial.py"),
             ],
             {"ignore_nested_functions": True},
-            (20, 6, 14, "30.0"),
+            (21, 7, 14, "33.3"),
         ),
     ),
 )
@@ -92,8 +92,8 @@ def test_coverage_errors(capsys):
     with pytest.raises(SystemExit, match="1"):
         interrogate_coverage.get_coverage()
 
-    captured = capsys.readouterr()
-    assert "E: No Python files found to interrogate in " in captured.err
+    capt = capsys.readouterr()
+    assert "E: No Python files or stubs found to interrogate in " in capt.err
 
 
 @pytest.mark.parametrize(
@@ -173,7 +173,9 @@ def test_print_results_omit_none(level, capsys, monkeypatch):
 
 def test_print_results_omit_all_summary(capsys, monkeypatch):
     """Output of test results for summary view, omitting all covered files."""
-    interrogate_config = config.InterrogateConfig(omit_covered_files=True)
+    interrogate_config = config.InterrogateConfig(
+        omit_covered_files=True, docstring_style="google"
+    )
     interrogate_coverage = coverage.InterrogateCoverage(
         paths=[os.path.join(SAMPLE_DIR, "full.py")], conf=interrogate_config
     )
@@ -195,7 +197,9 @@ def test_print_results_omit_all_summary(capsys, monkeypatch):
 
 def test_print_results_omit_all_detailed(capsys, monkeypatch):
     """Show no detail view when all files are omitted from skipping covered"""
-    interrogate_config = config.InterrogateConfig(omit_covered_files=True)
+    interrogate_config = config.InterrogateConfig(
+        omit_covered_files=True, docstring_style="google"
+    )
     interrogate_coverage = coverage.InterrogateCoverage(
         paths=[os.path.join(SAMPLE_DIR, "full.py")], conf=interrogate_config
     )
@@ -247,7 +251,10 @@ def test_print_results_ignore_module(
 def test_print_results_single_file(capsys, monkeypatch):
     """Results for a single file should still list the filename."""
     single_file = os.path.join(SAMPLE_DIR, "full.py")
-    interrogate_coverage = coverage.InterrogateCoverage(paths=[single_file])
+    conf = config.InterrogateConfig(docstring_style="google")
+    interrogate_coverage = coverage.InterrogateCoverage(
+        paths=[single_file], conf=conf
+    )
     results = interrogate_coverage.get_coverage()
     interrogate_coverage.print_results(
         results=results, output=None, verbosity=2
@@ -275,3 +282,33 @@ def test_print_results_single_file(capsys, monkeypatch):
     else:
         assert "tests\\functional\\sample\\" in captured.out
         assert "tests\\functional\\sample\\full.py" not in captured.out
+
+
+@pytest.mark.parametrize(
+    "fail_under,perc_covered,exp_ret",
+    [
+        (48.3, 48.27, 0),
+        (48.36, 48.359, 0),
+        (48.35, 48.349, 0),
+        (48.55, 48.500, 1),
+        (50.999999, 50.999998, 1),
+        (50.999999, 50.999999, 0),
+    ],
+)
+def test_pass_when_fail_under_exact(
+    fail_under, perc_covered, exp_ret, monkeypatch
+):
+    """Pass if actual coverage is exactly the `--fail-under` value.
+
+    See issue `#114 <https://github.com/econchick/interrogate/issues/114>`_.
+    """
+    monkeypatch.setattr(
+        coverage.InterrogateResults, "perc_covered", perc_covered
+    )
+
+    interrogate_config = config.InterrogateConfig(fail_under=fail_under)
+    interrogate_coverage = coverage.InterrogateCoverage(
+        paths=[SAMPLE_DIR], conf=interrogate_config
+    )
+    results = interrogate_coverage.get_coverage()
+    assert exp_ret == results.ret_code
