@@ -40,6 +40,16 @@ class Bar:
         class InnerBar:
             """an inner class"""
 
+class InitDocs:
+    def __init__(self) -> None:
+        """A docstring for init"""
+
+class ClassDocs:
+    """A docstring for a class"""
+
+    def __init__(self) -> None:
+        pass
+
 class _SemiprivateClass:
     """a semiprivate class"""
 

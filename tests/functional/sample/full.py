@@ -69,6 +69,21 @@ class Bar(object):
             pass
 
 
+# Coverage % for InitDocs should be the same as ClassDocs
+class InitDocs:
+    def __init__(self):
+        """A docstring for init"""
+        pass
+
+
+# Coverage % for ClassDocs should be the same as InitDocs
+class ClassDocs:
+    """A docstring for a class"""
+
+    def __init__(self):
+        self.foo = None
+
+
 class _SemiprivateClass(object):
     """a semiprivate class"""
 

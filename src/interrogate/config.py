@@ -39,6 +39,8 @@ class InterrogateConfig:
         function names to include.
     :param bool omit_covered_files: Omit reporting files that have 100%
         documentation coverage.
+    :param str docstring_style: Style of docstrings to follow. Choices:
+        "sphinx" (default), "google".
     """
 
     color = attr.ib(default=False)
@@ -57,6 +59,16 @@ class InterrogateConfig:
     include_regex = attr.ib(default=False)
     include_stubs = attr.ib(default=False)
     omit_covered_files = attr.ib(default=False)
+    docstring_style = attr.ib(default="sphinx")
+
+    @docstring_style.validator
+    def _check_style(self, attribute, value):
+        """Validate selected choice for docstring style"""
+        if value not in ("sphinx", "google"):
+            raise ValueError(
+                f"Invalid `docstring_style` '{value}'. Valid values: 'sphinx', "
+                "'google'"
+            )
 
 
 def find_project_root(srcs):

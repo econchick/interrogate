@@ -1,10 +1,11 @@
 | Name                                     |  Total |  Miss |  Cover |  Cover% |
 |------------------------------------------|--------|-------|--------|---------|
 | empty.py                                 |      1 |     1 |      0 |      0% |
+| full.py                                  |     23 |     2 |     21 |     91% |
 | partial.py                               |     23 |    15 |      8 |     35% |
 | child_sample/__init__.py                 |      1 |     1 |      0 |      0% |
 | child_sample/child_sample_module.py      |     13 |    13 |      0 |      0% |
 |------------------------------------------|--------|-------|--------|---------|
-| TOTAL                                    |     58 |    30 |     28 |   48.3% |
+| TOTAL                                    |     62 |    32 |     30 |   48.4% |
 |------------------------------------------------------------------------------|
-|               (2 of 6 files omitted due to complete coverage)                |
+|               (1 of 6 files omitted due to complete coverage)                |

@@ -190,6 +190,18 @@ from interrogate import utils
     ),
 )
 @click.option(
+    "--style",
+    type=click.Choice(["sphinx", "google"]),
+    default="sphinx",
+    show_default=True,
+    help=(
+        "Style of docstrings to honor.\nUsing `google` will consider a class "
+        "and its `__init__` method both covered if there is either a class-"
+        "level docstring, or an `__init__` method docstring, instead of "
+        "enforcing both. Mutually exclusive with `-i`/`--ignore-init` flag."
+    ),
+)
+@click.option(
     "-o",
     "--output",
     default=None,
@@ -309,6 +321,7 @@ def main(ctx, paths, **kwargs):
     .. versionadded:: 1.5.0 ``--omit-covered-files``
     .. versionadded:: 1.5.0 ``--badge-style``
     .. versionadded:: 23.0 ``--pyi``
+    .. versionadded:: 23.0 ``--style=sphinx|google``
 
     .. versionchanged:: 1.3.1 only generate badge if results change from
         an existing badge.
@@ -325,6 +338,14 @@ def main(ctx, paths, **kwargs):
         raise click.BadParameter(
             "The `--badge-style` option must be used along with the `-g/"
             "--generate-badge option."
+        )
+    if kwargs["style"] == "google" and kwargs["ignore_init_method"]:
+        raise click.BadOptionUsage(
+            option_name="style",
+            message=(
+                "The `--ignore-init-method` flag is mutually exclusive with "
+                "`--style google`."
+            ),
         )
     if not paths:
         paths = (os.path.abspath(os.getcwd()),)
@@ -354,6 +375,7 @@ def main(ctx, paths, **kwargs):
         include_regex=kwargs["whitelist_regex"],
         include_stubs=kwargs["pyi"],
         omit_covered_files=kwargs["omit_covered_files"],
+        docstring_style=kwargs["style"],
     )
     interrogate_coverage = coverage.InterrogateCoverage(
         paths=paths,

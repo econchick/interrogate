@@ -13,6 +13,7 @@ Added
 ^^^^^
 
 * Support Python stub files (``.pyi``) with new ``--pyi`` flag.
+* Support for Google-style docstrings for class ``__init__`` methods with new ``--style [sphinx|google]`` flag (`#128 <https://github.com/econchick/interrogate/issues/128>`_).
 
 Fixed
 ^^^^^

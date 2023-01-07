@@ -3,6 +3,30 @@
 |-----------------------------------------------------------------|-----------|
 | empty.py (module)                                               |    MISSED |
 |-----------------------------------------------------------------|-----------|
+| full.py (module)                                                |   COVERED |
+|   Foo (L5)                                                      |   COVERED |
+|     Foo.__init__ (L8)                                           |   COVERED |
+|     Foo.__str__ (L12)                                           |   COVERED |
+|     Foo._semiprivate (L16)                                      |   COVERED |
+|     Foo.__private (L20)                                         |   COVERED |
+|     Foo.method_foo (L24)                                        |   COVERED |
+|     Foo.get (L28)                                               |   COVERED |
+|     Foo.get (L32)                                               |   COVERED |
+|     Foo.prop (L37)                                              |   COVERED |
+|     Foo.prop (L42)                                              |   COVERED |
+|     Foo.prop (L47)                                              |   COVERED |
+|   top_level_func (L52)                                          |   COVERED |
+|     top_level_func.inner_func (L55)                             |   COVERED |
+|   Bar (L60)                                                     |   COVERED |
+|     Bar.method_bar (L63)                                        |   COVERED |
+|       Bar.method_bar.InnerBar (L66)                             |   COVERED |
+|   InitDocs (L73)                                                |    MISSED |
+|     InitDocs.__init__ (L74)                                     |   COVERED |
+|   ClassDocs (L80)                                               |   COVERED |
+|     ClassDocs.__init__ (L83)                                    |    MISSED |
+|   _SemiprivateClass (L87)                                       |   COVERED |
+|   __PrivateClass (L93)                                          |   COVERED |
+|-----------------------------------------------------------------|-----------|
 | partial.py (module)                                             |   COVERED |
 |   Foo (L5)                                                      |   COVERED |
 |     Foo.__init__ (L8)                                           |   COVERED |
@@ -27,9 +51,9 @@
 |   _SemiprivateClass (L70)                                       |    MISSED |
 |   __PrivateClass (L74)                                          |    MISSED |
 |-----------------------------------------------------------------|-----------|
-| child_sample\__init__.py (module)                               |    MISSED |
+| child_sample/__init__.py (module)                               |    MISSED |
 |-----------------------------------------------------------------|-----------|
-| child_sample\child_sample_module.py (module)                    |    MISSED |
+| child_sample/child_sample_module.py (module)                    |    MISSED |
 |   ChildFoo (L5)                                                 |    MISSED |
 |     ChildFoo.__init__ (L6)                                      |    MISSED |
 |     ChildFoo.__str__ (L9)                                       |    MISSED |

@@ -44,7 +44,7 @@ def patch_term_width(monkeypatch):
                 SAMPLE_DIR,
             ],
             {},
-            (58, 28, 30, "48.3"),
+            (62, 30, 32, "48.4"),
         ),
         ([os.path.join(SAMPLE_DIR, "partial.py")], {}, (23, 8, 15, "34.8")),
         (
@@ -52,7 +52,7 @@ def patch_term_width(monkeypatch):
                 os.path.join(SAMPLE_DIR, "full.py"),
             ],
             {"ignore_nested_functions": True},
-            (18, 18, 0, "100.0"),
+            (22, 20, 2, "90.9"),
         ),
         (
             [
@@ -173,7 +173,9 @@ def test_print_results_omit_none(level, capsys, monkeypatch):
 
 def test_print_results_omit_all_summary(capsys, monkeypatch):
     """Output of test results for summary view, omitting all covered files."""
-    interrogate_config = config.InterrogateConfig(omit_covered_files=True)
+    interrogate_config = config.InterrogateConfig(
+        omit_covered_files=True, docstring_style="google"
+    )
     interrogate_coverage = coverage.InterrogateCoverage(
         paths=[os.path.join(SAMPLE_DIR, "full.py")], conf=interrogate_config
     )
@@ -195,7 +197,9 @@ def test_print_results_omit_all_summary(capsys, monkeypatch):
 
 def test_print_results_omit_all_detailed(capsys, monkeypatch):
     """Show no detail view when all files are omitted from skipping covered"""
-    interrogate_config = config.InterrogateConfig(omit_covered_files=True)
+    interrogate_config = config.InterrogateConfig(
+        omit_covered_files=True, docstring_style="google"
+    )
     interrogate_coverage = coverage.InterrogateCoverage(
         paths=[os.path.join(SAMPLE_DIR, "full.py")], conf=interrogate_config
     )
@@ -247,7 +251,10 @@ def test_print_results_ignore_module(
 def test_print_results_single_file(capsys, monkeypatch):
     """Results for a single file should still list the filename."""
     single_file = os.path.join(SAMPLE_DIR, "full.py")
-    interrogate_coverage = coverage.InterrogateCoverage(paths=[single_file])
+    conf = config.InterrogateConfig(docstring_style="google")
+    interrogate_coverage = coverage.InterrogateCoverage(
+        paths=[single_file], conf=conf
+    )
     results = interrogate_coverage.get_coverage()
     interrogate_coverage.print_results(
         results=results, output=None, verbosity=2

@@ -18,14 +18,18 @@
 |   Bar (L60)                                         |                COVERED |
 |     Bar.method_bar (L63)                            |                COVERED |
 |       Bar.method_bar.InnerBar (L66)                 |                COVERED |
-|   _SemiprivateClass (L72)                           |                COVERED |
-|   __PrivateClass (L78)                              |                COVERED |
+|   InitDocs (L73)                                    |                COVERED |
+|     InitDocs.__init__ (L74)                         |                COVERED |
+|   ClassDocs (L80)                                   |                COVERED |
+|     ClassDocs.__init__ (L83)                        |                COVERED |
+|   _SemiprivateClass (L87)                           |                COVERED |
+|   __PrivateClass (L93)                              |                COVERED |
 |-----------------------------------------------------|------------------------|
 
 ----------------------------------- Summary ------------------------------------
 | Name             |        Total |        Miss |        Cover |        Cover% |
 |------------------|--------------|-------------|--------------|---------------|
-| full.py          |           19 |           0 |           19 |          100% |
+| full.py          |           23 |           0 |           23 |          100% |
 |------------------|--------------|-------------|--------------|---------------|
-| TOTAL            |           19 |           0 |           19 |        100.0% |
+| TOTAL            |           23 |           0 |           23 |        100.0% |
 --------------- RESULT: PASSED (minimum: 80.0%, actual: 100.0%) ----------------

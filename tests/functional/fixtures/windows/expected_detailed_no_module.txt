@@ -18,8 +18,12 @@
 |   Bar (L60)                                                     |   COVERED |
 |     Bar.method_bar (L63)                                        |   COVERED |
 |       Bar.method_bar.InnerBar (L66)                             |   COVERED |
-|   _SemiprivateClass (L72)                                       |   COVERED |
-|   __PrivateClass (L78)                                          |   COVERED |
+|   InitDocs (L73)                                                |    MISSED |
+|     InitDocs.__init__ (L74)                                     |   COVERED |
+|   ClassDocs (L80)                                               |   COVERED |
+|     ClassDocs.__init__ (L83)                                    |    MISSED |
+|   _SemiprivateClass (L87)                                       |   COVERED |
+|   __PrivateClass (L93)                                          |   COVERED |
 |-----------------------------------------------------------------|-----------|
 | partial.py                                                      |           |
 |   Foo (L5)                                                      |   COVERED |
