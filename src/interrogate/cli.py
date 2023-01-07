@@ -308,11 +308,11 @@ def main(ctx, paths, **kwargs):
     .. versionadded:: 1.4.0 ``--ignore-setters``
     .. versionadded:: 1.5.0 ``--omit-covered-files``
     .. versionadded:: 1.5.0 ``--badge-style``
-    .. versionadded:: 1.6.0 ``--pyi``
+    .. versionadded:: 23.0 ``--pyi``
 
     .. versionchanged:: 1.3.1 only generate badge if results change from
         an existing badge.
-    .. versionchanged:: 1.6.0 include property deleters when ignoring all
+    .. versionchanged:: 23.0 include property deleters when ignoring all
         property decorators (--ignore-property-decorators)
     """
     gen_badge = kwargs["generate_badge"]
