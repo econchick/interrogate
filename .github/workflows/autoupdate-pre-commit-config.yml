@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Set up Python
         uses: actions/setup-python@v3
-      - uses: actions/cache@v3.0.5
+      - uses: actions/cache@v3.2.3
         with:
           path: ~/.cache/pre-commit
           key: pre-commit-autoupdate
