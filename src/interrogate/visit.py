@@ -3,12 +3,8 @@
 
 import ast
 import os
-import sys
 
 import attr
-
-
-PY_38_HIGHER = sys.version_info >= (3, 8)
 
 
 @attr.s(eq=False)
@@ -83,12 +79,6 @@ class CoverageVisitor(ast.NodeVisitor):
         lineno = None
         if hasattr(node, "lineno"):
             lineno = node.lineno
-            # Python 3.8+ fixed the line number calc for decorated functions;
-            # previously the AST node would report the line number of the
-            # decorator, not the obj itself. We're going to try and back-port.
-            if not PY_38_HIGHER:
-                if hasattr(node, "decorator_list"):
-                    lineno += len(node.decorator_list)
 
         node_type = type(node).__name__
         cov_node = CovNode(

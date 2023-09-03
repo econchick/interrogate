@@ -5,10 +5,10 @@ Inspired by `coverage-badge <https://github.com/dbrgn/coverage-badge>`_.
 """
 
 import os
+import sys
 
+from importlib import resources
 from xml.dom import minidom
-
-import pkg_resources
 
 
 try:
@@ -157,9 +157,15 @@ def get_badge(result, color, style=None):
     result = _format_result(result)
     badge_template_values["result"] = result
     badge_template_values["color"] = color
-    template_path = os.path.join("badge", template_file)
-    tmpl = pkg_resources.resource_string(__name__, template_path)
-    tmpl = tmpl.decode("utf8")
+
+    if sys.version_info >= (3, 9):
+        tmpl = (
+            resources.files("interrogate") / "badge" / template_file
+        ).read_text()
+    else:
+        with resources.path("interrogate", "badge") as p:
+            tmpl = (p / template_file).read_text()
+
     for key, value in badge_template_values.items():
         tmpl = tmpl.replace("{{ %s }}" % key, str(value))
     return tmpl
