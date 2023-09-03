@@ -138,7 +138,7 @@ def _format_result(result):
     # do not include decimal if it's 100
     if result == 100:
         return "100"
-    return "{:.1f}".format(result)
+    return f"{result:.1f}"
 
 
 def get_badge(result, color, style=None):
@@ -218,7 +218,7 @@ def should_generate_badge(output, color, result):
         for r in rects
         if r.hasAttribute("data-interrogate")
     ]
-    fill_color = "fill:{}".format(color)
+    fill_color = f"fill:{color}"
     if fill_color not in current_colors:
         return True
 
@@ -228,7 +228,7 @@ def should_generate_badge(output, color, result):
         for t in texts
         if t.hasAttribute("data-interrogate")
     ]
-    result = "{:.1f}%".format(result)
+    result = f"{result:.1f}%"
     if result in current_results:
         return False
     return True

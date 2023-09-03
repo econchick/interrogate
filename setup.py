@@ -31,11 +31,11 @@ def read(*filenames, **kwargs):
 
 def find_meta(meta):
     """Extract __*meta*__ from META_FILE."""
-    re_str = r"^__{meta}__ = ['\"]([^'\"]*)['\"]".format(meta=meta)
+    re_str = rf"^__{meta}__ = ['\"]([^'\"]*)['\"]"
     meta_match = re.search(re_str, META_FILE, re.M)
     if meta_match:
         return meta_match.group(1)
-    raise RuntimeError("Unable to find __{meta}__ string.".format(meta=meta))
+    raise RuntimeError(f"Unable to find __{meta}__ string.")
 
 
 #####
@@ -95,7 +95,7 @@ LONG = (
     + "==================="
     + read("docs/changelog.rst").split(".. short-log")[1]
     + "\n`Full changelog "
-    + "<{url}/en/latest/#changelog>`_.".format(url=URL)
+    + f"<{URL}/en/latest/#changelog>`_."
 )
 
 setup(

@@ -75,7 +75,7 @@ def test_get_badge():
     actual = badge_gen.get_badge(99.9, "#4c1")
     actual = actual.replace("\n", "").replace("\r", "")
     expected_fixture = os.path.join(FIXTURES, "default-style", "99.svg")
-    with open(expected_fixture, "r") as f:
+    with open(expected_fixture) as f:
         expected = f.read()
         expected = expected.replace("\n", "").replace("\r", "")
 

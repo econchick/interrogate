@@ -79,7 +79,7 @@ def test_run_shortflags(flags, exp_result, exp_exit_code, runner):
     cli_inputs = flags + [SAMPLE_DIR]
     result = runner.invoke(cli.main, cli_inputs)
 
-    exp_partial_output = "actual: {:.1f}%".format(exp_result)
+    exp_partial_output = f"actual: {exp_result:.1f}%"
     assert exp_partial_output in result.output
     assert exp_exit_code == result.exit_code
 
@@ -108,7 +108,7 @@ def test_run_longflags(flags, exp_result, exp_exit_code, runner):
     cli_inputs = flags + [SAMPLE_DIR]
     result = runner.invoke(cli.main, cli_inputs)
 
-    exp_partial_output = "actual: {:.1f}%".format(exp_result)
+    exp_partial_output = f"actual: {exp_result:.1f}%"
     assert exp_partial_output in result.output
     assert exp_exit_code == result.exit_code
 
@@ -126,7 +126,7 @@ def test_run_multiple_flags(flags, exp_result, exp_exit_code, runner):
     cli_inputs = flags + [SAMPLE_DIR]
     result = runner.invoke(cli.main, cli_inputs)
 
-    exp_partial_output = "actual: {:.1f}%".format(exp_result)
+    exp_partial_output = f"actual: {exp_result:.1f}%"
     assert exp_partial_output in result.output
     assert exp_exit_code == result.exit_code
 
@@ -135,7 +135,7 @@ def test_run_multiple_flags(flags, exp_result, exp_exit_code, runner):
 def test_generate_badge(quiet, runner, tmp_path):
     """Test expected SVG output when creating a status badge."""
     expected_output_path = os.path.join(FIXTURES, "expected_badge.svg")
-    with open(expected_output_path, "r") as f:
+    with open(expected_output_path) as f:
         expected_output = f.read()
 
     expected_output = expected_output.replace("\n", "")
@@ -160,7 +160,7 @@ def test_generate_badge(quiet, runner, tmp_path):
     else:
         assert str(expected_path) in result.output
 
-    with open(str(expected_path), "r") as f:
+    with open(str(expected_path)) as f:
         actual_output = f.read()
         actual_output = actual_output.replace("\n", "")
 
