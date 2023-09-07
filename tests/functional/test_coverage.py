@@ -73,7 +73,7 @@ def test_coverage_simple(paths, conf, exp_results, mocker):
     assert exp_results[0] == results.total
     assert exp_results[1] == results.covered
     assert exp_results[2] == results.missing
-    assert exp_results[3] == "{:.1f}".format(results.perc_covered)
+    assert exp_results[3] == f"{results.perc_covered:.1f}"
 
 
 def test_coverage_errors(capsys):
@@ -116,7 +116,7 @@ def test_print_results(level, exp_fixture_file, capsys, monkeypatch):
     expected_fixture = os.path.join(FIXTURES, exp_fixture_file)
     if IS_WINDOWS:
         expected_fixture = os.path.join(FIXTURES, "windows", exp_fixture_file)
-    with open(expected_fixture, "r") as f:
+    with open(expected_fixture) as f:
         expected_out = f.read()
 
     assert expected_out in captured.out
@@ -148,7 +148,7 @@ def test_print_results_omit_covered(
     expected_fixture = os.path.join(FIXTURES, exp_fixture_file)
     if IS_WINDOWS:
         expected_fixture = os.path.join(FIXTURES, "windows", exp_fixture_file)
-    with open(expected_fixture, "r") as f:
+    with open(expected_fixture) as f:
         expected_out = f.read()
 
     assert expected_out in captured.out
@@ -187,7 +187,7 @@ def test_print_results_omit_all_summary(capsys, monkeypatch):
     expected_fixture = os.path.join(FIXTURES, exp_fixture_file)
     if IS_WINDOWS:
         expected_fixture = os.path.join(FIXTURES, "windows", exp_fixture_file)
-    with open(expected_fixture, "r") as f:
+    with open(expected_fixture) as f:
         expected_out = f.read()
 
     assert expected_out in captured.out
@@ -238,7 +238,7 @@ def test_print_results_ignore_module(
     expected_fixture = os.path.join(FIXTURES, exp_fixture_file)
     if IS_WINDOWS:
         expected_fixture = os.path.join(FIXTURES, "windows", exp_fixture_file)
-    with open(expected_fixture, "r") as f:
+    with open(expected_fixture) as f:
         expected_out = f.read()
 
     assert expected_out in captured.out
@@ -263,7 +263,7 @@ def test_print_results_single_file(capsys, monkeypatch):
             FIXTURES, "windows", "expected_detailed_single_file.txt"
         )
 
-    with open(expected_fixture, "r") as f:
+    with open(expected_fixture) as f:
         expected_out = f.read()
 
     assert expected_out in captured.out

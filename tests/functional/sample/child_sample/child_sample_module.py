@@ -2,7 +2,7 @@
 # intentionally no docstrings here
 
 
-class ChildFoo(object):
+class ChildFoo:
     def __init__(self):
         self.foo = None
 
@@ -23,17 +23,17 @@ def a_child_func():
     pass
 
 
-class ChildBar(object):
+class ChildBar:
     def method_bar(self):
-        class InnerBar(object):
+        class InnerBar:
             pass
 
         return InnerBar
 
 
-class _ChildBaz(object):
+class _ChildBaz:
     pass
 
 
-class __ChildBla(object):
+class __ChildBla:
     pass

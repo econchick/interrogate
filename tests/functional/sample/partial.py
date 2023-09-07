@@ -2,7 +2,7 @@
 """Sample module-level docs"""
 
 
-class Foo(object):
+class Foo:
     """Foo class"""
 
     def __init__(self):
@@ -57,15 +57,15 @@ def undocumented_top_level_func():
         pass
 
 
-class Bar(object):
+class Bar:
     def method_bar(self):
-        class InnerBar(object):
+        class InnerBar:
             pass
 
 
-class _SemiprivateClass(object):
+class _SemiprivateClass:
     pass
 
 
-class __PrivateClass(object):
+class __PrivateClass:
     pass
