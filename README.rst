@@ -322,6 +322,7 @@ Or use it with `pre-commit <https://pre-commit.com/>`_:
         hooks:
           - id: interrogate
             args: [--quiet, --fail-under=95]
+            pass_filenames: false  # needed if excluding files with pyproject.toml or setup.cfg
 
 Use it within your code directly:
 
