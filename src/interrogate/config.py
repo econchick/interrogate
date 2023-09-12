@@ -63,7 +63,7 @@ def find_project_root(srcs):
     That directory can be one of the directories passed in `srcs` or their
     common parent.
     If no directory in the tree contains a marker that would specify it's the
-    project root, the root of the file system is returned.k
+    project root, the root of the file system is returned.
     """
     if not srcs:
         return pathlib.Path("/").resolve()
