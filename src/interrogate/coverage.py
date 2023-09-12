@@ -300,7 +300,7 @@ class InterrogateCoverage:
         for file_result in combined_results.file_results:
             if (
                 self.config.omit_covered_files
-                and file_result.perc_covered == 100
+                and file_result.perc_covered >= self.config.fail_under
             ):
                 continue
             nodes = file_result.nodes
@@ -316,7 +316,8 @@ class InterrogateCoverage:
         """Print detailed table to the given output stream."""
         detailed_table = self._create_detailed_table(results)
 
-        # don't print an empty table if --omit-covered & all files have 100%
+        # don't print an empty table if --omit-covered & all files meet 
+        # --fail-under
         if len(detailed_table) < 3:
             return
 
@@ -349,7 +350,7 @@ class InterrogateCoverage:
             filename = self._get_filename(file_result.filename)
             if (
                 self.config.omit_covered_files
-                and file_result.perc_covered == 100
+                and file_result.perc_covered >= self.config.fail_under
             ):
                 continue
             perc_covered = f"{file_result.perc_covered:.0f}%"
@@ -434,7 +435,7 @@ class InterrogateCoverage:
         return base + "/"
 
     def _print_omitted_file_count(self, results):
-        """Print # of files omitted due to 100% coverage and --omit-covered.
+        """Print # of files omitted due to --fail-under and --omit-covered.
 
         :param InterrogateResults results: results of docstring coverage
             interrogation.
@@ -443,7 +444,7 @@ class InterrogateCoverage:
             return
 
         omitted_files = [
-            r for r in results.file_results if r.perc_covered == 100
+            r for r in results.file_results if r.perc_covered >= self.config.fail_under
         ]
         omitted_file_count = len(omitted_files)
         if omitted_file_count == 0:
@@ -453,7 +454,7 @@ class InterrogateCoverage:
         files_humanized = "files" if total_files_scanned > 1 else "file"
         files_skipped = (
             f"({omitted_file_count} of {total_files_scanned} {files_humanized} "
-            "omitted due to complete coverage)"
+            "omitted due to met coverage)"
         )
         to_print = tabulate.tabulate(
             [self.output_formatter.TABLE_SEPARATOR, [files_skipped]],

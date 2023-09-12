@@ -37,7 +37,7 @@ class InterrogateConfig:
     :param bool ignore_init_module: Ignore ``__init__.py`` modules.
     :param str include_regex: Regex identifying class, method, and
         function names to include.
-    :param bool omit_covered_files: Omit reporting files that have 100%
+    :param bool omit_covered_files: Omit reporting files that meet --fail-under
         documentation coverage.
     """
 
