@@ -158,7 +158,7 @@ class InterrogateCoverage:
 
         if not filenames:
             p = ", ".join(self.paths)
-            msg = "E: No Python files found to interrogate in '{}'.".format(p)
+            msg = f"E: No Python files found to interrogate in '{p}'."
             click.echo(msg, err=True)
             return sys.exit(1)
 
@@ -202,7 +202,7 @@ class InterrogateCoverage:
 
     def _get_file_coverage(self, filename):
         """Get coverage results for a particular file."""
-        with open(filename, "r", encoding="utf-8") as f:
+        with open(filename, encoding="utf-8") as f:
             source_tree = f.read()
 
         parsed_tree = ast.parse(source_tree)
@@ -268,13 +268,13 @@ class InterrogateCoverage:
         if node.node_type == "Module":
             if self.config.ignore_module:
                 return [filename, ""]
-            name = "{} (module)".format(filename)
+            name = f"{filename} (module)"
         else:
             name = node.path.split(":")[-1]
-            name = "{} (L{})".format(name, node.lineno)
+            name = f"{name} (L{node.lineno})"
 
         padding = "  " * node.level
-        name = "{}{}".format(padding, name)
+        name = f"{padding}{name}"
         status = "MISSED" if not node.covered else "COVERED"
         return [name, status]
 
@@ -352,7 +352,7 @@ class InterrogateCoverage:
                 and file_result.perc_covered == 100
             ):
                 continue
-            perc_covered = "{:.0f}%".format(file_result.perc_covered)
+            perc_covered = f"{file_result.perc_covered:.0f}%"
             row = [
                 filename,
                 file_result.total,
@@ -367,7 +367,7 @@ class InterrogateCoverage:
         if len(table) > 2:
             table.append(self.output_formatter.TABLE_SEPARATOR)
 
-        total_perc_covered = "{:.1f}%".format(combined_results.perc_covered)
+        total_perc_covered = f"{combined_results.perc_covered:.1f}%"
         total_row = [
             "TOTAL",
             combined_results.total,
@@ -400,13 +400,11 @@ class InterrogateCoverage:
         """Sort results by filename, directories first"""
         all_filenames_map = {r.filename: r for r in results.file_results}
         all_dirs = sorted(
-            set(
-                [
-                    os.path.dirname(r.filename)
-                    for r in results.file_results
-                    if os.path.dirname(r.filename) != ""
-                ]
-            )
+            {
+                os.path.dirname(r.filename)
+                for r in results.file_results
+                if os.path.dirname(r.filename) != ""
+            }
         )
 
         sorted_results = []
@@ -485,7 +483,7 @@ class InterrogateCoverage:
                 base = self._get_header_base()
                 self.output_formatter.tw.sep(
                     "=",
-                    "Coverage for {}".format(base),
+                    f"Coverage for {base}",
                     fullwidth=self.output_formatter.TERMINAL_WIDTH,
                 )
             if verbosity > 1:

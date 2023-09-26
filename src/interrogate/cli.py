@@ -378,6 +378,6 @@ def main(ctx, paths, **kwargs):
             output_style=badge_style,
         )
         if not is_quiet:
-            click.echo("Generated badge to {}".format(output_path))
+            click.echo(f"Generated badge to {output_path}")
 
     sys.exit(results.ret_code)

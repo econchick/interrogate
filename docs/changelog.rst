@@ -10,7 +10,14 @@ Added
 ^^^^^
 
 * Add ``--ignore-overloaded-functions`` flag to ignore overload decorators (`#97 <https://github.com/econchick/interrogate/issues/97>`_).
+- Support for Python 3.11 & 3.12.
 
+Removed
+^^^^^^^
+
+- Support for Python 3.6 & 3.7.
+
+.. short-log
 
 1.5.0 (2021-09-10)
 ------------------
@@ -27,7 +34,6 @@ Fixed
 ^^^^^
 * Clarify ``verbose`` configuration (`#83 <https://github.com/econchick/interrogate/issues/83>`_).
 
-.. short-log
 
 1.4.0 (2021-05-14)
 ------------------

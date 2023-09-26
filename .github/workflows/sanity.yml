@@ -1,6 +1,6 @@
 # Run workflow weekly to make sure interrogate can regularly build in case
 # there are new releases of dependencies. This is the same as main workflow,
-# but (1) coverage isn't uploaded, and (2) `install-dev` job runs onlyy on
+# but (1) coverage isn't uploaded, and (2) `install-dev` job runs only on
 # ubuntu, not all three OS platforms.
 
 name: sanity
@@ -10,20 +10,26 @@ on:
   schedule:
     - cron: "0 5 * * 1"
 
+env:
+  FORCE_COLOR: "1"
+  TOX_TESTENV_PASSENV: FORCE_COLOR
+  PYTHON_LATEST: "3.10"
+
 jobs:
   tests:
     name: "Python ${{ matrix.python-version }} on Ubuntu"
     runs-on: "ubuntu-latest"
-    env:
-      USING_COVERAGE: '3.7,3.8'
     strategy:
       matrix:
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10.0-rc.2"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
     steps:
-      - uses: "actions/checkout@v2"
-      - uses: "actions/setup-python@v2"
+      - uses: "actions/checkout@v3"
+      - uses: "actions/setup-python@v4"
         with:
           python-version: "${{ matrix.python-version }}"
+          allow-prereleases: true
+          cache: pip
+
       - name: "Install dependencies"
         run: |
           set -xe
@@ -38,27 +44,25 @@ jobs:
     name: "Build & Verify Package on Ubuntu"
     runs-on: "ubuntu-latest"
     steps:
-      - uses: "actions/checkout@v2"
-      - uses: "actions/setup-python@v2"
+      - uses: "actions/checkout@v3"
+      - uses: "actions/setup-python@v4"
         with:
-          python-version: "3.8"
-      - name: "Install pep517 and twine"
-        run: "python -m pip install pep517 twine"
-      - name: "Build package"
-        run: "python -m pep517.build --source --binary ."
-      - name: "List result"
-        run: "ls -l dist"
-      - name: "Check long_description"
-        run: "python -m twine check dist/*"
+          python-version: ${{env.PYTHON_LATEST}}
+      - run: python -m pip install build twine check-wheel-contents
+      - run: python -m build --sdist --wheel .
+      - run: ls -l dist
+      - run: check-wheel-contents dist/*.whl
+      - name: Check long_description
+        run: python -m twine check dist/*
 
   install-dev:
     name: "Verify Dev Env on Ubuntu"
     runs-on: "ubuntu-latest"
     steps:
-      - uses: "actions/checkout@v2"
-      - uses: "actions/setup-python@v2"
+      - uses: "actions/checkout@v3"
+      - uses: "actions/setup-python@v4"
         with:
-          python-version: "3.8"
+          python-version: ${{env.PYTHON_LATEST}}
       - name: "Install in dev mode"
         run: "python -m pip install -e .[dev]"
       - name: "Import package"

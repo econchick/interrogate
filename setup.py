@@ -31,11 +31,11 @@ def read(*filenames, **kwargs):
 
 def find_meta(meta):
     """Extract __*meta*__ from META_FILE."""
-    re_str = r"^__{meta}__ = ['\"]([^'\"]*)['\"]".format(meta=meta)
+    re_str = rf"^__{meta}__ = ['\"]([^'\"]*)['\"]"
     meta_match = re.search(re_str, META_FILE, re.M)
     if meta_match:
         return meta_match.group(1)
-    raise RuntimeError("Unable to find __{meta}__ string.".format(meta=meta))
+    raise RuntimeError(f"Unable to find __{meta}__ string.")
 
 
 #####
@@ -54,19 +54,16 @@ PROJECT_URLS = {
     "Source Code": "https://github.com/econchick/interrogate",
 }
 CLASSIFIERS = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Natural Language :: English",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.6",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Topic :: Software Development :: Documentation",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Software Development :: Quality Assurance",
@@ -82,7 +79,7 @@ INSTALL_REQUIRES = [
 EXTRAS_REQUIRE = {
     "png": ["cairosvg"],
     "docs": ["sphinx", "sphinx-autobuild"],
-    "tests": ["pytest", "pytest-cov", "pytest-mock"],
+    "tests": ["pytest", "pytest-cov", "pytest-mock", "coverage[toml]"],
 }
 EXTRAS_REQUIRE["dev"] = (
     EXTRAS_REQUIRE["png"]
@@ -98,7 +95,7 @@ LONG = (
     + "==================="
     + read("docs/changelog.rst").split(".. short-log")[1]
     + "\n`Full changelog "
-    + "<{url}/en/latest/#changelog>`_.".format(url=URL)
+    + f"<{URL}/en/latest/#changelog>`_."
 )
 
 setup(
@@ -118,7 +115,7 @@ setup(
     package_dir={"": "src"},
     include_package_data=True,
     zip_safe=False,
-    python_requires=">=3.6",
+    python_requires=">=3.8",
     install_requires=INSTALL_REQUIRES,
     extras_require=EXTRAS_REQUIRE,
     entry_points={

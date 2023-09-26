@@ -11,7 +11,6 @@ from interrogate import utils
 
 
 IS_WINDOWS = sys.platform in ("cygwin", "win32")
-IS_PY38 = sys.version_info >= (3, 8)
 
 
 @pytest.mark.parametrize(
@@ -338,49 +337,8 @@ def test_output_formatter_interrogate_line_formatter_windows(
     assert expected == actual
 
 
-@pytest.mark.skipif(IS_PY38, reason="monkeypatching functools fails on 3.8")
 @pytest.mark.parametrize("table_type", ("detailed", "summary"))
 def test_output_formatter_get_table_formatter(table_type, mocker, monkeypatch):
-    """The returned table formatter uses the correct table type."""
-    mock_table_format = mocker.Mock()
-    monkeypatch.setattr(utils.tabulate, "TableFormat", mock_table_format)
-    mock_functools_partial = mocker.Mock()
-
-    # functools.partial does not have an __eq__ method so any comparison
-    # between two partial functions will use id() and not actual equality.
-    # To work around this, we mock functools.partial. But it isn't as
-    # easy as it is with other monkeypatching:
-    # https://github.com/pytest-dev/pytest/pull/3382
-    # However, this fails on py3.8
-    with monkeypatch.context() as m:
-        m.setattr(utils.functools, "partial", mock_functools_partial)
-
-        conf = config.InterrogateConfig()
-        formatter = utils.OutputFormatter(conf)
-        formatter.get_table_formatter(table_type=table_type)
-
-    mock_table_format.assert_called_once_with(
-        lineabove=None,
-        linebelowheader=None,
-        linebetweenrows=None,
-        linebelow=None,
-        headerrow=mock_functools_partial.return_value,
-        datarow=mock_functools_partial.return_value,
-        padding=1,
-        with_header_hide=None,
-    )
-    mock_functools_partial.assert_called_once_with(
-        formatter._interrogate_line_formatter, table_type=table_type
-    )
-
-
-@pytest.mark.skipif(
-    not IS_PY38, reason="monkeypatching functools fails on 3.8"
-)
-@pytest.mark.parametrize("table_type", ("detailed", "summary"))
-def test_output_formatter_get_table_formatter_py38(
-    table_type, mocker, monkeypatch
-):
     """The returned table formatter uses the correct table type."""
     mock_table_format = mocker.Mock()
     monkeypatch.setattr(utils.tabulate, "TableFormat", mock_table_format)

@@ -2,6 +2,15 @@
 requires = ["setuptools>=40.6.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
+[tool.check-wheel-contents]
+toplevel = ["interrogate"]
+
+
+[tool.pytest.ini_options]
+addopts = ["-ra", "--strict-markers", "--strict-config"]
+testpaths = "tests"
+xfail_strict = true
+
 [tool.coverage.run]
 parallel = true
 branch = true
@@ -9,7 +18,7 @@ source = ["interrogate"]
 omit = ["**/__main__.py"]
 
 [tool.coverage.paths]
-source = ["src", ".tox/*/site-packages"]
+source = ["src", ".tox/py*/**/site-packages"]
 
 [tool.coverage.report]
 show_missing = true
