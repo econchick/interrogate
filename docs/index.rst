@@ -68,6 +68,10 @@ Command Line Options
 
     Ignore nested classes.  [default: ``False``]
 
+.. option:: -O, --ignore-overloaded-functions
+
+    Ignore `@typing.overload`-decorated functions.  [default: ``False``]
+
 .. option:: -p, --ignore-private
 
     Ignore private classes, methods, and functions starting with two underscores.  [default: ``False``]

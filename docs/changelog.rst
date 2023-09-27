@@ -9,6 +9,7 @@ Changelog
 Added
 ^^^^^
 
+* Add ``--ignore-overloaded-functions`` flag to ignore overload decorators (`#97 <https://github.com/econchick/interrogate/issues/97>`_).
 - Support for Python 3.11 & 3.12.
 
 Removed

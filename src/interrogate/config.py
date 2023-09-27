@@ -39,6 +39,8 @@ class InterrogateConfig:
         function names to include.
     :param bool omit_covered_files: Omit reporting files that have 100%
         documentation coverage.
+    :param bool ignore_overloaded_functions: Ignore `@typing.overload`-decorated
+        functions.
     """
 
     color = attr.ib(default=False)
@@ -54,6 +56,7 @@ class InterrogateConfig:
     ignore_nested_functions = attr.ib(default=False)
     ignore_property_setters = attr.ib(default=False)
     ignore_property_decorators = attr.ib(default=False)
+    ignore_overloaded_functions = attr.ib(default=False)
     include_regex = attr.ib(default=False)
     omit_covered_files = attr.ib(default=False)
 
