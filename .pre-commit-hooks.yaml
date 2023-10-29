@@ -6,3 +6,4 @@
   language_version: python3
   types: [python]
   require_serial: true
+  additional_dependencies: [setuptools]
