@@ -145,8 +145,8 @@ class InterrogateCoverage:
             if os.path.isfile(path):
                 if not path.endswith(".py") and not path.endswith(".pyi"):
                     msg = (
-                        "E: Invalid file '{}'. Unable to interrogate non-Python "
-                        "files.".format(path)
+                        "E: Invalid file '{}'. Unable to interrogate non-Python"
+                        " files.".format(path)
                     )
                     click.echo(msg, err=True)
                     return sys.exit(1)
