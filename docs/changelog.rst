@@ -3,7 +3,7 @@ Changelog
 
 .. short-log
 
-1.6.0 (UNRELEASED)
+1.6.0 (2024-04-06)
 ------------------
 
 Added
