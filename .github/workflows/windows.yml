@@ -15,15 +15,15 @@ jobs:
     runs-on: "windows-latest"
     strategy:
       matrix:
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10.0-rc.2"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
     steps:
-      - uses: "actions/checkout@v2"
-      - uses: "actions/setup-python@v2"
+      - uses: "actions/checkout@v3"
+      - uses: "actions/setup-python@v4"
         with:
           python-version: "${{ matrix.python-version }}"
-      - name: "Install dependencies"
-        run: |
-          python -m pip install --upgrade pip setuptools wheel
-          python -m pip install --upgrade virtualenv tox tox-gh-actions
-      - name: "Run tox targets for ${{ matrix.python-version }}"
-        run: "python -m tox"
+          allow-prereleases: true
+          cache: pip
+      - run: python -Im pip install --upgrade tox
+
+      - name: Run tests on ${{ matrix.python-version }} sans PNG
+        run: python -Im tox -e py$(echo ${{ matrix.python-version }} | tr -d .)

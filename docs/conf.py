@@ -35,7 +35,7 @@ author = "Lynn Root"
 
 # The short X.Y version.
 release = find_version("../src/interrogate/__init__.py")
-version = release.rsplit(u".", 1)[0]
+version = release.rsplit(".", 1)[0]
 
 master_doc = "index"
 
@@ -89,7 +89,7 @@ html_css_files = [
     "custom.css",
 ]
 templates_path = ["_templates"]
-html_title = "Python docstring coverage (v{})".format(release)
+html_title = f"Python docstring coverage (v{release})"
 html_short_title = "interrogate: Python docstring coverage"
 
 # -- Other config

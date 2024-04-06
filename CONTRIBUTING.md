@@ -1,6 +1,6 @@
 # How To Contribute
 
-First off, thank you for considering contributing to ``interrogate``! It's people like _you_ who make it such a great tool for everyone.
+First off, thank you for considering contributing to `interrogate`! It's people like _you_ who make it such a great tool for everyone.
 
 This document intends to make contribution more accessible by codifying tribal knowledge and expectations. Don't be afraid to open half-finished PRs, and ask questions if something is unclear!
 
@@ -16,7 +16,7 @@ This document intends to make contribution more accessible by codifying tribal k
 
 ## Code
 
-* Obey [PEP 8](https://www.python.org/dev/peps/pep-0008/), [PEP 257](https://www.python.org/dev/peps/pep-0257/), and the [Google Python Style Guide](http://google.github.io/styleguide/pyguide.html) (mostly)<sup>[1](#footnote-1)</sup>.  We use [restructuredtext](https://docutils.sourceforge.io/rst.html) syntax, and have a summary line starting the `"""` block:
+* Obey [PEP 8](https://www.python.org/dev/peps/pep-0008/), [PEP 257](https://www.python.org/dev/peps/pep-0257/), and the [Google Python Style Guide](http://google.github.io/styleguide/pyguide.html) (mostly[^mostly]).  We use [restructuredtext](https://docutils.sourceforge.io/rst.html) syntax, and have a summary line starting the `"""` block:
 
     ```python
     def func(x):
@@ -31,6 +31,11 @@ This document intends to make contribution more accessible by codifying tribal k
     ```
 * If you add or change public APIs, tag the docstring using [version directives](http://www.sphinx-doc.org/en/stable/markup/para.html#directive-versionadded) like `..  versionadded:: 1.2.0 WHAT` or `..  versionchanged:: 1.2.1 WHAT`.
 * We follow the [Google Python Style Guide](http://google.github.io/styleguide/pyguide.html) for sorting our imports enforced by [isort](https://github.com/timothycrosley/isort), and we follow the [Black](https://github.com/psf/black) code style with a line length of 79 characters.As long as you run our full tox suite before committing, or install our [pre-commit](https://pre-commit.com/) hooks (ideally you'll do both -- see [Local Development Environment](#local-development-environment)), you won't have to spend any time on formatting your code at all. If you don't, CI will catch it for you -- but that seems like a waste of your time!
+
+[^mostly]: Due to personal preference, this project differs from Google's style guide in a few ways:
+    * Instead of using Google's approach for documenting [arguments, return/yields, and raises](http://google.github.io/styleguide/pyguide.html#383-functions-and-methods), use [restructuredtext](https://docutils.sourceforge.io/rst.html) syntax as recommended by [PEP-0258](https://www.python.org/dev/peps/pep-0258/).
+    * Instead of [using `pylint`](http://google.github.io/styleguide/pyguide.html#21-lint), use [flake8](https://flake8.pycqa.org/en/latest/).
+    * Instead of [using yapf](http://google.github.io/styleguide/pyguide.html#1-background), use [Black](https://github.com/psf/black).
 
 
 ## Tests
@@ -76,61 +81,55 @@ First create a [virtual environment](https://virtualenv.pypa.io/). It’s out of
 
 Next, get an up to date checkout of the `interrogate` repository:
 
-```sh
+```console
 $ git clone git@github.com:econchick/interrogate.git
 ```
 
 or if you want to use git via `https`:
 
-```sh
+```console
 $ git clone https://github.com/econchick/interrogate.git
 ```
 
 Change into the newly created directory and **after activating your virtual environment** install an editable version of `interrogate` along with its tests and docs requirements:
 
-```sh
+```console
 (env) $ cd interrogate
 (env) $ pip install -e '.[dev]'
 ```
 
 At this point,
 
-```sh
+```console
 (env) $ python -m pytest
 ```
 
 should work and pass, as should:
 
-```sh
+```console
 (env) $ cd docs
 (env) $ make livehtml
 ```
 
 The built documentation can then be found in [`localhost:8888`](http://localhost:8888).
 
-To avoid committing code that violates our style guide, we advise you to install [pre-commit](https://pre-commit.com/) <sup>[2](#footnote-2)</sup> hooks:
+To avoid committing code that violates our style guide, we advise you to install [pre-commit](https://pre-commit.com/)[^pre] hooks:
 
-```sh
+```console
 (env) $ pre-commit install
 ```
 
 You can also run them anytime (as our `tox` does, but always run `tox` outside of a virtual environment):
 
-```sh
+```console
 (env) $ pre-commit run --all-files
 ```
+
+[^pre]: pre-commit should have been installed into your virtualenv automatically when you ran `pip install -e '.[dev]'` above. If pre-commit is missing, it may be that you need to re-run `pip install -e '.[dev]'`.
+
 
 ## Code of Conduct
 
 Please note that this project is released with a Contributor [Code of Conduct](https://github.com/econchick/interrogate/blob/master/CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms. Please report any harm to `interrogate-project [at] lynnroot.com` for anything you find appropriate.
 
 Thank you for considering contributing to `interrogate`!
-
----
-
-<a name="footnote-1">1</a>: Do to personal preference, this project differs from Google's style guide in a few ways:
-* Instead of using Google's approach for documenting [arguments, return/yields, and raises](http://google.github.io/styleguide/pyguide.html#383-functions-and-methods), use [restructuredtext](https://docutils.sourceforge.io/rst.html) syntax as recommended by [PEP-0258](https://www.python.org/dev/peps/pep-0258/).
-* Instead of [using `pylint`](http://google.github.io/styleguide/pyguide.html#21-lint), use [flake8](https://flake8.pycqa.org/en/latest/).
-* Instead of [using yapf](http://google.github.io/styleguide/pyguide.html#1-background), use [Black](https://github.com/psf/black).
-
-<a name="footnote-2">2</a>: pre-commit should have been installed into your virtualenv automatically when you ran `pip install -e '.[dev]'` above. If pre-commit is missing, it may be that you need to re-run `pip install -e '.[dev]'`.

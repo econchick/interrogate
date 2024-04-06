@@ -5,7 +5,7 @@ import typing
 from typing import overload
 
 
-class Foo(object):
+class Foo:
     """Foo class"""
 
     def __init__(self):
@@ -83,25 +83,25 @@ def top_level_func():
         pass
 
 
-class Bar(object):
+class Bar:
     """Bar class"""
 
     def method_bar(self):
         """a method that does bar"""
 
-        class InnerBar(object):
+        class InnerBar:
             """an inner class"""
 
             pass
 
 
-class _SemiprivateClass(object):
+class _SemiprivateClass:
     """a semiprivate class"""
 
     pass
 
 
-class __PrivateClass(object):
+class __PrivateClass:
     """a private class"""
 
     pass

@@ -236,7 +236,7 @@ class OutputFormatter:
         assert table_type in (
             "detailed",
             "summary",
-        ), "'{}' is not a supported table type".format(table_type)
+        ), f"'{table_type}' is not a supported table type"
         line_formatter = functools.partial(
             self._interrogate_line_formatter, table_type=table_type
         )

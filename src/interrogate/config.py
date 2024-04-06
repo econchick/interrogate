@@ -205,7 +205,7 @@ def read_config_file(ctx, param, value):
         except (toml.TomlDecodeError, OSError) as e:
             raise click.FileError(
                 filename=value,
-                hint="Error reading configuration file: {}".format(e),
+                hint=f"Error reading configuration file: {e}",
             )
 
     elif value.endswith(".cfg"):
@@ -214,7 +214,7 @@ def read_config_file(ctx, param, value):
         except configparser.ParsingError as e:
             raise click.FileError(
                 filename=value,
-                hint="Error reading configuration file: {}".format(e),
+                hint=f"Error reading configuration file: {e}",
             )
 
     if not config:

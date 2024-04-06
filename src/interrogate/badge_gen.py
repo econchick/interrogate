@@ -5,10 +5,10 @@ Inspired by `coverage-badge <https://github.com/dbrgn/coverage-badge>`_.
 """
 
 import os
+import sys
 
+from importlib import resources
 from xml.dom import minidom
-
-import pkg_resources
 
 
 try:
@@ -138,7 +138,7 @@ def _format_result(result):
     # do not include decimal if it's 100
     if result == 100:
         return "100"
-    return "{:.1f}".format(result)
+    return f"{result:.1f}"
 
 
 def get_badge(result, color, style=None):
@@ -157,9 +157,15 @@ def get_badge(result, color, style=None):
     result = _format_result(result)
     badge_template_values["result"] = result
     badge_template_values["color"] = color
-    template_path = os.path.join("badge", template_file)
-    tmpl = pkg_resources.resource_string(__name__, template_path)
-    tmpl = tmpl.decode("utf8")
+
+    if sys.version_info >= (3, 9):
+        tmpl = (
+            resources.files("interrogate") / "badge" / template_file
+        ).read_text()
+    else:
+        with resources.path("interrogate", "badge") as p:
+            tmpl = (p / template_file).read_text()
+
     for key, value in badge_template_values.items():
         tmpl = tmpl.replace("{{ %s }}" % key, str(value))
     return tmpl
@@ -212,7 +218,7 @@ def should_generate_badge(output, color, result):
         for r in rects
         if r.hasAttribute("data-interrogate")
     ]
-    fill_color = "fill:{}".format(color)
+    fill_color = f"fill:{color}"
     if fill_color not in current_colors:
         return True
 
@@ -222,7 +228,7 @@ def should_generate_badge(output, color, result):
         for t in texts
         if t.hasAttribute("data-interrogate")
     ]
-    result = "{:.1f}%".format(result)
+    result = f"{result:.1f}%"
     if result in current_results:
         return False
     return True
