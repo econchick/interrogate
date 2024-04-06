@@ -3,6 +3,21 @@ Changelog
 
 .. short-log
 
+1.7.0 (UNRELEASED)
+------------------
+
+Added
+^^^^^
+
+* `tomli` dependency for Python versions < 3.11, making use of `tomllib` in the standard library with 3.11+ (`#150 <https://github.com/econchick/interrogate/issues/150>`_).
+
+Removed
+^^^^^^^
+
+* `toml` dependency for all Python versions (`#150 <https://github.com/econchick/interrogate/issues/150>`_).
+
+.. short-log
+
 1.6.0 (2024-04-06)
 ------------------
 
@@ -17,7 +32,6 @@ Removed
 
 * Support for Python 3.6 & 3.7.
 
-.. short-log
 
 1.5.0 (2021-09-10)
 ------------------

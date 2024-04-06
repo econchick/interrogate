@@ -74,7 +74,7 @@ INSTALL_REQUIRES = [
     "colorama",
     "py",
     "tabulate",
-    "toml",
+    "tomli; python_version < '3.11'",
 ]
 EXTRAS_REQUIRE = {
     "png": ["cairosvg"],

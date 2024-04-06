@@ -6,7 +6,12 @@ import pathlib
 
 import click
 import pytest
-import toml
+
+
+try:
+    import tomllib
+except ImportError:
+    import tomli as tomllib
 
 from interrogate import config
 
@@ -208,7 +213,7 @@ def test_read_config_file(
 
 def test_read_config_file_raises(mocker, monkeypatch):
     """Handle exceptions while reading pyproject.toml/setup.cfg, if any."""
-    toml_error = toml.TomlDecodeError("toml error", doc="foo", pos=0)
+    toml_error = tomllib.TOMLDecodeError("toml error")
     os_error = OSError("os error")
     mock_parse_pyproject_toml = mocker.Mock()
     mock_parse_pyproject_toml.side_effect = (toml_error, os_error)
