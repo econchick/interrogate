@@ -3,13 +3,10 @@ ci:
   autoupdate_schedule: monthly
 
 repos:
-  - repo: local
+  - repo: https://github.com/econchick/interrogate
+    rev: 1.5.0
     hooks:
       - id: interrogate
-        name: interrogate
-        language: system
-        entry: interrogate
-        types: [python]
         exclude: ^(docs/conf.py|setup.py|tests/functional/sample)
         args: [--config=pyproject.toml]
 
