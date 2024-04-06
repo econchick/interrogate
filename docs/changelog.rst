@@ -15,7 +15,7 @@ Added
 Removed
 ^^^^^^^
 
--*Support for Python 3.6 & 3.7.
+* Support for Python 3.6 & 3.7.
 
 .. short-log
 
