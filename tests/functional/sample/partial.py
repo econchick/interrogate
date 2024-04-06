@@ -1,5 +1,8 @@
 # Copyright 2020 Lynn Root
 """Sample module-level docs"""
+import typing
+
+from typing import overload
 
 
 class Foo:
@@ -41,6 +44,26 @@ class Foo:
 
     @a_prop.setter
     def a_prop(self, x):
+        pass
+
+    @typing.overload
+    def module_overload(a: None) -> None: ...
+
+    @typing.overload
+    def module_overload(a: int) -> int: ...
+
+    def module_overload(a):
+        """overloaded method implementation"""
+        pass
+
+    @overload
+    def simple_overload(a: None) -> None: ...
+
+    @overload
+    def simple_overload(a: int) -> int: ...
+
+    def simple_overload(a):
+        """overloaded method implementation"""
         pass
 
 
