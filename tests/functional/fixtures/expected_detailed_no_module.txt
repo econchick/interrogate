@@ -40,20 +40,20 @@
 |     Foo.a_prop (L42)                                             |    MISSED |
 |     Foo.a_prop (L46)                                             |    MISSED |
 |     Foo.module_overload (L50)                                    |    MISSED |
-|     Foo.module_overload (L54)                                    |    MISSED |
-|     Foo.module_overload (L57)                                    |   COVERED |
-|     Foo.simple_overload (L62)                                    |    MISSED |
-|     Foo.simple_overload (L66)                                    |    MISSED |
-|     Foo.simple_overload (L69)                                    |   COVERED |
-|   documented_top_level_func (L74)                                |   COVERED |
-|     documented_top_level_func.documented_inner_func (L77)        |   COVERED |
-|   undocumented_top_level_func (L82)                              |    MISSED |
-|     undocumented_top_level_func.undocumented_inner_func (L83)    |    MISSED |
-|   Bar (L87)                                                      |    MISSED |
-|     Bar.method_bar (L88)                                         |    MISSED |
-|       Bar.method_bar.InnerBar (L89)                              |    MISSED |
-|   _SemiprivateClass (L93)                                        |    MISSED |
-|   __PrivateClass (L97)                                           |    MISSED |
+|     Foo.module_overload (L53)                                    |    MISSED |
+|     Foo.module_overload (L55)                                    |   COVERED |
+|     Foo.simple_overload (L60)                                    |    MISSED |
+|     Foo.simple_overload (L63)                                    |    MISSED |
+|     Foo.simple_overload (L65)                                    |   COVERED |
+|   documented_top_level_func (L70)                                |   COVERED |
+|     documented_top_level_func.documented_inner_func (L73)        |   COVERED |
+|   undocumented_top_level_func (L78)                              |    MISSED |
+|     undocumented_top_level_func.undocumented_inner_func (L79)    |    MISSED |
+|   Bar (L83)                                                      |    MISSED |
+|     Bar.method_bar (L84)                                         |    MISSED |
+|       Bar.method_bar.InnerBar (L85)                              |    MISSED |
+|   _SemiprivateClass (L89)                                        |    MISSED |
+|   __PrivateClass (L93)                                           |    MISSED |
 |------------------------------------------------------------------|-----------|
 | child_sample/child_sample_module.py                              |           |
 |   ChildFoo (L5)                                                  |    MISSED |
