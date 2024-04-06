@@ -1,4 +1,3 @@
-= Coverage for C:\Users\zack.yancey\dev\interrogate\tests\functional\sample\ ==
 ----------------------------------- Summary -----------------------------------
 | Name            |        Total |        Miss |        Cover |        Cover% |
 |-----------------|--------------|-------------|--------------|---------------|
