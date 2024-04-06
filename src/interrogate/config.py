@@ -10,7 +10,12 @@ import pathlib
 
 import attr
 import click
-import toml
+
+
+try:
+    import tomllib
+except ImportError:
+    import tomli as tomllib
 
 
 # TODO: idea: break out InterrogateConfig into two classes: one for
@@ -107,9 +112,10 @@ def parse_pyproject_toml(path_config):
     :return: Dictionary representing configuration for Interrogate.
     :rtype: dict
     :raise OSError: an I/O-related error when opening ``pyproject.toml``.
-    :raise toml.TomlDecodeError: unable to load ``pyproject.toml``.
+    :raise toml.TOMLDecodeError: unable to load ``pyproject.toml``.
     """
-    pyproject_toml = toml.load(path_config)
+    with open(path_config, "rb") as f:
+        pyproject_toml = tomllib.load(f)
     config = pyproject_toml.get("tool", {}).get("interrogate", {})
     return {
         k.replace("--", "").replace("-", "_"): v for k, v in config.items()
@@ -202,7 +208,7 @@ def read_config_file(ctx, param, value):
     if value.endswith(".toml"):
         try:
             config = parse_pyproject_toml(value)
-        except (toml.TomlDecodeError, OSError) as e:
+        except (tomllib.TOMLDecodeError, OSError) as e:
             raise click.FileError(
                 filename=value,
                 hint=f"Error reading configuration file: {e}",
