@@ -364,6 +364,7 @@ Configure within your ``pyproject.toml`` (``interrogate`` will automatically det
     fail-under = 95
     exclude = ["setup.py", "docs", "build"]
     ignore-regex = ["^get$", "^mock_.*", ".*BaseClass.*"]
+    ext = []
     # possible values: 0 (minimal output), 1 (-v), 2 (-vv)
     verbose = 0
     quiet = false
@@ -397,6 +398,7 @@ Or configure within your ``setup.cfg`` (``interrogate`` will automatically detec
     fail-under = 95
     exclude = setup.py,docs,build
     ignore-regex = ^get$,^mock_.*,.*BaseClass.*
+    ext = []
     ; possible values: 0 (minimal output), 1 (-v), 2 (-vv)
     verbose = 0
     quiet = false
@@ -527,6 +529,10 @@ To view all options available, run ``interrogate --help``:
       -r, --ignore-regex STR          Regex identifying class, method, and
                                       function names to ignore. Multiple
                                       `-r/--ignore-regex` invocations supported.
+
+      --ext                           Include Python-like files with the given
+                                      extension (supported: ``pyi``). Multiple
+                                      `--ext` invocations supported.
 
       -w, --whitelist-regex STR       Regex identifying class, method, and
                                       function names to include. Multiple

@@ -109,9 +109,12 @@ class InterrogateCoverage:
     """
 
     COMMON_EXCLUDE = [".tox", ".venv", "venv", ".git", ".hg"]
+    VALID_EXT = [".py", ".pyi"]  # someday in the future: .ipynb
 
-    def __init__(self, paths, conf=None, excluded=None):
+    def __init__(self, paths, conf=None, excluded=None, extensions=None):
         self.paths = paths
+        self.extensions = set(extensions or set())
+        self.extensions.add(".py")
         self.config = conf or config.InterrogateConfig()
         self.excluded = excluded or ()
         self.common_base = pathlib.Path("/")
@@ -129,7 +132,8 @@ class InterrogateCoverage:
     def _filter_files(self, files):
         """Filter files that are explicitly excluded."""
         for f in files:
-            if not f.endswith(".py"):
+            has_valid_ext = any([f.endswith(ext) for ext in self.extensions])
+            if not has_valid_ext:
                 continue
             if self.config.ignore_init_module:
                 basename = os.path.basename(f)
@@ -144,10 +148,14 @@ class InterrogateCoverage:
         filenames = []
         for path in self.paths:
             if os.path.isfile(path):
-                if not path.endswith(".py") and not path.endswith(".pyi"):
+                has_valid_ext = any(
+                    [path.endswith(ext) for ext in self.VALID_EXT]
+                )
+                if not has_valid_ext:
                     msg = (
-                        "E: Invalid file '{}'. Unable to interrogate non-Python"
-                        " files.".format(path)
+                        f"E: Invalid file '{path}'. Unable to interrogate "
+                        "non-Python or Python-like files. "
+                        f"Valid file extensions: {', '.join(self.VALID_EXT)}"
                     )
                     click.echo(msg, err=True)
                     return sys.exit(1)
@@ -159,7 +167,10 @@ class InterrogateCoverage:
 
         if not filenames:
             p = ", ".join(self.paths)
-            msg = f"E: No Python files found to interrogate in '{p}'."
+            msg = (
+                f"E: No Python or Python-like files found to interrogate in "
+                f"'{p}'."
+            )
             click.echo(msg, err=True)
             return sys.exit(1)
 
