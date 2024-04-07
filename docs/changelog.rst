@@ -10,6 +10,7 @@ Added
 ^^^^^
 
 * `tomli` dependency for Python versions < 3.11, making use of `tomllib` in the standard library with 3.11+ (`#150 <https://github.com/econchick/interrogate/issues/150>`_).
+* Support for ``pyi`` file extensions (and leave room for other file extensions to be added, like maybe ``ipynb``).
 
 Fixed
 ^^^^^

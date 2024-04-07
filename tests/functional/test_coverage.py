@@ -107,7 +107,10 @@ def test_coverage_errors(capsys):
         interrogate_coverage.get_coverage()
 
     captured = capsys.readouterr()
-    assert "E: No Python files found to interrogate in " in captured.err
+    assert (
+        "E: No Python or Python-like files found to interrogate in "
+        in captured.err
+    )
 
 
 @pytest.mark.parametrize(

@@ -178,6 +178,18 @@ from interrogate import utils
     ),
 )
 @click.option(
+    "--ext",
+    default=(),
+    multiple=True,
+    metavar="STR",
+    type=click.Choice(["pyi"], case_sensitive=False),
+    help=(
+        "Include Python-like files with the given extension "
+        "(supported: ``pyi``). Multiple ``--ext`` invocations supported. "
+        "``.py`` files included by default unless excluded in ``--exclude``."
+    ),
+)
+@click.option(
     "-w",
     "--whitelist-regex",
     type=str,
@@ -310,6 +322,7 @@ def main(ctx, paths, **kwargs):
     .. versionadded:: 1.5.0 ``--omit-covered-files``
     .. versionadded:: 1.5.0 ``--badge-style``
     .. versionadded:: 1.6.0 ``--ignore-overloaded-functions``
+    .. verisonadded:: 1.7.0 ``--ext``
 
     .. versionchanged:: 1.3.1 only generate badge if results change from
         an existing badge.
@@ -360,6 +373,7 @@ def main(ctx, paths, **kwargs):
         paths=paths,
         conf=conf,
         excluded=kwargs["exclude"],
+        extensions=kwargs["ext"],
     )
     results = interrogate_coverage.get_coverage()
 

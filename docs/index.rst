@@ -94,6 +94,10 @@ Command Line Options
 
     Regex identifying class, method, and function names to ignore. Multiple ``-r/--ignore-regex`` invocations supported.
 
+.. option:: --ext STR
+
+    Include Python-like files with the given extension (supported: ``pyi``). Multiple ``--ext`` invocations supported.
+
 .. option:: -w, --whitelist-regex STR
 
     Regex identifying class, method, and function names to include. Multiple ``-r/--ignore-regex`` invocations supported.
