@@ -16,7 +16,7 @@ Added
 Fixed
 ^^^^^
 
-* Include support for deleters when ignoring property decorators (`#126 <https://github.com/econchick/interrogate/issues/126>_`).
+* Include support for deleters when ignoring property decorators (`#126 <https://github.com/econchick/interrogate/issues/126>`_).
 * Support floats for ``--fail-under`` values (`#114 <https://github.com/econchick/interrogate/issues/114>`_).
 
 Removed
