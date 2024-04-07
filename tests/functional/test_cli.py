@@ -43,33 +43,33 @@ def test_run_no_paths(runner, monkeypatch, tmpdir):
         # no flags
         ([], 51.4, 1),
         # ignore init module
-        (["-I"], 51.5, 1),
+        (["-I"], 51.4, 1),
         # ignore module docs
-        (["-M"], 51.6, 1),
+        (["-M"], 51.5, 1),
         # ignore semiprivate docs
-        (["-s"], 52.4, 1),
+        (["-s"], 52.2, 1),
         # ignore private docs
-        (["-p"], 53.1, 1),
+        (["-p"], 52.9, 1),
         # ignore property getter/setter/deleter decorators
         (["-P"], 50.0, 1),
         # ignore property setter decorators
-        (["-S"], 51.5, 1),
+        (["-S"], 51.4, 1),
         # ignore magic method docs
-        (["-m"], 51.5, 1),
+        (["-m"], 51.4, 1),
         # ignore init method docs
         (["-i"], 50.7, 1),
         # ignore nested funcs
         (["-n"], 50.7, 1),
         # ignore nested classes
-        (["-C"], 52.2, 1),
+        (["-C"], 52.1, 1),
         # ignore @typing.overload-decorated functions
-        (["-O"], 51.6, 1),
+        (["-O"], 51.5, 1),
         # ignore regex
-        (["-r", "^get$"], 51.5, 1),
+        (["-r", "^get$"], 51.4, 1),
         # whitelist regex
         (["-w", "^get$"], 50.0, 1),
         # exclude file
-        (["-e", os.path.join(SAMPLE_DIR, "partial.py")], 63.4, 1),
+        (["-e", os.path.join(SAMPLE_DIR, "partial.py")], 62.2, 1),
         # exclude file which doesn't exist
         (["-e", os.path.join(SAMPLE_DIR, "does.not.exist")], 51.4, 1),
         # fail under
@@ -89,22 +89,23 @@ def test_run_shortflags(flags, exp_result, exp_exit_code, runner):
 @pytest.mark.parametrize(
     "flags,exp_result,exp_exit_code",
     (
-        (["--ignore-init-module"], 51.5, 1),
-        (["--ignore-module"], 51.6, 1),
-        (["--ignore-semiprivate"], 52.4, 1),
-        (["--ignore-private"], 53.1, 1),
+        (["--ignore-init-module"], 51.4, 1),
+        (["--ignore-module"], 51.5, 1),
+        (["--ignore-semiprivate"], 52.2, 1),
+        (["--ignore-private"], 52.9, 1),
         (["--ignore-property-decorators"], 50.0, 1),
-        (["--ignore-setters"], 51.5, 1),
-        (["--ignore-magic"], 51.5, 1),
+        (["--ignore-setters"], 51.4, 1),
+        (["--ignore-magic"], 51.4, 1),
         (["--ignore-init-method"], 50.7, 1),
         (["--ignore-nested-functions"], 50.7, 1),
-        (["--ignore-nested-classes"], 52.2, 1),
-        (["--ignore-overloaded-functions"], 51.6, 1),
-        (["--ignore-regex", "^get$"], 51.5, 1),
-        (["--ext", "pyi"], 64.2, 1),
+        (["--ignore-nested-classes"], 52.1, 1),
+        (["--ignore-overloaded-functions"], 51.5, 1),
+        (["--ignore-regex", "^get$"], 51.4, 1),
+        (["--ext", "pyi"], 63.1, 1),
         (["--whitelist-regex", "^get$"], 50.0, 1),
-        (["--exclude", os.path.join(SAMPLE_DIR, "partial.py")], 63.4, 1),
+        (["--exclude", os.path.join(SAMPLE_DIR, "partial.py")], 62.2, 1),
         (["--fail-under", "40"], 51.4, 0),
+        (["--style", "google"], 54.1, 1),
     ),
 )
 def test_run_longflags(flags, exp_result, exp_exit_code, runner):
@@ -121,8 +122,8 @@ def test_run_longflags(flags, exp_result, exp_exit_code, runner):
     "flags,exp_result,exp_exit_code",
     (
         (["-i", "-I", "-r" "^method_foo$"], 51.6, 1),
-        (["-s", "-p", "-M"], 54.9, 1),
-        (["-m", "-f", "45"], 51.5, 0),
+        (["-s", "-p", "-M"], 54.5, 1),
+        (["-m", "-f", "45"], 51.4, 0),
     ),
 )
 def test_run_multiple_flags(flags, exp_result, exp_exit_code, runner):

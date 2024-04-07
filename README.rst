@@ -365,6 +365,8 @@ Configure within your ``pyproject.toml`` (``interrogate`` will automatically det
     exclude = ["setup.py", "docs", "build"]
     ignore-regex = ["^get$", "^mock_.*", ".*BaseClass.*"]
     ext = []
+    # possible values: sphinx (default), google
+    style = sphinx
     # possible values: 0 (minimal output), 1 (-v), 2 (-vv)
     verbose = 0
     quiet = false
@@ -399,6 +401,8 @@ Or configure within your ``setup.cfg`` (``interrogate`` will automatically detec
     exclude = setup.py,docs,build
     ignore-regex = ^get$,^mock_.*,.*BaseClass.*
     ext = []
+    ; possible values: sphinx (default), google
+    style = sphinx
     ; possible values: 0 (minimal output), 1 (-v), 2 (-vv)
     verbose = 0
     quiet = false
@@ -538,6 +542,14 @@ To view all options available, run ``interrogate --help``:
                                       function names to include. Multiple
                                       `-w/--whitelist-regex` invocations
                                       supported.
+
+      --style [sphinx|google]         Style of docstrings to honor. Using `google`
+                                      will consider a class and its `__init__`
+                                      method both covered if there is either a
+                                      class-level docstring, or an `__init__`
+                                      method docstring, instead of enforcing both.
+                                      Mutually exclusive with `-i`/`--ignore-init`
+                                      flag.  [default: sphinx]
 
       -o, --output FILE               Write output to a given FILE.  [default:
                                       stdout]

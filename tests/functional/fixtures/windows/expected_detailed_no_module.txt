@@ -26,6 +26,10 @@
 |       Bar.method_bar.InnerBar (L97)                             |   COVERED |
 |   _SemiprivateClass (L103)                                      |   COVERED |
 |   __PrivateClass (L109)                                         |   COVERED |
+|   InitDocs (L116)                                               |   COVERED |
+|     InitDocs.__init__ (L117)                                    |   COVERED |
+|   ClassDocs (L123)                                              |   COVERED |
+|     ClassDocs.__init__ (L126)                                   |   COVERED |
 |-----------------------------------------------------------------|-----------|
 | partial.py                                                      |           |
 |   Foo (L8)                                                      |   COVERED |
@@ -75,9 +79,9 @@
 ----------------------------------- Summary -----------------------------------
 | Name                                    |  Total |  Miss |  Cover |  Cover% |
 |-----------------------------------------|--------|-------|--------|---------|
-| full.py                                 |     24 |     0 |     24 |    100% |
+| full.py                                 |     28 |     0 |     28 |    100% |
 | partial.py                              |     28 |    19 |      9 |     32% |
 | child_sample\child_sample_module.py     |     12 |    12 |      0 |      0% |
 |-----------------------------------------|--------|-------|--------|---------|
-| TOTAL                                   |     64 |    31 |     33 |   51.6% |
---------------- RESULT: FAILED (minimum: 80.0%, actual: 51.6%) ----------------
+| TOTAL                                   |     68 |    31 |     37 |   54.4% |
+--------------- RESULT: FAILED (minimum: 80.0%, actual: 54.4%) ----------------

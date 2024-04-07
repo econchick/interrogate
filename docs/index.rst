@@ -102,6 +102,13 @@ Command Line Options
 
     Regex identifying class, method, and function names to include. Multiple ``-r/--ignore-regex`` invocations supported.
 
+.. option:: --style [sphinx|google]
+
+    Style of docstrings to honor. Using ``google`` will consider a class and its ``__init__`` method
+    both covered if there is either a class-level docstring, or an ``__init__`` method docstring,
+    instead of enforcing both. Mutually exclusive with ``-i/--ignore-init`` flag.
+    [default: ``sphinx``]
+
 .. option:: -o, --output FILE
 
     Write output to a given ``FILE``.  [default: ``stdout``]

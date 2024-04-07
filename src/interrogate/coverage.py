@@ -212,6 +212,23 @@ class InterrogateCoverage:
         filtered_nodes = [n for n in filtered_nodes if n not in nested_cls]
         return filtered_nodes
 
+    def _set_google_style(self, nodes):
+        """Apply Google-style docstrings for class coverage.
+
+        Update coverage of a class node if its `__init__` method has a
+        docstring, or an `__init__` method if its class has a docstring.
+
+        A class and its `__init__` method are considered covered if either one
+        contains a docstring. See <https://sphinxcontrib-napoleon.readthedocs.
+        io/en/latest/example_google.html>`_ for more info and an example.
+        """
+        for node in nodes:
+            if node.node_type == "FunctionDef" and node.name == "__init__":
+                if not node.covered and node.parent.covered:
+                    setattr(node, "covered", True)
+                elif node.covered and not node.parent.covered:
+                    setattr(node.parent, "covered", True)
+
     def _get_file_coverage(self, filename):
         """Get coverage results for a particular file."""
         with open(filename, encoding="utf-8") as f:
@@ -231,6 +248,9 @@ class InterrogateCoverage:
             ]
         if self.config.ignore_nested_classes:
             filtered_nodes = self._filter_inner_nested(filtered_nodes)
+
+        if self.config.docstring_style == "google":
+            self._set_google_style(filtered_nodes)
 
         results = InterrogateFileResult(
             filename=filename,

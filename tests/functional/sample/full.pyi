@@ -83,3 +83,15 @@ class _SemiprivateClass:
 
 class __PrivateClass:
     """a private class"""
+
+# Coverage % for InitDocs should be the same as ClassDocs
+class InitDocs:
+    def __init__(self) -> None:
+        """A docstring for init"""
+
+# Coverage % for ClassDocs should be the same as InitDocs
+class ClassDocs:
+    """A docstring for a class"""
+
+    def __init__(self) -> None:
+        pass
