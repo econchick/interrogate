@@ -1,1 +1,1 @@
-RESULT: FAILED (minimum: 80.0%, actual: 51.4%)
+RESULT: FAILED (minimum: 80.0%, actual: 54.1%)

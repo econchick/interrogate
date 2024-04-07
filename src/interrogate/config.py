@@ -25,6 +25,8 @@ class InterrogateConfig:
     """Configuration related to interrogating a given codebase.
 
     :param bool color: Highlight verbose output with color.
+    :param str docstring_style: Style of docstrings to follow. Choices:
+        "sphinx" (default), "google".
     :param fail_under: Fail when coverage % is less than a given amount.
     :type fail_under: `int` or `float`
     :param str ignore_regex: Regex identifying class, method, and
@@ -48,7 +50,10 @@ class InterrogateConfig:
         functions.
     """
 
+    VALID_STYLES = ("sphinx", "google")
+
     color = attr.ib(default=False)
+    docstring_style = attr.ib(default="sphinx")
     fail_under = attr.ib(default=80.0)
     ignore_regex = attr.ib(default=False)
     ignore_magic = attr.ib(default=False)
@@ -64,6 +69,15 @@ class InterrogateConfig:
     ignore_overloaded_functions = attr.ib(default=False)
     include_regex = attr.ib(default=False)
     omit_covered_files = attr.ib(default=False)
+
+    @docstring_style.validator
+    def _check_style(self, attribute, value):
+        """Validate selected choice for docstring style"""
+        if value not in self.VALID_STYLES:
+            raise ValueError(
+                f"Invalid `docstring_style` '{value}'. Valid values: "
+                f"{', '.join(self.VALID_STYLES)}"
+            )
 
 
 def find_project_root(srcs):
