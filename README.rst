@@ -350,7 +350,7 @@ Configure within your ``pyproject.toml`` (``interrogate`` will automatically det
 .. code-block:: toml
 
     [tool.interrogate]
-    ignore-init-method = true
+    ignore-init-method = false
     ignore-init-module = false
     ignore-magic = false
     ignore-semiprivate = false
@@ -358,11 +358,13 @@ Configure within your ``pyproject.toml`` (``interrogate`` will automatically det
     ignore-property-decorators = false
     ignore-module = false
     ignore-nested-functions = false
-    ignore-nested-classes = true
+    ignore-nested-classes = false
     ignore-setters = false
     ignore-overloaded-functions = false
-    fail-under = 95
+    fail-under = 80
+    # example values
     exclude = ["setup.py", "docs", "build"]
+    # example regex
     ignore-regex = ["^get$", "^mock_.*", ".*BaseClass.*"]
     ext = []
     # possible values: sphinx (default), google
@@ -373,6 +375,7 @@ Configure within your ``pyproject.toml`` (``interrogate`` will automatically det
     whitelist-regex = []
     color = true
     omit-covered-files = false
+    # output file logation
     generate-badge = "."
     badge-format = "svg"
 
@@ -386,7 +389,7 @@ Or configure within your ``setup.cfg`` (``interrogate`` will automatically detec
 .. code-block:: ini
 
     [tool:interrogate]
-    ignore-init-method = true
+    ignore-init-method = false
     ignore-init-module = false
     ignore-magic = false
     ignore-semiprivate = false
@@ -394,11 +397,13 @@ Or configure within your ``setup.cfg`` (``interrogate`` will automatically detec
     ignore-property-decorators = false
     ignore-module = false
     ignore-nested-functions = false
-    ignore-nested-classes = true
+    ignore-nested-classes = false
     ignore-setters = false
     ignore-overloaded-functions = false
-    fail-under = 95
+    fail-under = 80
+    ; example values
     exclude = setup.py,docs,build
+    ; example regex
     ignore-regex = ^get$,^mock_.*,.*BaseClass.*
     ext = []
     ; possible values: sphinx (default), google
@@ -409,6 +414,7 @@ Or configure within your ``setup.cfg`` (``interrogate`` will automatically detec
     whitelist-regex =
     color = true
     omit-covered-files = false
+    ; output file logation
     generate-badge = .
     badge-format = svg
 
