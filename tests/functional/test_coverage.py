@@ -44,36 +44,36 @@ def patch_term_width(monkeypatch):
                 SAMPLE_DIR,
             ],
             {},
-            (68, 34, 34, "50.0"),
+            (70, 36, 34, "51.4"),
         ),
-        ([os.path.join(SAMPLE_DIR, "partial.py")], {}, (28, 9, 19, "32.1")),
+        ([os.path.join(SAMPLE_DIR, "partial.py")], {}, (29, 10, 19, "34.5")),
         (
             [
                 os.path.join(SAMPLE_DIR, "full.py"),
             ],
             {"ignore_nested_functions": True},
-            (23, 23, 0, "100.0"),
+            (24, 24, 0, "100.0"),
         ),
         (
             [
                 os.path.join(SAMPLE_DIR, "partial.py"),
             ],
             {"ignore_nested_functions": True},
-            (26, 8, 18, "30.8"),
+            (27, 9, 18, "33.3"),
         ),
         (
             [
                 os.path.join(SAMPLE_DIR, "full.py"),
             ],
             {"ignore_overloaded_functions": True},
-            (20, 20, 0, "100.0"),
+            (21, 21, 0, "100.0"),
         ),
         (
             [
                 os.path.join(SAMPLE_DIR, "partial.py"),
             ],
             {"ignore_overloaded_functions": True},
-            (24, 9, 15, "37.5"),
+            (25, 10, 15, "40.0"),
         ),
     ),
 )
@@ -289,3 +289,32 @@ def test_print_results_single_file(capsys, monkeypatch):
     else:
         assert "tests\\functional\\sample\\" in captured.out
         assert "tests\\functional\\sample\\full.py" not in captured.out
+
+
+@pytest.mark.parametrize(
+    "fail_under,perc_covered,exp_ret",
+    [
+        (48.3, 48.27, 0),
+        (48.36, 48.359, 0),
+        (48.35, 48.349, 0),
+        (48.55, 48.500, 1),
+        (50.999999, 50.999998, 1),
+        (50.999999, 50.999999, 0),
+    ],
+)
+def test_pass_when_fail_under_exact(
+    fail_under, perc_covered, exp_ret, monkeypatch
+):
+    """Pass if actual coverage is exactly the `--fail-under` value.
+    See issue `#114 <https://github.com/econchick/interrogate/issues/114>`_.
+    """
+    monkeypatch.setattr(
+        coverage.InterrogateResults, "perc_covered", perc_covered
+    )
+
+    interrogate_config = config.InterrogateConfig(fail_under=fail_under)
+    interrogate_coverage = coverage.InterrogateCoverage(
+        paths=[SAMPLE_DIR], conf=interrogate_config
+    )
+    results = interrogate_coverage.get_coverage()
+    assert exp_ret == results.ret_code

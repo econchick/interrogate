@@ -46,6 +46,11 @@ class Foo:
         """this method has a set property decorator"""
         pass
 
+    @prop.deleter
+    def prop(self):
+        """this method as a del property decorator"""
+        pass
+
     @typing.overload
     def module_overload(a: None) -> None:
         """overloaded method"""
