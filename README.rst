@@ -318,7 +318,7 @@ Or use it with `pre-commit <https://pre-commit.com/>`_:
 
     repos:
       - repo: https://github.com/econchick/interrogate
-        rev: 1.6.0  # or master if you're bold
+        rev: 1.7.0  # or master if you're bold
         hooks:
           - id: interrogate
             args: [--quiet, --fail-under=95]
@@ -337,6 +337,7 @@ Use it within your code directly:
 
 Use ``interrogate`` with `GitHub Actions <https://github.com/features/actions>`_. Check out the `action <https://github.com/marketplace/actions/python-interrogate-check>`_ written & maintained by `Jack McKew <https://github.com/JackMcKew>`_ (thank you, Jack!).
 
+Or use ``interrogate`` in VSCode with the `interrogate extension <https://marketplace.visualstudio.com/items?itemName=kennethlove.interrogate>`_ written & maintained by `Kenneth Love <https://thekennethlove.com/>`_ (thank you, Kenneth!).
 
 Configuration
 =============
