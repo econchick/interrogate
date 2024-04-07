@@ -44,36 +44,36 @@ def patch_term_width(monkeypatch):
                 SAMPLE_DIR,
             ],
             {},
-            (68, 34, 34, "50.0"),
+            (70, 36, 34, "51.4"),
         ),
-        ([os.path.join(SAMPLE_DIR, "partial.py")], {}, (28, 9, 19, "32.1")),
+        ([os.path.join(SAMPLE_DIR, "partial.py")], {}, (29, 10, 19, "34.5")),
         (
             [
                 os.path.join(SAMPLE_DIR, "full.py"),
             ],
             {"ignore_nested_functions": True},
-            (23, 23, 0, "100.0"),
+            (24, 24, 0, "100.0"),
         ),
         (
             [
                 os.path.join(SAMPLE_DIR, "partial.py"),
             ],
             {"ignore_nested_functions": True},
-            (26, 8, 18, "30.8"),
+            (27, 9, 18, "33.3"),
         ),
         (
             [
                 os.path.join(SAMPLE_DIR, "full.py"),
             ],
             {"ignore_overloaded_functions": True},
-            (20, 20, 0, "100.0"),
+            (21, 21, 0, "100.0"),
         ),
         (
             [
                 os.path.join(SAMPLE_DIR, "partial.py"),
             ],
             {"ignore_overloaded_functions": True},
-            (24, 9, 15, "37.5"),
+            (25, 10, 15, "40.0"),
         ),
     ),
 )

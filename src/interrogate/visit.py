@@ -156,7 +156,7 @@ class CoverageVisitor(ast.NodeVisitor):
         return False
 
     def _has_property_decorators(self, node):
-        """Detect if node has property get/setter decorators."""
+        """Detect if node has property get/setter/deleter decorators."""
         if not hasattr(node, "decorator_list"):
             return False
 
@@ -166,6 +166,8 @@ class CoverageVisitor(ast.NodeVisitor):
                     return True
             if hasattr(dec, "attr"):
                 if dec.attr == "setter":
+                    return True
+                if dec.attr == "deleter":
                     return True
         return False
 

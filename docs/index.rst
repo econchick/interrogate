@@ -80,7 +80,7 @@ Command Line Options
 
 .. option:: -P, --ignore-property-decorators
 
-    Ignore methods with property setter/getter decorators.  [default: ``False``]
+    Ignore methods with property setter/getter/deleter decorators.  [default: ``False``]
 
 .. option:: -S, --ignore-setters
 
