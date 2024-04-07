@@ -514,7 +514,7 @@ To view all options available, run ``interrogate --help``:
                                       method` instead.
 
       -P, --ignore-property-decorators
-                                      Ignore methods with property setter/getter
+                                      Ignore methods with property setter/getter/deleter
                                       decorators.  [default: False]
 
       -S, --ignore-setters            Ignore methods with property setter

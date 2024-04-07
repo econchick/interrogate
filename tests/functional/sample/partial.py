@@ -46,6 +46,10 @@ class Foo:
     def a_prop(self, x):
         pass
 
+    @a_prop.deleter
+    def a_prop(self):
+        """A documented del property decorator"""
+
     @typing.overload
     def module_overload(a: None) -> None: ...
 

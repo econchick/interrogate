@@ -11,6 +11,11 @@ Added
 
 * `tomli` dependency for Python versions < 3.11, making use of `tomllib` in the standard library with 3.11+ (`#150 <https://github.com/econchick/interrogate/issues/150>`_).
 
+Fixed
+^^^^^
+
+* Include support for deleters when ignoring property decorators (`#126 <https://github.com/econchick/interrogate/issues/126>_`).
+
 Removed
 ^^^^^^^
 

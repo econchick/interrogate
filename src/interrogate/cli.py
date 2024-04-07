@@ -143,7 +143,7 @@ from interrogate import utils
     is_flag=True,
     default=False,
     show_default=True,
-    help="Ignore methods with property setter/getter decorators.",
+    help="Ignore methods with property setter/getter/deleter decorators.",
 )
 @click.option(
     "-S",
@@ -313,6 +313,8 @@ def main(ctx, paths, **kwargs):
 
     .. versionchanged:: 1.3.1 only generate badge if results change from
         an existing badge.
+    .. versionchanged:: 1.7.0 include property deleters when ignoring all
+        property decorators (--ignore-property-decorators)
     """
     gen_badge = kwargs["generate_badge"]
     if kwargs["badge_format"] is not None and gen_badge is None:
