@@ -1,6 +1,7 @@
 # Copyright 2020 Lynn Root
 """Measure and report on documentation coverage in Python modules."""
 import ast
+import decimal
 import os
 import pathlib
 import sys
@@ -240,7 +241,10 @@ class InterrogateCoverage:
 
         results.combine()
 
-        if self.config.fail_under > results.perc_covered:
+        fail_under_str = str(self.config.fail_under)
+        round_to = -decimal.Decimal(fail_under_str).as_tuple().exponent
+
+        if self.config.fail_under > round(results.perc_covered, round_to):
             results.ret_code = 1
 
         return results
