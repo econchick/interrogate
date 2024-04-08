@@ -126,7 +126,7 @@ def parse_pyproject_toml(path_config):
     :return: Dictionary representing configuration for Interrogate.
     :rtype: dict
     :raise OSError: an I/O-related error when opening ``pyproject.toml``.
-    :raise toml.TOMLDecodeError: unable to load ``pyproject.toml``.
+    :raise tomllib.TOMLDecodeError: unable to load ``pyproject.toml``.
     """
     with open(path_config, "rb") as f:
         pyproject_toml = tomllib.load(f)
