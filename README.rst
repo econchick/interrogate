@@ -21,6 +21,10 @@
    :target: https://github.com/econchick/interrogate/actions?workflow=CI
    :alt: CI Status
 
+.. image:: https://results.pre-commit.ci/badge/github/econchick/interrogate/master.svg
+   :target: https://results.pre-commit.ci/latest/github/econchick/interrogate/master
+   :alt: pre-commit.ci status
+
 .. start-readme
 
 Interrogate a codebase for docstring coverage.
