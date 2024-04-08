@@ -235,8 +235,8 @@ from interrogate import utils
     default=False,
     show_default=True,
     help=(
-        "Omit reporting files that have 100% documentation coverage. This "
-        "option is ignored if verbosity is not set."
+        "Omit reporting files that meet --fail-under documentation coverage. "
+        "This option is ignored if verbosity is not set."
     ),
 )
 @click.option(

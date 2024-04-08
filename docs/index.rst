@@ -123,7 +123,7 @@ Command Line Options
 
 .. option:: --omit-covered-files
 
-    Omit reporting files that have 100% documentation coverage.
+    Omit reporting files that meet --fail-under documentation coverage.
     This option is ignored if verbosity is not set.  [default: ``False``]
 
 .. option:: -g, --generate-badge PATH
