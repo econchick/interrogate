@@ -1,4 +1,4 @@
-# Copyright 2020 Lynn Root
+# Copyright 2020-2024 Lynn Root
 """Unit tests for interrogate/utils.py module"""
 
 import re

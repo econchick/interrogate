@@ -1,4 +1,4 @@
-# Copyright 2020 Lynn Root
+# Copyright 2020-2024 Lynn Root
 """Module for generating an SVG badge.
 
 Inspired by `coverage-badge <https://github.com/dbrgn/coverage-badge>`_.

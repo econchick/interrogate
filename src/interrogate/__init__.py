@@ -1,4 +1,4 @@
-# Copyright 2020-2021 Lynn Root
+# Copyright 2020-2024 Lynn Root
 """Explain yourself! Interrogate a codebase for docstring coverage."""
 __author__ = "Lynn Root"
 __version__ = "1.7.0"

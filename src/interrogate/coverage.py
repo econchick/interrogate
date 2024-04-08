@@ -1,4 +1,4 @@
-# Copyright 2020 Lynn Root
+# Copyright 2020-2024 Lynn Root
 """Measure and report on documentation coverage in Python modules."""
 import ast
 import decimal

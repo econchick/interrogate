@@ -1,4 +1,4 @@
-# Copyright 2020 Lynn Root
+# Copyright 2020-2024 Lynn Root
 """Functional tests for interrogate/coverage.py."""
 
 import os
