@@ -137,7 +137,7 @@ Command Line Options
     File format for the generated badge. Used with the ``-g/--generate-badge`` flag.  [default: ``svg``]
 
     NOTE: To generate a PNG file, interrogate must be installed with ``interrogate[png]``, i.e.
-    ``pip install interrogate[png]``.
+    ``pip install "interrogate[png]"``.
 
 .. option:: --badge-style [flat|flat-square|flat-square-modified|for-the-badge|plastic|social]
 
