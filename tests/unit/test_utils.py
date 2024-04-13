@@ -6,8 +6,7 @@ import sys
 
 import pytest
 
-from interrogate import config
-from interrogate import utils
+from interrogate import config, utils
 
 
 IS_WINDOWS = sys.platform in ("cygwin", "win32")

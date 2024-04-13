@@ -1,20 +1,21 @@
 # Copyright 2020-2024 Lynn Root
 """Measure and report on documentation coverage in Python modules."""
+
+from __future__ import annotations
+
 import ast
 import decimal
+import fnmatch
 import os
-import pathlib
 import sys
 
-from fnmatch import fnmatch
+from typing import Final, Iterator
 
 import attr
 import click
 import tabulate
 
-from interrogate import config
-from interrogate import utils
-from interrogate import visit
+from interrogate import config, utils, visit
 
 
 tabulate.PRESERVE_WHITESPACE = True
@@ -30,12 +31,12 @@ class BaseInterrogateResult:
     :attr int missing: number of objects not covered by docstrings.
     """
 
-    total = attr.ib(init=False, default=0)
-    covered = attr.ib(init=False, default=0)
-    missing = attr.ib(init=False, default=0)
+    total: int = attr.ib(init=False, default=0)
+    covered: int = attr.ib(init=False, default=0)
+    missing: int = attr.ib(init=False, default=0)
 
     @property
-    def perc_covered(self):
+    def perc_covered(self) -> float:
         """Percentage of node covered.
 
         .. versionchanged:: 1.3.2
@@ -57,15 +58,14 @@ class InterrogateFileResult(BaseInterrogateResult):
 
     :param str filename: filename associated with the coverage result.
     :param bool ignore_module: whether or not to ignore this file/module.
-    :param visit.CoverageVisitor visitor: coverage visitor instance
-        that assessed docstring coverage of file.
+    :param list[visit.CovNode] nodes: visited AST nodes.
     """
 
-    filename = attr.ib(default=None)
-    ignore_module = attr.ib(default=False)
-    nodes = attr.ib(repr=False, default=None)
+    filename: str = attr.ib(default=None)
+    ignore_module: bool = attr.ib(default=False)
+    nodes: list[visit.CovNode] = attr.ib(repr=False, default=None)
 
-    def combine(self):
+    def combine(self) -> None:
         """Tally results from each AST node visited."""
         for node in self.nodes:
             if node.node_type == "Module":
@@ -84,14 +84,16 @@ class InterrogateResults(BaseInterrogateResult):
 
     :attr int ret_code: return code of program (``0`` for success, ``1``
         for fail).
-    :attr list(InterrogateFileResults) file_results: list of file
+    :attr list(InterrogateFileResult) file_results: list of file
         results associated with this program run.
     """
 
-    ret_code = attr.ib(init=False, default=0, repr=False)
-    file_results = attr.ib(init=False, default=None, repr=False)
+    ret_code: int = attr.ib(init=False, default=0, repr=False)
+    file_results: list[InterrogateFileResult] = attr.ib(
+        init=False, default=None, repr=False
+    )
 
-    def combine(self):
+    def combine(self) -> None:
         """Tally results from each file."""
         for result in self.file_results:
             self.covered += result.covered
@@ -106,30 +108,40 @@ class InterrogateCoverage:
     :param config.InterrogateConfig conf: interrogation configuration.
     :param tuple(str) excluded: tuple of files and directories to exclude
         in assessing coverage.
+    :param list[str] extensions: additional file extensions to interrogate.
     """
 
-    COMMON_EXCLUDE = [".tox", ".venv", "venv", ".git", ".hg"]
-    VALID_EXT = [".py", ".pyi"]  # someday in the future: .ipynb
+    COMMON_EXCLUDE: Final[list[str]] = [".tox", ".venv", "venv", ".git", ".hg"]
+    VALID_EXT: Final[list[str]] = [
+        ".py",
+        ".pyi",
+    ]  # someday in the future: .ipynb
 
-    def __init__(self, paths, conf=None, excluded=None, extensions=None):
+    def __init__(
+        self,
+        paths: list[str],
+        conf: config.InterrogateConfig | None = None,
+        excluded: tuple[str] | None = None,
+        extensions: tuple[str] | None = None,
+    ):
         self.paths = paths
         self.extensions = set(extensions or set())
         self.extensions.add(".py")
         self.config = conf or config.InterrogateConfig()
         self.excluded = excluded or ()
-        self.common_base = pathlib.Path("/")
-        self.output_formatter = None
+        self.common_base = ""
         self._add_common_exclude()
         self.skipped_file_count = 0
+        self.output_formatter: utils.OutputFormatter
 
-    def _add_common_exclude(self):
+    def _add_common_exclude(self) -> None:
         """Ignore common directories by default"""
         for path in self.paths:
-            self.excluded = self.excluded + tuple(
+            self.excluded = self.excluded + tuple(  # type: ignore
                 os.path.join(path, i) for i in self.COMMON_EXCLUDE
             )
 
-    def _filter_files(self, files):
+    def _filter_files(self, files: list[str]) -> Iterator[str]:
         """Filter files that are explicitly excluded."""
         for f in files:
             has_valid_ext = any([f.endswith(ext) for ext in self.extensions])
@@ -139,11 +151,11 @@ class InterrogateCoverage:
                 basename = os.path.basename(f)
                 if basename == "__init__.py":
                     continue
-            if any(fnmatch(f, exc + "*") for exc in self.excluded):
+            if any(fnmatch.fnmatch(f, exc + "*") for exc in self.excluded):
                 continue
             yield f
 
-    def get_filenames_from_paths(self):
+    def get_filenames_from_paths(self) -> list[str]:
         """Find all files to measure for docstring coverage."""
         filenames = []
         for path in self.paths:
@@ -177,7 +189,7 @@ class InterrogateCoverage:
         self.common_base = utils.get_common_base(filenames)
         return filenames
 
-    def _filter_nodes(self, nodes):
+    def _filter_nodes(self, nodes: list[visit.CovNode]) -> list[visit.CovNode]:
         """Remove empty modules when ignoring modules."""
         is_empty = 1 == len(nodes)
         if is_empty and self.config.ignore_module:
@@ -203,7 +215,9 @@ class InterrogateCoverage:
             filtered.insert(0, module_node)
         return filtered
 
-    def _filter_inner_nested(self, nodes):
+    def _filter_inner_nested(
+        self, nodes: list[visit.CovNode]
+    ) -> list[visit.CovNode]:
         """Filter out children of ignored nested funcs/classes."""
         nested_cls = [n for n in nodes if n.is_nested_cls]
         inner_nested_nodes = [n for n in nodes if n.parent in nested_cls]
@@ -212,7 +226,7 @@ class InterrogateCoverage:
         filtered_nodes = [n for n in filtered_nodes if n not in nested_cls]
         return filtered_nodes
 
-    def _set_google_style(self, nodes):
+    def _set_google_style(self, nodes: list[visit.CovNode]) -> None:
         """Apply Google-style docstrings for class coverage.
 
         Update coverage of a class node if its `__init__` method has a
@@ -224,12 +238,14 @@ class InterrogateCoverage:
         """
         for node in nodes:
             if node.node_type == "FunctionDef" and node.name == "__init__":
-                if not node.covered and node.parent.covered:
+                if not node.covered and node.parent.covered:  # type: ignore
                     setattr(node, "covered", True)
-                elif node.covered and not node.parent.covered:
+                elif node.covered and not node.parent.covered:  # type: ignore
                     setattr(node.parent, "covered", True)
 
-    def _get_file_coverage(self, filename):
+    def _get_file_coverage(
+        self, filename: str
+    ) -> InterrogateFileResult | None:
         """Get coverage results for a particular file."""
         with open(filename, encoding="utf-8") as f:
             source_tree = f.read()
@@ -240,7 +256,7 @@ class InterrogateCoverage:
 
         filtered_nodes = self._filter_nodes(visitor.nodes)
         if len(filtered_nodes) == 0:
-            return
+            return None
 
         if self.config.ignore_nested_functions:
             filtered_nodes = [
@@ -260,7 +276,7 @@ class InterrogateCoverage:
         results.combine()
         return results
 
-    def _get_coverage(self, filenames):
+    def _get_coverage(self, filenames: list[str]) -> InterrogateResults:
         """Get coverage results."""
         results = InterrogateResults()
         file_results = []
@@ -273,19 +289,20 @@ class InterrogateCoverage:
         results.combine()
 
         fail_under_str = str(self.config.fail_under)
-        round_to = -decimal.Decimal(fail_under_str).as_tuple().exponent
+        fail_under_dec = decimal.Decimal(fail_under_str)
+        round_to = -fail_under_dec.as_tuple().exponent  # type: ignore
 
         if self.config.fail_under > round(results.perc_covered, round_to):
             results.ret_code = 1
 
         return results
 
-    def get_coverage(self):
+    def get_coverage(self) -> InterrogateResults:
         """Get coverage results from files."""
         filenames = self.get_filenames_from_paths()
         return self._get_coverage(filenames)
 
-    def _get_filename(self, filename):
+    def _get_filename(self, filename: str) -> str:
         """Get filename for output information.
 
         If only one file is being interrogated, then ``self.common_base``
@@ -296,7 +313,9 @@ class InterrogateCoverage:
             return os.path.basename(filename)
         return filename[len(self.common_base) + 1 :]
 
-    def _get_detailed_row(self, node, filename):
+    def _get_detailed_row(
+        self, node: visit.CovNode, filename: str
+    ) -> list[str]:
         """Generate a row of data for the detailed view."""
         filename = self._get_filename(filename)
 
@@ -313,14 +332,16 @@ class InterrogateCoverage:
         status = "MISSED" if not node.covered else "COVERED"
         return [name, status]
 
-    def _create_detailed_table(self, combined_results):
+    def _create_detailed_table(
+        self, combined_results: InterrogateResults
+    ) -> list[list[str]]:
         """Generate table for the detailed view.
 
         The detailed view shows coverage of each module, class, and
         function/method.
         """
 
-        def _sort_nodes(x):
+        def _sort_nodes(x: visit.CovNode) -> int:
             """Sort nodes by line number."""
             lineno = getattr(x, "lineno", 0)
             # lineno is "None" if module is empty
@@ -347,7 +368,7 @@ class InterrogateCoverage:
             verbose_tbl.append(self.output_formatter.TABLE_SEPARATOR)
         return verbose_tbl
 
-    def _print_detailed_table(self, results):
+    def _print_detailed_table(self, results: InterrogateResults) -> None:
         """Print detailed table to the given output stream."""
         detailed_table = self._create_detailed_table(results)
 
@@ -370,7 +391,9 @@ class InterrogateCoverage:
         self.output_formatter.tw.line(to_print)
         self.output_formatter.tw.line()
 
-    def _create_summary_table(self, combined_results):
+    def _create_summary_table(
+        self, combined_results: InterrogateResults
+    ) -> list[list[str]]:
         """Generate table for the summary view.
 
         The summary view shows coverage for an overall file.
@@ -390,9 +413,9 @@ class InterrogateCoverage:
             perc_covered = f"{file_result.perc_covered:.0f}%"
             row = [
                 filename,
-                file_result.total,
-                file_result.missing,
-                file_result.covered,
+                str(file_result.total),
+                str(file_result.missing),
+                str(file_result.covered),
                 perc_covered,
             ]
             table.append(row)
@@ -405,15 +428,15 @@ class InterrogateCoverage:
         total_perc_covered = f"{combined_results.perc_covered:.1f}%"
         total_row = [
             "TOTAL",
-            combined_results.total,
-            combined_results.missing,
-            combined_results.covered,
+            str(combined_results.total),
+            str(combined_results.missing),
+            str(combined_results.covered),
             total_perc_covered,
         ]
         table.append(total_row)
         return table
 
-    def _print_summary_table(self, results):
+    def _print_summary_table(self, results: InterrogateResults) -> None:
         """Print summary table to the given output stream."""
         summary_table = self._create_summary_table(results)
         self.output_formatter.tw.sep(
@@ -431,7 +454,7 @@ class InterrogateCoverage:
         self.output_formatter.tw.line(to_print)
 
     @staticmethod
-    def _sort_results(results):
+    def _sort_results(results: InterrogateResults) -> InterrogateResults:
         """Sort results by filename, directories first"""
         all_filenames_map = {r.filename: r for r in results.file_results}
         all_dirs = sorted(
@@ -459,7 +482,7 @@ class InterrogateCoverage:
         results.file_results = sorted_res
         return results
 
-    def _get_header_base(self):
+    def _get_header_base(self) -> str:
         """Get common base directory for header of verbose output."""
         base = self.common_base
         if os.path.isfile(base):
@@ -468,7 +491,7 @@ class InterrogateCoverage:
             return base + "\\"
         return base + "/"
 
-    def _print_omitted_file_count(self, results):
+    def _print_omitted_file_count(self, results: InterrogateResults) -> None:
         """Print # of files omitted due to 100% coverage and --omit-covered.
 
         :param InterrogateResults results: results of docstring coverage
@@ -499,7 +522,9 @@ class InterrogateCoverage:
         )
         self.output_formatter.tw.line(to_print)
 
-    def print_results(self, results, output, verbosity):
+    def print_results(
+        self, results: InterrogateResults, output: str | None, verbosity: int
+    ) -> None:
         """Print results to a given output stream.
 
         :param InterrogateResults results: results of docstring coverage

@@ -1,10 +1,18 @@
 # Copyright 2020-2024 Lynn Root
 """AST traversal for finding docstrings."""
+from __future__ import annotations
 
 import ast
 import os
 
 import attr
+
+from interrogate.config import InterrogateConfig
+
+
+DocumentableFunc = ast.AsyncFunctionDef | ast.FunctionDef
+DocumentableFuncOrClass = DocumentableFunc | ast.ClassDef
+DocumentableNode = DocumentableFuncOrClass | ast.Module
 
 
 @attr.s(eq=False)
@@ -26,15 +34,15 @@ class CovNode:
     :param CovNode _parent: parent node of current CovNode, if any.
     """
 
-    name = attr.ib()
-    path = attr.ib()
-    level = attr.ib()
-    lineno = attr.ib()
-    covered = attr.ib()
-    node_type = attr.ib()
-    is_nested_func = attr.ib()
-    is_nested_cls = attr.ib()
-    parent = attr.ib()
+    name: str = attr.ib()
+    path: str = attr.ib()
+    level: int = attr.ib()
+    lineno: int | None = attr.ib()
+    covered: bool = attr.ib()
+    node_type: str = attr.ib()
+    is_nested_func: bool = attr.ib()
+    is_nested_cls: bool = attr.ib()
+    parent: CovNode | None = attr.ib()
 
 
 class CoverageVisitor(ast.NodeVisitor):
@@ -44,21 +52,21 @@ class CoverageVisitor(ast.NodeVisitor):
     :param config.InterrogateConfig config: configuration.
     """
 
-    def __init__(self, filename, config):
+    def __init__(self, filename: str, config: InterrogateConfig):
         self.filename = filename
-        self.stack = []
-        self.nodes = []
         self.config = config
+        self.stack: list[CovNode] = []
+        self.nodes: list[CovNode] = []
 
     @staticmethod
-    def _has_doc(node):
+    def _has_doc(node: DocumentableNode) -> bool:
         """Return if node has docstrings."""
         return (
             ast.get_docstring(node) is not None
-            and ast.get_docstring(node).strip() != ""
+            and ast.get_docstring(node).strip() != ""  # type: ignore
         )
 
-    def _visit_helper(self, node):
+    def _visit_helper(self, node: DocumentableNode) -> None:
         """Recursively visit AST node for docstrings."""
         if not hasattr(node, "name"):
             node_name = os.path.basename(self.filename)
@@ -99,7 +107,7 @@ class CoverageVisitor(ast.NodeVisitor):
 
         self.stack.pop()
 
-    def _is_nested_func(self, parent, node_type):
+    def _is_nested_func(self, parent: CovNode | None, node_type: str) -> bool:
         """Is node a nested func/method of another func/method."""
         if parent is None:
             return False
@@ -108,7 +116,7 @@ class CoverageVisitor(ast.NodeVisitor):
             return True
         return False
 
-    def _is_nested_cls(self, parent, node_type):
+    def _is_nested_cls(self, parent: CovNode | None, node_type: str) -> bool:
         """Is node a nested func/method of another func/method."""
         if parent is None:
             return False
@@ -120,7 +128,7 @@ class CoverageVisitor(ast.NodeVisitor):
             return True
         return False
 
-    def _is_private(self, node):
+    def _is_private(self, node: DocumentableFuncOrClass) -> bool:
         """Is node private (i.e. __MyClass, __my_func)."""
         if node.name.endswith("__"):
             return False
@@ -128,7 +136,7 @@ class CoverageVisitor(ast.NodeVisitor):
             return False
         return True
 
-    def _is_semiprivate(self, node):
+    def _is_semiprivate(self, node: DocumentableFuncOrClass) -> bool:
         """Is node semiprivate (i.e. _MyClass, _my_func)."""
         if node.name.endswith("__"):
             return False
@@ -138,7 +146,7 @@ class CoverageVisitor(ast.NodeVisitor):
             return False
         return True
 
-    def _is_ignored_common(self, node):
+    def _is_ignored_common(self, node: DocumentableFuncOrClass) -> bool:
         """Commonly-shared ignore checkers."""
         is_private = self._is_private(node)
         is_semiprivate = self._is_semiprivate(node)
@@ -155,7 +163,7 @@ class CoverageVisitor(ast.NodeVisitor):
                     return True
         return False
 
-    def _has_property_decorators(self, node):
+    def _has_property_decorators(self, node: DocumentableFuncOrClass) -> bool:
         """Detect if node has property get/setter/deleter decorators."""
         if not hasattr(node, "decorator_list"):
             return False
@@ -171,7 +179,7 @@ class CoverageVisitor(ast.NodeVisitor):
                     return True
         return False
 
-    def _has_setters(self, node):
+    def _has_setters(self, node: DocumentableFuncOrClass) -> bool:
         """Detect if node has property get/setter decorators."""
         if not hasattr(node, "decorator_list"):
             return False
@@ -182,7 +190,7 @@ class CoverageVisitor(ast.NodeVisitor):
                     return True
         return False
 
-    def _has_overload_decorator(self, node):
+    def _has_overload_decorator(self, node: DocumentableFuncOrClass) -> bool:
         """Detect if node has a typing.overload decorator."""
         if not hasattr(node, "decorator_list"):
             return False
@@ -202,7 +210,7 @@ class CoverageVisitor(ast.NodeVisitor):
                 return True
         return False
 
-    def _is_func_ignored(self, node):
+    def _is_func_ignored(self, node: DocumentableFuncOrClass) -> bool:
         """Should the AST visitor ignore this func/method node."""
         is_init = node.name == "__init__"
         is_magic = all(
@@ -229,18 +237,18 @@ class CoverageVisitor(ast.NodeVisitor):
 
         return self._is_ignored_common(node)
 
-    def _is_class_ignored(self, node):
+    def _is_class_ignored(self, node: DocumentableFuncOrClass) -> bool:
         """Should the AST visitor ignore this class node."""
         return self._is_ignored_common(node)
 
-    def visit_Module(self, node):
+    def visit_Module(self, node: DocumentableNode) -> None:
         """Visit module for docstrings.
 
         :param ast.Module node: a module AST node.
         """
         self._visit_helper(node)
 
-    def visit_ClassDef(self, node):
+    def visit_ClassDef(self, node: DocumentableFuncOrClass) -> None:
         """Visit class for docstrings.
 
         :param ast.ClassDef node: a class AST node.
@@ -249,7 +257,7 @@ class CoverageVisitor(ast.NodeVisitor):
             return
         self._visit_helper(node)
 
-    def visit_FunctionDef(self, node):
+    def visit_FunctionDef(self, node: DocumentableFuncOrClass) -> None:
         """Visit function or method for docstrings.
 
         :param ast.FunctionDef node: a function/method AST node.
@@ -258,7 +266,7 @@ class CoverageVisitor(ast.NodeVisitor):
             return
         self._visit_helper(node)
 
-    def visit_AsyncFunctionDef(self, node):
+    def visit_AsyncFunctionDef(self, node: DocumentableFuncOrClass) -> None:
         """Visit async function or method for docstrings.
 
         :param ast.AsyncFunctionDef node: a async function/method AST node.

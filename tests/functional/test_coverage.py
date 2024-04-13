@@ -6,8 +6,7 @@ import sys
 
 import pytest
 
-from interrogate import config
-from interrogate import coverage
+from interrogate import config, coverage
 
 
 HERE = os.path.abspath(os.path.join(os.path.abspath(__file__), os.path.pardir))
