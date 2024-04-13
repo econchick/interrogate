@@ -45,7 +45,9 @@ SUPPORTED_OUTPUT_FORMATS: list[str] = ["svg", "png"]
 # depending on the character length of the result (e.g. 100, 99.9, 9.9)
 # a few values in the svg template need to adjust so it's readable.
 # Tuple of values: (svg_width, rect_width, text_x, text_length)
-SVG_WIDTH_VALUES: dict[str, dict[str, tuple[int, int, NumberType, NumberType]]] = {
+SVG_WIDTH_VALUES: dict[
+    str, dict[str, tuple[int, int, NumberType, NumberType]]
+] = {
     # integer
     "100": {
         "plastic": (135, 43, 1140, 330),
@@ -123,7 +125,9 @@ def save_badge(
     return output
 
 
-def _get_badge_measurements(result: float, style: str) -> dict[str, NumberType]:
+def _get_badge_measurements(
+    result: float, style: str
+) -> dict[str, NumberType]:
     """Lookup templated style values based on result number."""
     if result == 100:
         width_values = SVG_WIDTH_VALUES["100"]
