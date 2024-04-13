@@ -11,7 +11,8 @@ import os
 import pathlib
 import re
 
-from typing import Any, Sequence
+from collections.abc import Sequence
+from typing import Any
 
 import attr
 import click

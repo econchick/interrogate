@@ -8,6 +8,8 @@ from __future__ import annotations
 import os
 import sys
 
+from typing import Union
+
 from importlib import resources
 from xml.dom import minidom
 
@@ -20,7 +22,7 @@ except ImportError:  # pragma: no cover
 from interrogate.coverage import InterrogateResults
 
 
-NumberType = int | float
+NumberType = Union[int, float]
 
 DEFAULT_FILENAME: str = "interrogate_badge"
 COLORS: dict[str, str] = {

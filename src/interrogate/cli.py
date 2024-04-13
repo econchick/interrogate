@@ -2,10 +2,9 @@
 """CLI entrypoint into `interrogate`."""
 
 import os
-import re
 import sys
 
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Pattern, Tuple, Union
 
 import click
 import colorama
@@ -330,9 +329,9 @@ def main(
     ignore_property_decorators: bool,
     ignore_setters: bool,
     ignore_semiprivate: bool,
-    ignore_regex: Optional[List[re.Pattern[str]]],
+    ignore_regex: Optional[List[Pattern[str]]],
     ext: Tuple[str],
-    whitelist_regex: Optional[List[re.Pattern[str]]],
+    whitelist_regex: Optional[List[Pattern[str]]],
     style: str,
     output: Optional[str],
     color: bool,

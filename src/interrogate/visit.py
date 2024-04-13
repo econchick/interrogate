@@ -5,14 +5,16 @@ from __future__ import annotations
 import ast
 import os
 
+from typing import Union
+
 import attr
 
 from interrogate.config import InterrogateConfig
 
 
-DocumentableFunc = ast.AsyncFunctionDef | ast.FunctionDef
-DocumentableFuncOrClass = DocumentableFunc | ast.ClassDef
-DocumentableNode = DocumentableFuncOrClass | ast.Module
+DocumentableFunc = Union[ast.AsyncFunctionDef, ast.FunctionDef]
+DocumentableFuncOrClass = Union[DocumentableFunc, ast.ClassDef]
+DocumentableNode = Union[DocumentableFuncOrClass, ast.Module]
 
 
 @attr.s(eq=False)
