@@ -94,7 +94,7 @@ If you get an error when trying to generate a badge like so:
 Then first try:
 
 .. code-block:: console
-    
+
     export DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/lib
 
 And rerun the command.
