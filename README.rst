@@ -69,7 +69,7 @@ To generate a **PNG file** instead, install ``interrogate`` with the extras ``[p
 
 .. code-block:: console
 
-    $ pip install interrogate[png]
+    $ pip install "interrogate[png]"
 
 **NOTICE:** Additional system libraries/tools may be required in order to generate a PNG file of the coverage badge:
 
