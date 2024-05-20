@@ -31,7 +31,7 @@
       release-test-pypi:
         name: Publish in-dev package to test.pypi.org
         environment: release-test-pypi
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        if: github.event_name == 'push' && github.ref == 'refs/tags/**.dev*'
         runs-on: ubuntu-latest
         needs: build-package
 
