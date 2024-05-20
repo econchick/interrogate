@@ -74,10 +74,29 @@ To generate a **PNG file** instead, install ``interrogate`` with the extras ``[p
 **NOTICE:** Additional system libraries/tools may be required in order to generate a PNG file of the coverage badge:
 
 * on Windows, install Visual C++ compiler for Cairo;
-* on macOS, install ``cairo`` and ``libffi`` (with Homebrew for example);
+* on macOS, install ``cairo`` and ``libffi`` (with Homebrew for example - `see note below <#macos-and-cairo>`_);
 * on Linux, install the ``cairo``, ``python3-dev`` and ``libffi-dev`` packages (names may vary depending on distribution).
 
 Refer to the ``cairosvg`` `documentation <https://cairosvg.org/documentation/>`_ for more information.
+
+MacOS and Cairo
+^^^^^^^^^^^^^^^
+
+If you get an error when trying to generate a badge like so:
+
+    ```
+    OSError: no library called "cairo-2" was found
+    no library called "cairo" was found
+    no library called "libcairo-2" was found
+    ```
+
+Then first try:
+
+```
+export DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/lib
+```
+
+And rerun the command.
 
 Usage
 =====
