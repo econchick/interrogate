@@ -84,17 +84,18 @@ MacOS and Cairo
 
 If you get an error when trying to generate a badge like so:
 
-    ```
+.. code-block:: console
+
     OSError: no library called "cairo-2" was found
     no library called "cairo" was found
     no library called "libcairo-2" was found
-    ```
+
 
 Then first try:
 
-```
-export DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/lib
-```
+.. code-block:: console
+    
+    export DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/lib
 
 And rerun the command.
 
