@@ -10,7 +10,7 @@ on:
     branches: [ master ]
   # Allow rebuilds via API.
   repository_dispatch:
-    types: rebuild
+    types: [rebuild]
 
 env:
   FORCE_COLOR: "1"
