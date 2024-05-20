@@ -135,6 +135,9 @@ jobs:
       - name: "Create a badge"
         run: interrogate --config pyproject.toml --generate-badge . src tests
         if: runner.os != 'Windows'
+        env:
+          # TODO: set for only macos
+          DYLD_FALLBACK_LIBRARY_PATH: "/opt/homebrew/lib"
 
   docs:
     name: Check docs
