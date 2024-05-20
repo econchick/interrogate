@@ -50,7 +50,7 @@ jobs:
           python -Im pip install --upgrade tox
       - name: Run tox targets for ${{ matrix.python-version }}
         run: python -Im tox run -f py$(echo ${{ matrix.python-version }} | tr -d .)
-      
+
       - name: Run mypy
         run: python -Im tox run -e mypy
         if: matrix.python-version == '3.11'
