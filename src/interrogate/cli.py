@@ -1,17 +1,18 @@
-# Copyright 2020 Lynn Root
+# Copyright 2020-2024 Lynn Root
 """CLI entrypoint into `interrogate`."""
 
 import os
 import sys
+
+from typing import List, Optional, Pattern, Tuple, Union
 
 import click
 import colorama
 
 from interrogate import __version__ as version
 from interrogate import badge_gen
-from interrogate import config
-from interrogate import coverage
-from interrogate import utils
+from interrogate import config as int_config
+from interrogate import coverage, utils
 
 
 @click.command()
@@ -101,20 +102,20 @@ from interrogate import utils
     help="Ignore module-level docstrings.",
 )
 @click.option(
-    "-n",
-    "--ignore-nested-functions",
-    is_flag=True,
-    default=False,
-    show_default=True,
-    help="Ignore nested functions and methods.",
-)
-@click.option(
     "-C",
     "--ignore-nested-classes",
     is_flag=True,
     default=False,
     show_default=True,
     help="Ignore nested classes.",
+)
+@click.option(
+    "-n",
+    "--ignore-nested-functions",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help="Ignore nested functions and methods.",
 )
 @click.option(
     "-O",
@@ -182,7 +183,7 @@ from interrogate import utils
     default=(),
     multiple=True,
     metavar="STR",
-    type=click.Choice(["pyi"], case_sensitive=False),
+    type=click.Choice(["pyi", "ipynb"], case_sensitive=False),
     help=(
         "Include Python-like files with the given extension "
         "(supported: ``pyi``). Multiple ``--ext`` invocations supported. "
@@ -308,11 +309,38 @@ from interrogate import utils
         exists=False, file_okay=True, dir_okay=False, readable=True
     ),
     is_eager=True,
-    callback=config.read_config_file,
+    callback=int_config.read_config_file,
     help="Read configuration from `pyproject.toml` or `setup.cfg`.",
 )
-@click.pass_context
-def main(ctx, paths, **kwargs):
+def main(
+    paths: Optional[List[str]],
+    verbose: int,
+    quiet: bool,
+    fail_under: Union[int, float],
+    exclude: Tuple[str],
+    ignore_init_method: bool,
+    ignore_init_module: bool,
+    ignore_magic: bool,
+    ignore_module: bool,
+    ignore_nested_classes: bool,
+    ignore_nested_functions: bool,
+    ignore_overloaded_functions: bool,
+    ignore_private: bool,
+    ignore_property_decorators: bool,
+    ignore_setters: bool,
+    ignore_semiprivate: bool,
+    ignore_regex: Optional[List[Pattern[str]]],
+    ext: Tuple[str],
+    whitelist_regex: Optional[List[Pattern[str]]],
+    style: str,
+    output: Optional[str],
+    color: bool,
+    omit_covered_files: bool,
+    generate_badge: Optional[str],
+    badge_format: Optional[str],
+    badge_style: Optional[str],
+    config: Optional[str],
+) -> None:
     """Measure and report on documentation coverage in Python modules.
 
     \f
@@ -342,18 +370,17 @@ def main(ctx, paths, **kwargs):
     .. versionchanged:: 1.7.0 include property deleters when ignoring all
         property decorators (--ignore-property-decorators)
     """
-    gen_badge = kwargs["generate_badge"]
-    if kwargs["badge_format"] is not None and gen_badge is None:
+    if badge_format is not None and generate_badge is None:
         raise click.BadParameter(
             "The `--badge-format` option must be used along with the `-g/"
             "--generate-badge option."
         )
-    if kwargs["badge_style"] is not None and gen_badge is None:
+    if badge_style is not None and generate_badge is None:
         raise click.BadParameter(
             "The `--badge-style` option must be used along with the `-g/"
             "--generate-badge option."
         )
-    if kwargs["style"] == "google" and kwargs["ignore_init_method"]:
+    if style == "google" and ignore_init_method:
         raise click.BadOptionUsage(
             option_name="style",
             message=(
@@ -362,60 +389,57 @@ def main(ctx, paths, **kwargs):
             ),
         )
     if not paths:
-        paths = (os.path.abspath(os.getcwd()),)
+        paths = [os.path.abspath(os.getcwd())]
 
     # NOTE: this will need to be fixed if we want to start supporting
     #       --whitelist-regex on filenames. This otherwise assumes you
     #       want to ignore module-level docs when only white listing
     #       items (visit.py will also need to be addressed since white/
     #       black listing only looks at classes & funcs, not modules).
-    if kwargs["whitelist_regex"]:
-        kwargs["ignore_module"] = True
+    if whitelist_regex:
+        ignore_module = True
 
-    conf = config.InterrogateConfig(
-        color=kwargs["color"],
-        docstring_style=kwargs["style"],
-        fail_under=kwargs["fail_under"],
-        ignore_regex=kwargs["ignore_regex"],
-        ignore_magic=kwargs["ignore_magic"],
-        ignore_module=kwargs["ignore_module"],
-        ignore_private=kwargs["ignore_private"],
-        ignore_semiprivate=kwargs["ignore_semiprivate"],
-        ignore_init_method=kwargs["ignore_init_method"],
-        ignore_init_module=kwargs["ignore_init_module"],
-        ignore_nested_classes=kwargs["ignore_nested_classes"],
-        ignore_nested_functions=kwargs["ignore_nested_functions"],
-        ignore_overloaded_functions=kwargs["ignore_overloaded_functions"],
-        ignore_property_setters=kwargs["ignore_setters"],
-        ignore_property_decorators=kwargs["ignore_property_decorators"],
-        include_regex=kwargs["whitelist_regex"],
-        omit_covered_files=kwargs["omit_covered_files"],
+    conf = int_config.InterrogateConfig(
+        color=color,
+        docstring_style=style,
+        fail_under=fail_under,
+        ignore_regex=ignore_regex,
+        ignore_magic=ignore_magic,
+        ignore_module=ignore_module,
+        ignore_private=ignore_private,
+        ignore_semiprivate=ignore_semiprivate,
+        ignore_init_method=ignore_init_method,
+        ignore_init_module=ignore_init_module,
+        ignore_nested_classes=ignore_nested_classes,
+        ignore_nested_functions=ignore_nested_functions,
+        ignore_overloaded_functions=ignore_overloaded_functions,
+        ignore_property_setters=ignore_setters,
+        ignore_property_decorators=ignore_property_decorators,
+        include_regex=whitelist_regex,
+        omit_covered_files=omit_covered_files,
     )
     interrogate_coverage = coverage.InterrogateCoverage(
         paths=paths,
         conf=conf,
-        excluded=kwargs["exclude"],
-        extensions=kwargs["ext"],
+        excluded=exclude,
+        extensions=ext,
     )
     results = interrogate_coverage.get_coverage()
 
-    is_quiet = kwargs["quiet"]
-    if not is_quiet:
+    if not quiet:
         colorama.init()  # needed for Windows
-        interrogate_coverage.print_results(
-            results, kwargs["output"], kwargs["verbose"]
-        )
+        interrogate_coverage.print_results(results, output, verbose)
 
-    if gen_badge is not None:
-        badge_format = kwargs["badge_format"]
-        badge_style = kwargs["badge_style"]
+    if generate_badge is not None:
+        badge_format = badge_format
+        badge_style = badge_style
         output_path = badge_gen.create(
-            gen_badge,
+            generate_badge,
             results,
             output_format=badge_format,
             output_style=badge_style,
         )
-        if not is_quiet:
+        if not quiet:
             click.echo(f"Generated badge to {output_path}")
 
     sys.exit(results.ret_code)

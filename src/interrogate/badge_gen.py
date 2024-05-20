@@ -1,13 +1,15 @@
-# Copyright 2020 Lynn Root
+# Copyright 2020-2024 Lynn Root
 """Module for generating an SVG badge.
 
 Inspired by `coverage-badge <https://github.com/dbrgn/coverage-badge>`_.
 """
+from __future__ import annotations
 
 import os
 import sys
 
 from importlib import resources
+from typing import Union
 from xml.dom import minidom
 
 
@@ -16,9 +18,13 @@ try:
 except ImportError:  # pragma: no cover
     cairosvg = None
 
+from interrogate.coverage import InterrogateResults
 
-DEFAULT_FILENAME = "interrogate_badge"
-COLORS = {
+
+NumberType = Union[int, float]
+
+DEFAULT_FILENAME: str = "interrogate_badge"
+COLORS: dict[str, str] = {
     "brightgreen": "#4c1",
     "green": "#97CA00",
     "yellowgreen": "#a4a61d",
@@ -28,7 +34,7 @@ COLORS = {
     "lightgrey": "#9f9f9f",
 }
 
-COLOR_RANGES = [
+COLOR_RANGES: list[tuple[int, str]] = [
     (95, "brightgreen"),
     (90, "green"),
     (75, "yellowgreen"),
@@ -36,11 +42,13 @@ COLOR_RANGES = [
     (40, "orange"),
     (0, "red"),
 ]
-SUPPORTED_OUTPUT_FORMATS = ["svg", "png"]
+SUPPORTED_OUTPUT_FORMATS: list[str] = ["svg", "png"]
 # depending on the character length of the result (e.g. 100, 99.9, 9.9)
 # a few values in the svg template need to adjust so it's readable.
 # Tuple of values: (svg_width, rect_width, text_x, text_length)
-SVG_WIDTH_VALUES = {
+SVG_WIDTH_VALUES: dict[
+    str, dict[str, tuple[int, int, NumberType, NumberType]]
+] = {
     # integer
     "100": {
         "plastic": (135, 43, 1140, 330),
@@ -71,7 +79,9 @@ SVG_WIDTH_VALUES = {
 }
 
 
-def save_badge(badge, output, output_format=None):
+def save_badge(
+    badge: str, output: str, output_format: str | None = None
+) -> str:
     """Save badge to the specified path.
 
     .. versionadded:: 1.4.0 new ``output_format`` keyword argument
@@ -116,7 +126,9 @@ def save_badge(badge, output, output_format=None):
     return output
 
 
-def _get_badge_measurements(result, style):
+def _get_badge_measurements(
+    result: float, style: str
+) -> dict[str, NumberType]:
     """Lookup templated style values based on result number."""
     if result == 100:
         width_values = SVG_WIDTH_VALUES["100"]
@@ -133,7 +145,7 @@ def _get_badge_measurements(result, style):
     }
 
 
-def _format_result(result):
+def _format_result(result: float) -> str:
     """Format result into string for templating."""
     # do not include decimal if it's 100
     if result == 100:
@@ -141,7 +153,7 @@ def _format_result(result):
     return f"{result:.1f}"
 
 
-def get_badge(result, color, style=None):
+def get_badge(result: float, color: str, style: str | None = None) -> str:
     """Generate an SVG from template.
 
     :param float result: coverage % result.
@@ -154,9 +166,9 @@ def get_badge(result, color, style=None):
         style = "flat-square-modified"
     template_file = f"{style}-style.svg"
     badge_template_values = _get_badge_measurements(result, style)
-    result = _format_result(result)
-    badge_template_values["result"] = result
-    badge_template_values["color"] = color
+    formatted_result = _format_result(result)
+    badge_template_values["result"] = formatted_result  # type: ignore
+    badge_template_values["color"] = color  # type: ignore
 
     if sys.version_info >= (3, 9):
         tmpl = (
@@ -171,7 +183,7 @@ def get_badge(result, color, style=None):
     return tmpl
 
 
-def should_generate_badge(output, color, result):
+def should_generate_badge(output: str, color: str, result: float) -> bool:
     """Detect if existing badge needs updating.
 
     This is to help avoid unnecessary newline updates. See
@@ -186,8 +198,8 @@ def should_generate_badge(output, color, result):
         logo doesn't exist.
 
     :param str output: path to output badge file
-    :param float result: coverage % result.
     :param str color: color of badge.
+    :param float result: coverage % result.
     :return: Whether or not the badge SVG file should be generated.
     :rtype: bool
     """
@@ -228,13 +240,13 @@ def should_generate_badge(output, color, result):
         for t in texts
         if t.hasAttribute("data-interrogate")
     ]
-    result = f"{result:.1f}%"
-    if result in current_results:
+    formatted_result = f"{result:.1f}%"
+    if formatted_result in current_results:
         return False
     return True
 
 
-def get_color(result):
+def get_color(result: float) -> str:
     """Get color for current doc coverage percent.
 
     :param float result: coverage % result
@@ -247,7 +259,12 @@ def get_color(result):
     return COLORS["lightgrey"]
 
 
-def create(output, result, output_format=None, output_style=None):
+def create(
+    output: str,
+    result: InterrogateResults,
+    output_format: str | None = None,
+    output_style: str | None = None,
+) -> str:
     """Create a status badge.
 
     The badge file will only be written if it doesn't exist, or if the
@@ -263,6 +280,11 @@ def create(output, result, output_format=None, output_style=None):
     :param str output: path to output badge file.
     :param coverage.InterrogateResults result: results of coverage
         interrogation.
+    :param str output_format: output format of the badge. Options: "svg", "png".
+        Default: "svg"
+    :param str output_style: badge styling. Options: "plastic", "social",
+        "flat", "flat-square", "flat-square-modified", "for-the-badge".
+        Default: "flat-square-modified"
     :return: path to output badge file.
     :rtype: str
     """

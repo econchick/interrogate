@@ -1,5 +1,7 @@
-# Copyright 2020 Lynn Root
+# Copyright 2020-2024 Lynn Root
 """Collection of general helper functions."""
+
+from __future__ import annotations
 
 import contextlib
 import functools
@@ -9,16 +11,23 @@ import re
 import shutil
 import sys
 
+from typing import IO, Any, Final, Iterator, Sequence
+
 import colorama
 import tabulate
 
+from click import Context, Parameter
 from py import io as py_io
 
+from interrogate.config import InterrogateConfig
 
-IS_WINDOWS = sys.platform == "win32"
+
+IS_WINDOWS: Final[bool] = sys.platform == "win32"
 
 
-def parse_regex(ctx, param, values):
+def parse_regex(
+    ctx: Context, param: Parameter, values: list[str]
+) -> list[re.Pattern[str]] | None:
     """Compile a regex if given.
 
     :param click.Context ctx: click command context.
@@ -32,12 +41,14 @@ def parse_regex(ctx, param, values):
         ``list`` of ``str``s.
     """
     if not values:
-        return
+        return None
     return [re.compile(v) for v in values]
 
 
 @contextlib.contextmanager
-def smart_open(filename=None, fmode=None):
+def smart_open(
+    filename: str | None = None, fmode: str = "w"
+) -> Iterator[IO[Any]]:
     """Context manager to handle both stdout & files in the same manner.
 
     :param filename: Filename to open.
@@ -57,7 +68,7 @@ def smart_open(filename=None, fmode=None):
             fh.close()
 
 
-def get_common_base(files):
+def get_common_base(files: Sequence[str | pathlib.Path]) -> str:
     """Find the common parent base path for a list of files.
 
     For example, ``["/usr/src/app", "/usr/src/tests", "/usr/src/app2"]``
@@ -83,11 +94,11 @@ class OutputFormatter:
     TERMINAL_WIDTH, _ = shutil.get_terminal_size((80, 20))
     TABLE_SEPARATOR = ["---"]
 
-    def __init__(self, config, file=None):
+    def __init__(self, config: InterrogateConfig, file: IO[Any] | None = None):
         self.config = config
         self.tw = py_io.TerminalWriter(file=file)
 
-    def should_markup(self):
+    def should_markup(self) -> bool:
         """Return whether or not color markup should be added to output."""
         if self.config.color is False:
             return False
@@ -102,7 +113,7 @@ class OutputFormatter:
 
         return True
 
-    def set_detailed_markup(self, padded_cells):
+    def set_detailed_markup(self, padded_cells: list[str]) -> list[str]:
         """Add markup specific to the detailed output section."""
         if not self.should_markup():
             return padded_cells
@@ -126,7 +137,7 @@ class OutputFormatter:
 
         return marked_up_padded_cells
 
-    def set_summary_markup(self, padded_cells):
+    def set_summary_markup(self, padded_cells: list[str]) -> list[str]:
         """Add markup specific to the summary output section."""
         if not self.should_markup():
             return padded_cells
@@ -156,8 +167,12 @@ class OutputFormatter:
         return marked_up_padded_cells
 
     def _interrogate_line_formatter(
-        self, padded_cells, colwidths, colaligns, table_type
-    ):
+        self,
+        padded_cells: list[str],
+        colwidths: list[int],
+        colaligns: list[str],
+        table_type: str,
+    ) -> str:
         """Format rows of a table to fit terminal.
 
         :param list(str) padded_cells: row where each cell is padded with
@@ -165,6 +180,9 @@ class OutputFormatter:
         :param list(int) colwidths: list of widths, by column order.
         :param list(str) colaligns: list of column alignment, by column
             order. Possible values: ``"left"`` or ``"right"``
+        :param str table_type: Table type of either "detailed" (second
+            level of output verbosity), or "summary" (first level of
+            output verbosity).
 
         :return: a formatted table row
         :rtype: str
@@ -223,7 +241,7 @@ class OutputFormatter:
         ret = sep + sep.join(to_join) + sep
         return ret.rstrip()
 
-    def get_table_formatter(self, table_type):
+    def get_table_formatter(self, table_type: str) -> tabulate.TableFormat:
         """Get a `tabulate` table formatter.
 
         :param str table_type: Table type of either "detailed" (second

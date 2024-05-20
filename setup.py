@@ -5,8 +5,7 @@ import codecs
 import os
 import re
 
-from setuptools import find_packages
-from setuptools import setup
+from setuptools import find_packages, setup
 
 
 HERE = os.path.abspath(os.path.dirname(__file__))
@@ -80,11 +79,13 @@ EXTRAS_REQUIRE = {
     "png": ["cairosvg"],
     "docs": ["sphinx", "sphinx-autobuild"],
     "tests": ["pytest", "pytest-cov", "pytest-mock", "coverage[toml]"],
+    "typing": ["mypy", "types-tabulate"],
 }
 EXTRAS_REQUIRE["dev"] = (
     EXTRAS_REQUIRE["png"]
     + EXTRAS_REQUIRE["docs"]
     + EXTRAS_REQUIRE["tests"]
+    + EXTRAS_REQUIRE["typing"]
     + ["wheel", "pre-commit"]
 )
 URL = find_meta("uri")

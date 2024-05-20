@@ -1,6 +1,14 @@
 Changelog
 =========
 
+1.8.0 (UNRELEASED)
+------------------
+
+Added
+^^^^^
+
+* Finally added type hints
+
 .. short-log
 
 1.7.0 (2024-04-07)

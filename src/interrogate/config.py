@@ -1,12 +1,18 @@
-# Copyright 2020 Lynn Root
+# Copyright 2020-2024 Lynn Root
 """
 Configuration-related helpers.
 """
 # Adapted from Black https://github.com/psf/black/blob/master/black.py.
 
+from __future__ import annotations
+
 import configparser
 import os
 import pathlib
+import re
+
+from collections.abc import Sequence
+from typing import Any
 
 import attr
 import click
@@ -15,7 +21,7 @@ import click
 try:
     import tomllib
 except ImportError:
-    import tomli as tomllib
+    import tomli as tomllib  # type: ignore
 
 
 # TODO: idea: break out InterrogateConfig into two classes: one for
@@ -52,26 +58,26 @@ class InterrogateConfig:
 
     VALID_STYLES = ("sphinx", "google")
 
-    color = attr.ib(default=False)
-    docstring_style = attr.ib(default="sphinx")
-    fail_under = attr.ib(default=80.0)
-    ignore_regex = attr.ib(default=False)
-    ignore_magic = attr.ib(default=False)
-    ignore_module = attr.ib(default=False)
-    ignore_private = attr.ib(default=False)
-    ignore_semiprivate = attr.ib(default=False)
-    ignore_init_method = attr.ib(default=False)
-    ignore_init_module = attr.ib(default=False)
-    ignore_nested_classes = attr.ib(default=False)
-    ignore_nested_functions = attr.ib(default=False)
-    ignore_property_setters = attr.ib(default=False)
-    ignore_property_decorators = attr.ib(default=False)
-    ignore_overloaded_functions = attr.ib(default=False)
-    include_regex = attr.ib(default=False)
-    omit_covered_files = attr.ib(default=False)
+    color: bool = attr.ib(default=False)
+    docstring_style: str = attr.ib(default="sphinx")
+    fail_under: float = attr.ib(default=80.0)
+    ignore_regex: list[re.Pattern[str]] | None = attr.ib(default=None)
+    ignore_magic: bool = attr.ib(default=False)
+    ignore_module: bool = attr.ib(default=False)
+    ignore_private: bool = attr.ib(default=False)
+    ignore_semiprivate: bool = attr.ib(default=False)
+    ignore_init_method: bool = attr.ib(default=False)
+    ignore_init_module: bool = attr.ib(default=False)
+    ignore_nested_classes: bool = attr.ib(default=False)
+    ignore_nested_functions: bool = attr.ib(default=False)
+    ignore_property_setters: bool = attr.ib(default=False)
+    ignore_property_decorators: bool = attr.ib(default=False)
+    ignore_overloaded_functions: bool = attr.ib(default=False)
+    include_regex: list[re.Pattern[str]] | None = attr.ib(default=None)
+    omit_covered_files: bool = attr.ib(default=False)
 
     @docstring_style.validator
-    def _check_style(self, attribute, value):
+    def _check_style(self, attribute: str, value: str) -> None:
         """Validate selected choice for docstring style"""
         if value not in self.VALID_STYLES:
             raise ValueError(
@@ -80,7 +86,7 @@ class InterrogateConfig:
             )
 
 
-def find_project_root(srcs):
+def find_project_root(srcs: Sequence[str]) -> pathlib.Path:
     """Return a directory containing .git, .hg, or pyproject.toml.
     That directory can be one of the directories passed in `srcs` or their
     common parent.
@@ -108,7 +114,7 @@ def find_project_root(srcs):
     return directory
 
 
-def find_project_config(path_search_start):
+def find_project_config(path_search_start: Sequence[str]) -> str | None:
     """Find the absolute filepath to a pyproject.toml if it exists."""
     project_root = find_project_root(path_search_start)
     pyproject_toml = project_root / "pyproject.toml"
@@ -119,7 +125,7 @@ def find_project_config(path_search_start):
     return str(setup_cfg) if setup_cfg.is_file() else None
 
 
-def parse_pyproject_toml(path_config):
+def parse_pyproject_toml(path_config: str) -> dict[str, Any]:
     """Parse ``pyproject.toml`` file and return relevant parts for Interrogate.
 
     :param str path_config: Path to ``pyproject.toml`` file.
@@ -136,7 +142,7 @@ def parse_pyproject_toml(path_config):
     }
 
 
-def sanitize_list_values(value):
+def sanitize_list_values(value: str) -> list[str | None]:
     """Parse a string of list items to a Python list.
 
     This is super hacky...
@@ -159,7 +165,7 @@ def sanitize_list_values(value):
     return [v.strip('"') for v in raw_values]
 
 
-def parse_setup_cfg(path_config):
+def parse_setup_cfg(path_config: str) -> dict[str, Any] | None:
     """Parse ``setup.cfg`` file and return relevant parts for Interrogate.
 
     This is super hacky...
@@ -185,15 +191,17 @@ def parse_setup_cfg(path_config):
     }
     for k, v in config.items():
         if k in keys_for_list_values:
-            config[k] = sanitize_list_values(v)
+            config[k] = sanitize_list_values(v)  # type: ignore
         elif v.lower() == "false":
-            config[k] = False
+            config[k] = False  # type: ignore
         elif v.lower() == "true":
-            config[k] = True
+            config[k] = True  # type: ignore
     return config
 
 
-def read_config_file(ctx, param, value):
+def read_config_file(
+    ctx: click.Context, param: click.Parameter, value: str | None
+) -> str | None:
     """Inject config from ``pyproject.toml`` or ``setup.py`` into ``ctx``.
 
     These override option defaults, but still respect option values

@@ -10,7 +10,7 @@ on:
     branches: [ master ]
   # Allow rebuilds via API.
   repository_dispatch:
-    types: rebuild
+    types: [rebuild]
 
 env:
   FORCE_COLOR: "1"
@@ -50,6 +50,14 @@ jobs:
           python -Im pip install --upgrade tox
       - name: Run tox targets for ${{ matrix.python-version }}
         run: python -Im tox run -f py$(echo ${{ matrix.python-version }} | tr -d .)
+
+      - name: Run mypy
+        run: python -Im tox run -e mypy
+        if: matrix.python-version == '3.11'
+
+      - name: Run mypy
+        run: python -Im tox run -e mypy
+        if: matrix.python-version == '3.11'
 
       - name: Check MANIFEST.in
         run: python -Im tox run -e manifest
@@ -127,6 +135,9 @@ jobs:
       - name: "Create a badge"
         run: interrogate --config pyproject.toml --generate-badge . src tests
         if: runner.os != 'Windows'
+        env:
+          # TODO: set for only macos
+          DYLD_FALLBACK_LIBRARY_PATH: "/opt/homebrew/lib"
 
   docs:
     name: Check docs

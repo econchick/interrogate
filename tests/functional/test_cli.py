@@ -1,4 +1,4 @@
-# Copyright 2020 Lynn Root
+# Copyright 2020-2024 Lynn Root
 """Functional tests for the CLI and implicitly interrogate/visit.py."""
 
 import os
@@ -8,8 +8,7 @@ import pytest
 
 from click import testing
 
-from interrogate import cli
-from interrogate import config
+from interrogate import cli, config
 
 
 HERE = os.path.abspath(os.path.join(os.path.abspath(__file__), os.path.pardir))
