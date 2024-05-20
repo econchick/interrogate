@@ -393,7 +393,7 @@ Configure within your ``pyproject.toml`` (``interrogate`` will automatically det
     ignore-regex = ["^get$", "^mock_.*", ".*BaseClass.*"]
     ext = []
     # possible values: sphinx (default), google
-    style = sphinx
+    style = "sphinx"
     # possible values: 0 (minimal output), 1 (-v), 2 (-vv)
     verbose = 0
     quiet = false
