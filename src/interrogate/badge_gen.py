@@ -5,13 +5,15 @@ Inspired by `coverage-badge <https://github.com/dbrgn/coverage-badge>`_.
 """
 from __future__ import annotations
 
-import os
 import sys
+from pathlib import Path
 
 from importlib import resources
-from typing import Union
+from typing import TYPE_CHECKING, Union
 from xml.dom import minidom
 
+if TYPE_CHECKING:
+    from os import PathLike
 
 try:
     import cairosvg
@@ -80,8 +82,8 @@ SVG_WIDTH_VALUES: dict[
 
 
 def save_badge(
-    badge: str, output: str, output_format: str | None = None
-) -> str:
+    badge: str, output: PathLike[str] | str, output_format: str | None = None
+) -> Path:
     """Save badge to the specified path.
 
     .. versionadded:: 1.4.0 new ``output_format`` keyword argument
@@ -96,10 +98,10 @@ def save_badge(
     if output_format is None:
         output_format = "svg"
 
-    if output_format == "svg":
-        with open(output, "w") as f:
-            f.write(badge)
+    output = Path(output)
 
+    if output_format == "svg":
+        output.write_text(badge)
         return output
 
     if cairosvg is None:
@@ -110,16 +112,14 @@ def save_badge(
 
     # need to write the badge as an svg first in order to convert it to
     # another format
-    tmp_output_file = f"{os.path.splitext(output)[0]}.tmp.svg"
+    tmp_output_file = Path(f"{output.parent / output.stem}.tmp.svg")
     try:
-        with open(tmp_output_file, "w") as f:
-            f.write(badge)
-
+        tmp_output_file.write_text(badge)
         cairosvg.svg2png(url=tmp_output_file, write_to=output, scale=2)
 
     finally:
         try:
-            os.remove(tmp_output_file)
+            tmp_output_file.unlink()
         except Exception:  # pragma: no cover
             pass
 
@@ -183,7 +183,7 @@ def get_badge(result: float, color: str, style: str | None = None) -> str:
     return tmpl
 
 
-def should_generate_badge(output: str, color: str, result: float) -> bool:
+def should_generate_badge(output: PathLike[str] | str, color: str, result: float) -> bool:
     """Detect if existing badge needs updating.
 
     This is to help avoid unnecessary newline updates. See
@@ -203,14 +203,16 @@ def should_generate_badge(output: str, color: str, result: float) -> bool:
     :return: Whether or not the badge SVG file should be generated.
     :rtype: bool
     """
-    if not os.path.exists(output):
+    output = Path(output)
+
+    if not output.exists():
         return True
 
-    if not output.endswith(".svg"):
+    if output.suffix != ".svg":
         return True
 
     try:
-        badge = minidom.parse(output)
+        badge = minidom.parse(str(output))
     except Exception:
         # an exception might happen when a file is not an SVG file but has
         # `.svg` extension (perhaps a png image was generated with the wrong
@@ -260,11 +262,11 @@ def get_color(result: float) -> str:
 
 
 def create(
-    output: str,
+    output: PathLike[str] | str,
     result: InterrogateResults,
     output_format: str | None = None,
     output_style: str | None = None,
-) -> str:
+) -> Path:
     """Create a status badge.
 
     The badge file will only be written if it doesn't exist, or if the
@@ -290,9 +292,10 @@ def create(
     """
     if output_format is None:
         output_format = "svg"
-    if os.path.isdir(output):
+    output = Path(output)
+    if output.is_dir():
         filename = DEFAULT_FILENAME + "." + output_format
-        output = os.path.join(output, filename)
+        output /= filename
 
     result_perc = result.perc_covered
     color = get_color(result_perc)

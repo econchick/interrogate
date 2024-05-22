@@ -1,7 +1,7 @@
 # Copyright 2020-2024 Lynn Root
 """Unit tests for interrogate/badge_gen.py module"""
 
-import os
+from pathlib import Path
 import sys
 
 import pytest
@@ -9,8 +9,8 @@ import pytest
 from interrogate import badge_gen
 
 
-HERE = os.path.abspath(os.path.join(os.path.abspath(__file__), os.path.pardir))
-FIXTURES = os.path.join(HERE, "fixtures")
+HERE = Path(__file__).parent
+FIXTURES = HERE / "fixtures"
 IS_WINDOWS = sys.platform in ("cygwin", "win32")
 
 
@@ -18,9 +18,9 @@ IS_WINDOWS = sys.platform in ("cygwin", "win32")
 @pytest.mark.parametrize(
     "out_format,out_file,exp_called_with",
     (
-        (None, "fixtures/my_badge.svg", "fixtures/my_badge.svg"),
-        ("svg", "fixtures/my_badge.svg", "fixtures/my_badge.svg"),
-        ("png", "fixtures/my_badge.png", "fixtures/my_badge.tmp.svg"),
+        (None, Path("fixtures/my_badge.svg"), Path("fixtures/my_badge.svg")),
+        ("svg", Path("fixtures/my_badge.svg"), Path("fixtures/my_badge.svg")),
+        ("png", Path("fixtures/my_badge.png"), Path("fixtures/my_badge.tmp.svg")),
     ),
 )
 def test_save_badge(
@@ -30,20 +30,19 @@ def test_save_badge(
     mock_cairosvg = mocker.Mock()
     monkeypatch.setattr(badge_gen, "cairosvg", mock_cairosvg)
 
-    mock_open = mocker.mock_open()
-    m = mocker.patch("interrogate.badge_gen.open", mock_open)
-    mock_rm = mocker.patch("interrogate.badge_gen.os.remove", mocker.Mock())
+    mock_write_text = mocker.patch.object(Path, "write_text")
+    mock_unlink = mocker.patch.object(Path, "unlink")
 
     badge_contents = "<svg>foo</svg>"
 
     actual = badge_gen.save_badge(badge_contents, out_file, out_format)
     assert out_file == actual
-    m.assert_called_once_with(exp_called_with, "w")
+    mock_write_text.assert_called_once_with(badge_contents)
     if out_format == "png":
         mock_cairosvg.svg2png.assert_called_once_with(
             url=exp_called_with, write_to=out_file, scale=2
         )
-        mock_rm.assert_called_once_with(exp_called_with)
+        mock_unlink.assert_called_once()
 
 
 @pytest.mark.skipif(not IS_WINDOWS, reason="windows-only tests")
@@ -74,7 +73,7 @@ def test_get_badge():
     """SVG badge is templated as expected."""
     actual = badge_gen.get_badge(99.9, "#4c1")
     actual = actual.replace("\n", "").replace("\r", "")
-    expected_fixture = os.path.join(FIXTURES, "default-style", "99.svg")
+    expected_fixture = FIXTURES / "default-style" / "99.svg"
     with open(expected_fixture) as f:
         expected = f.read()
         expected = expected.replace("\n", "").replace("\r", "")
@@ -95,7 +94,7 @@ def test_get_badge():
 )
 def test_should_generate(fixture, color, result, expected):
     """Only return True if existing badge needs updating"""
-    output = os.path.join(FIXTURES, "default-style", fixture)
+    output = FIXTURES / "default-style" / fixture
     actual = badge_gen.should_generate_badge(output, color, result)
     assert actual is expected
 
@@ -105,7 +104,7 @@ def test_should_generate_xml_error(mocker, monkeypatch):
     mock_minidom_parse = mocker.Mock()
     mock_minidom_parse.side_effect = Exception("fuuuu")
     monkeypatch.setattr(badge_gen.minidom, "parse", mock_minidom_parse)
-    output = os.path.join(FIXTURES, "default-style", "99.svg")
+    output = FIXTURES / "default-style" / "99.svg"
     actual = badge_gen.should_generate_badge(output, "#123456", 99.9)
     assert actual is True
 
@@ -168,7 +167,7 @@ def test_create(
     tmpdir,
 ):
     """Status badges are created according to interrogation results."""
-    monkeypatch.setattr(badge_gen.os.path, "isdir", lambda x: is_dir)
+    monkeypatch.setattr(badge_gen.Path, "is_dir", lambda x: is_dir)
     output = tmpdir.mkdir("output")
     if not is_dir:
         output = output.join("badge.svg")
@@ -191,8 +190,7 @@ def test_create(
 
     if style is None:
         style = "default-style"
-    expected_fixture = os.path.join(style, expected_fixture)
-    expected_fixture = os.path.join(FIXTURES, expected_fixture)
+    expected_fixture = FIXTURES / style / expected_fixture
     with open(expected_fixture, flag) as f:
         expected_contents = f.read()
         if out_format is None:
