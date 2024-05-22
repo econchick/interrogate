@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 try:
     import tomllib
 except ImportError:
-    import tomli as tomllib  # type: ignore
+    import tomli as tomllib
 
 
 # TODO: idea: break out InterrogateConfig into two classes: one for

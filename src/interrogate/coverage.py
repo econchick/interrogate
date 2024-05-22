@@ -19,6 +19,7 @@ from interrogate import config, utils, visit
 
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable
     from os import PathLike
 
 
@@ -123,7 +124,7 @@ class InterrogateCoverage:
 
     def __init__(
         self,
-        paths: list[PathLike[str] | str],
+        paths: Iterable[PathLike[str] | str],
         conf: config.InterrogateConfig | None = None,
         excluded: tuple[str] | None = None,
         extensions: tuple[str] | None = None,
@@ -141,7 +142,7 @@ class InterrogateCoverage:
     def _add_common_exclude(self) -> None:
         """Ignore common directories by default"""
         for path in self.paths:
-            self.excluded = self.excluded + tuple(  # type: ignore
+            self.excluded = self.excluded + tuple(
                 str(path / i) for i in self.COMMON_EXCLUDE
             )
 
