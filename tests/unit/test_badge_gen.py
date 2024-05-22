@@ -74,9 +74,7 @@ def test_get_badge():
     actual = badge_gen.get_badge(99.9, "#4c1")
     actual = actual.replace("\n", "").replace("\r", "")
     expected_fixture = FIXTURES / "default-style" / "99.svg"
-    with open(expected_fixture) as f:
-        expected = f.read()
-        expected = expected.replace("\n", "").replace("\r", "")
+    expected = expected_fixture.read_text().replace("\n", "").replace("\r", "")
 
     assert expected == actual
 
@@ -182,18 +180,21 @@ def test_create(
         str(output), mock_result, out_format, output_style=style
     )
 
-    flag = "rb" if out_format == "png" else "r"
-    with open(actual, flag) as f:
-        actual_contents = f.read()
-        if out_format is None:
-            actual_contents = actual_contents.replace("\n", "")
+    actual_contents = (
+        actual.read_bytes() if out_format == "png" else actual.read_text()
+    )
+    if out_format is None:
+        actual_contents = actual_contents.replace("\n", "")
 
     if style is None:
         style = "default-style"
     expected_fixture = FIXTURES / style / expected_fixture
-    with open(expected_fixture, flag) as f:
-        expected_contents = f.read()
-        if out_format is None:
-            expected_contents = expected_contents.replace("\n", "")
+    expected_contents = (
+        expected_fixture.read_bytes()
+        if out_format == "png"
+        else expected_fixture.read_text()
+    )
+    if out_format is None:
+        expected_contents = expected_contents.replace("\n", "")
 
     assert expected_contents == actual_contents

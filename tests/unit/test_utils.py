@@ -37,13 +37,13 @@ def test_parse_regex(value, exp):
 def test_smart_open(filename, mocker):
     """Handles both opening a file and stdout in the same manner."""
     m_open = mocker.mock_open()
-    mock_open = mocker.patch("interrogate.utils.open", m_open)
+    mock_open = mocker.patch("interrogate.utils.Path.open", m_open)
 
     with utils.smart_open(filename, fmode="r") as act_ret:
         pass
 
     if filename and filename != "-":
-        mock_open.assert_called_once_with(filename, "r")
+        mock_open.assert_called_once_with("r")
         assert act_ret.closed
     else:
         mock_open.assert_not_called()
@@ -67,7 +67,7 @@ def test_smart_open(filename, mocker):
 def test_get_common_base(files, side_effect, expected, mocker, monkeypatch):
     """Return common base of a set of files/directories, if any."""
     mock_exists = mocker.Mock(side_effect=side_effect)
-    monkeypatch.setattr(utils.pathlib.Path, "exists", mock_exists)
+    monkeypatch.setattr(utils.Path, "exists", mock_exists)
     actual = utils.get_common_base(files)
     assert expected == actual
 
@@ -100,7 +100,7 @@ def test_get_common_base_windows(
 ):
     """Return common base of a set of files/directories, if any."""
     mock_exists = mocker.Mock(side_effect=side_effect)
-    monkeypatch.setattr(utils.pathlib.Path, "exists", mock_exists)
+    monkeypatch.setattr(utils.Path, "exists", mock_exists)
     actual = utils.get_common_base(files)
     assert expected == actual
 

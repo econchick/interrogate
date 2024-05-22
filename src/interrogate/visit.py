@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import ast
-import os
 
+from pathlib import Path
 from typing import Union
 
 import attr
@@ -71,7 +71,7 @@ class CoverageVisitor(ast.NodeVisitor):
     def _visit_helper(self, node: DocumentableNode) -> None:
         """Recursively visit AST node for docstrings."""
         if not hasattr(node, "name"):
-            node_name = os.path.basename(self.filename)
+            node_name = Path(self.filename).name
         else:
             node_name = node.name
 
