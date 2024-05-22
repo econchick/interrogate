@@ -1,6 +1,6 @@
 import codecs
-import os
 import re
+from pathlib import Path
 
 
 def read(*parts):
@@ -8,8 +8,8 @@ def read(*parts):
     Build an absolute path from *parts* and and return the contents of the
     resulting file.  Assume UTF-8 encoding.
     """
-    here = os.path.abspath(os.path.dirname(__file__))
-    with codecs.open(os.path.join(here, *parts), "rb", "utf-8") as f:
+    here = Path(__file__).parent.absolute()
+    with codecs.open(str(here.joinpath(*parts)), "rb", "utf-8") as f:
         return f.read()
 
 
