@@ -5,18 +5,20 @@ from __future__ import annotations
 
 import ast
 import decimal
-import fnmatch
 import os
 from pathlib import Path
-import sys
 
-from typing import Final, Iterator
+import sys
+from typing import TYPE_CHECKING, Final, Iterator
 
 import attr
 import click
 import tabulate
 
 from interrogate import config, utils, visit
+
+if TYPE_CHECKING:
+    from os import PathLike
 
 
 tabulate.PRESERVE_WHITESPACE = True
@@ -120,16 +122,16 @@ class InterrogateCoverage:
 
     def __init__(
         self,
-        paths: list[Path],
+        paths: list[PathLike[str] | str],
         conf: config.InterrogateConfig | None = None,
         excluded: tuple[str] | None = None,
-        extensions: tuple[str] | None = None,
+        extensions: tuple[PathLike[str] | str] | None = None,
     ):
-        self.paths = paths
-        self.extensions = set(extensions or set())
+        self.paths = list(map(Path, paths))
+        self.extensions = {f".{ext.lstrip('.')}" for ext in extensions or ()}
         self.extensions.add(".py")
         self.config = conf or config.InterrogateConfig()
-        self.excluded = excluded or ()
+        self.excluded = tuple(map(str, excluded or ()))
         self.common_base = ""
         self._add_common_exclude()
         self.skipped_file_count = 0
@@ -139,30 +141,29 @@ class InterrogateCoverage:
         """Ignore common directories by default"""
         for path in self.paths:
             self.excluded = self.excluded + tuple(  # type: ignore
-                os.path.join(path, i) for i in self.COMMON_EXCLUDE
+                str(path / i) for i in self.COMMON_EXCLUDE
             )
 
     def _filter_files(self, files: list[str]) -> Iterator[str]:
         """Filter files that are explicitly excluded."""
         for f in files:
-            has_valid_ext = any([f.endswith(ext) for ext in self.extensions])
+            has_valid_ext = any([f.suffix == ext for ext in self.extensions])
             if not has_valid_ext:
                 continue
             if self.config.ignore_init_module:
-                basename = os.path.basename(f)
-                if basename == "__init__.py":
+                if f.name == "__init__.py":
                     continue
-            if any(fnmatch.fnmatch(f, exc + "*") for exc in self.excluded):
+            if any(f.match(exc + "*") for exc in self.excluded):
                 continue
-            yield f
+            yield str(f)
 
     def get_filenames_from_paths(self) -> list[str]:
         """Find all files to measure for docstring coverage."""
         filenames = []
         for path in self.paths:
-            if os.path.isfile(path):
+            if path.is_file():
                 has_valid_ext = any(
-                    [path.endswith(ext) for ext in self.VALID_EXT]
+                    [path.suffix == ext for ext in self.VALID_EXT]
                 )
                 if not has_valid_ext:
                     msg = (
@@ -172,14 +173,14 @@ class InterrogateCoverage:
                     )
                     click.echo(msg, err=True)
                     return sys.exit(1)
-                filenames.append(path)
+                filenames.append(str(path))
                 continue
             for root, dirs, fs in os.walk(path):
-                full_paths = [os.path.join(root, f) for f in fs]
+                full_paths = [Path(root) / f for f in fs]
                 filenames.extend(self._filter_files(full_paths))
 
         if not filenames:
-            p = ", ".join(self.paths)
+            p = ", ".join(map(str, self.paths))
             msg = (
                 f"E: No Python or Python-like files found to interrogate in "
                 f"'{p}'."
@@ -485,12 +486,12 @@ class InterrogateCoverage:
 
     def _get_header_base(self) -> str:
         """Get common base directory for header of verbose output."""
-        base = self.common_base
-        if os.path.isfile(base):
-            base = os.path.dirname(base)
+        base = Path(self.common_base)
+        if base.is_file():
+            base = base.parent
         if sys.platform in ("cygwin", "win32"):  # pragma: no cover
-            return base + "\\"
-        return base + "/"
+            return f"{base}\\"
+        return f"{base}/"
 
     def _print_omitted_file_count(self, results: InterrogateResults) -> None:
         """Print # of files omitted due to 100% coverage and --omit-covered.
