@@ -2,8 +2,9 @@
 """Functional tests for interrogate/coverage.py."""
 
 import os
-from pathlib import Path
 import sys
+
+from pathlib import Path
 
 import pytest
 

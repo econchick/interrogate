@@ -16,6 +16,7 @@ from typing import TYPE_CHECKING, Any
 import attr
 import click
 
+
 if TYPE_CHECKING:
     from os import PathLike
 
@@ -115,7 +116,9 @@ def find_project_root(srcs: Sequence[PathLike[str] | str]) -> Path:
     return directory
 
 
-def find_project_config(path_search_start: Sequence[PathLike[str] | str]) -> str | None:
+def find_project_config(
+    path_search_start: Sequence[PathLike[str] | str],
+) -> str | None:
     """Find the absolute filepath to a pyproject.toml if it exists."""
     project_root = find_project_root(path_search_start)
     pyproject_toml = project_root / "pyproject.toml"

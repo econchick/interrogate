@@ -2,6 +2,7 @@
 """Unit tests for interrogate/config.py module"""
 
 import configparser
+
 from pathlib import Path
 
 import click

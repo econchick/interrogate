@@ -1,8 +1,9 @@
 # Copyright 2020-2024 Lynn Root
 """Unit tests for interrogate/badge_gen.py module"""
 
-from pathlib import Path
 import sys
+
+from pathlib import Path
 
 import pytest
 
@@ -20,7 +21,11 @@ IS_WINDOWS = sys.platform in ("cygwin", "win32")
     (
         (None, Path("fixtures/my_badge.svg"), Path("fixtures/my_badge.svg")),
         ("svg", Path("fixtures/my_badge.svg"), Path("fixtures/my_badge.svg")),
-        ("png", Path("fixtures/my_badge.png"), Path("fixtures/my_badge.tmp.svg")),
+        (
+            "png",
+            Path("fixtures/my_badge.png"),
+            Path("fixtures/my_badge.tmp.svg"),
+        ),
     ),
 )
 def test_save_badge(

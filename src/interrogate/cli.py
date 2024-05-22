@@ -1,9 +1,9 @@
 # Copyright 2020-2024 Lynn Root
 """CLI entrypoint into `interrogate`."""
 
-from pathlib import Path
 import sys
 
+from pathlib import Path
 from typing import List, Optional, Pattern, Tuple, Union
 
 import click

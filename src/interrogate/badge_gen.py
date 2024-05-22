@@ -6,11 +6,12 @@ Inspired by `coverage-badge <https://github.com/dbrgn/coverage-badge>`_.
 from __future__ import annotations
 
 import sys
-from pathlib import Path
 
 from importlib import resources
+from pathlib import Path
 from typing import TYPE_CHECKING, Union
 from xml.dom import minidom
+
 
 if TYPE_CHECKING:
     from os import PathLike
@@ -183,7 +184,9 @@ def get_badge(result: float, color: str, style: str | None = None) -> str:
     return tmpl
 
 
-def should_generate_badge(output: PathLike[str] | str, color: str, result: float) -> bool:
+def should_generate_badge(
+    output: PathLike[str] | str, color: str, result: float
+) -> bool:
     """Detect if existing badge needs updating.
 
     This is to help avoid unnecessary newline updates. See

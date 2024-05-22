@@ -2,6 +2,7 @@
 """Functional tests for the CLI and implicitly interrogate/visit.py."""
 
 import sys
+
 from pathlib import Path
 
 import pytest

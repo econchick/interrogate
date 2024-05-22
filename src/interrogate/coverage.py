@@ -6,9 +6,9 @@ from __future__ import annotations
 import ast
 import decimal
 import os
-from pathlib import Path
-
 import sys
+
+from pathlib import Path
 from typing import TYPE_CHECKING, Final, Iterator
 
 import attr
@@ -16,6 +16,7 @@ import click
 import tabulate
 
 from interrogate import config, utils, visit
+
 
 if TYPE_CHECKING:
     from os import PathLike
@@ -252,7 +253,9 @@ class InterrogateCoverage:
         source_tree = filename.read_text(encoding="utf-8")
 
         parsed_tree = ast.parse(source_tree)
-        visitor = visit.CoverageVisitor(filename=str(filename), config=self.config)
+        visitor = visit.CoverageVisitor(
+            filename=str(filename), config=self.config
+        )
         visitor.visit(parsed_tree)
 
         filtered_nodes = self._filter_nodes(visitor.nodes)
@@ -474,7 +477,7 @@ class InterrogateCoverage:
         #     pth = Path.home() / "dev/download/interrogate/log.txt"
         #     with pth.open("a") as f:
         #         f.write(f"{cnt} {obj!r}\n")
-        
+
         # log(all_filenames_map)  # 1
         # log(all_filenames_map_paths)  # 2
         # log(all_dirs)  # 3
