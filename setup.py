@@ -2,13 +2,13 @@
 # Copyright 2020 Lynn Root
 
 import codecs
-import os
 import re
+from pathlib import Path
 
 from setuptools import find_packages, setup
 
 
-HERE = os.path.abspath(os.path.dirname(__file__))
+HERE = Path(__file__).parent.absolute()
 
 
 #####
@@ -23,7 +23,7 @@ def read(*filenames, **kwargs):
     sep = kwargs.get("sep", "\n")
     buf = []
     for fl in filenames:
-        with codecs.open(os.path.join(HERE, fl), "rb", encoding) as f:
+        with codecs.open(HERE / fl, "rb", encoding) as f:
             buf.append(f.read())
     return sep.join(buf)
 
@@ -43,7 +43,7 @@ def find_meta(meta):
 NAME = "interrogate"
 PACKAGE_NAME = "interrogate"
 PACKAGES = find_packages(where="src")
-META_PATH = os.path.join("src", PACKAGE_NAME, "__init__.py")
+META_PATH = Path("src") / PACKAGE_NAME / "__init__.py"
 
 META_FILE = read(META_PATH)
 KEYWORDS = ["documentation", "coverage", "quality"]
