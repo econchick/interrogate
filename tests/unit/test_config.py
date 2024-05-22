@@ -2,7 +2,8 @@
 """Unit tests for interrogate/config.py module"""
 
 import configparser
-import pathlib
+
+from pathlib import Path
 
 import click
 import pytest
@@ -34,10 +35,10 @@ from interrogate import config
 def test_find_project_root(srcs, patch_func, expected, monkeypatch):
     """Return expected directory of project root."""
     with monkeypatch.context() as mp:
-        expected = pathlib.Path(expected)
+        expected = Path(expected)
         if patch_func:
-            mp.setattr(config.pathlib.Path, patch_func, lambda x: True)
-        mp.setattr(config.pathlib.Path, "resolve", lambda x: x)
+            mp.setattr(config.Path, patch_func, lambda x: True)
+        mp.setattr(config.Path, "resolve", lambda x: x)
 
         actual = config.find_project_root(srcs)
 
@@ -47,15 +48,15 @@ def test_find_project_root(srcs, patch_func, expected, monkeypatch):
 @pytest.mark.parametrize(
     "is_file,expected",
     (
-        (True, str(pathlib.Path("/usr/src/pyproject.toml"))),
+        (True, str(Path("/usr/src/pyproject.toml"))),
         (False, None),
     ),
 )
 def test_find_project_config(is_file, expected, mocker, monkeypatch):
     """Return absolute path if pyproject.toml or setup.cfg is detected."""
     with monkeypatch.context() as mp:
-        mp.setattr(config.pathlib.Path, "is_file", lambda x: is_file)
-        mp.setattr(config.pathlib.Path, "resolve", lambda x: x)
+        mp.setattr(config.Path, "is_file", lambda x: is_file)
+        mp.setattr(config.Path, "resolve", lambda x: x)
 
         actual = config.find_project_config(("/usr/src/app",))
         assert expected == actual

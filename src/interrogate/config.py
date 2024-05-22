@@ -7,21 +7,23 @@ Configuration-related helpers.
 from __future__ import annotations
 
 import configparser
-import os
-import pathlib
 import re
 
 from collections.abc import Sequence
-from typing import Any
+from pathlib import Path
+from typing import TYPE_CHECKING, Any
 
 import attr
 import click
 
 
+if TYPE_CHECKING:
+    from os import PathLike
+
 try:
     import tomllib
 except ImportError:
-    import tomli as tomllib  # type: ignore
+    import tomli as tomllib
 
 
 # TODO: idea: break out InterrogateConfig into two classes: one for
@@ -86,7 +88,7 @@ class InterrogateConfig:
             )
 
 
-def find_project_root(srcs: Sequence[str]) -> pathlib.Path:
+def find_project_root(srcs: Sequence[PathLike[str] | str]) -> Path:
     """Return a directory containing .git, .hg, or pyproject.toml.
     That directory can be one of the directories passed in `srcs` or their
     common parent.
@@ -94,9 +96,9 @@ def find_project_root(srcs: Sequence[str]) -> pathlib.Path:
     project root, the root of the file system is returned.
     """
     if not srcs:
-        return pathlib.Path("/").resolve()
+        return Path("/").resolve()
 
-    common_base = min(pathlib.Path(src).resolve() for src in srcs)
+    common_base = min(Path(src).resolve() for src in srcs)
     if common_base.is_dir():
         # Append a fake file so `parents` below returns `common_base_dir`, too.
         common_base /= "fake-file"
@@ -114,7 +116,9 @@ def find_project_root(srcs: Sequence[str]) -> pathlib.Path:
     return directory
 
 
-def find_project_config(path_search_start: Sequence[str]) -> str | None:
+def find_project_config(
+    path_search_start: Sequence[PathLike[str] | str],
+) -> str | None:
     """Find the absolute filepath to a pyproject.toml if it exists."""
     project_root = find_project_root(path_search_start)
     pyproject_toml = project_root / "pyproject.toml"
@@ -125,7 +129,7 @@ def find_project_config(path_search_start: Sequence[str]) -> str | None:
     return str(setup_cfg) if setup_cfg.is_file() else None
 
 
-def parse_pyproject_toml(path_config: str) -> dict[str, Any]:
+def parse_pyproject_toml(path_config: PathLike[str] | str) -> dict[str, Any]:
     """Parse ``pyproject.toml`` file and return relevant parts for Interrogate.
 
     :param str path_config: Path to ``pyproject.toml`` file.
@@ -134,8 +138,7 @@ def parse_pyproject_toml(path_config: str) -> dict[str, Any]:
     :raise OSError: an I/O-related error when opening ``pyproject.toml``.
     :raise tomllib.TOMLDecodeError: unable to load ``pyproject.toml``.
     """
-    with open(path_config, "rb") as f:
-        pyproject_toml = tomllib.load(f)
+    pyproject_toml = tomllib.loads(Path(path_config).read_text())
     config = pyproject_toml.get("tool", {}).get("interrogate", {})
     return {
         k.replace("--", "").replace("-", "_"): v for k, v in config.items()
@@ -221,7 +224,7 @@ def read_config_file(
     if not value:
         paths = ctx.params.get("paths")
         if not paths:
-            paths = (os.path.abspath(os.getcwd()),)
+            paths = (Path.cwd(),)
         value = find_project_config(paths)
         if value is None:
             return None

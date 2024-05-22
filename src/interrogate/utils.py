@@ -6,11 +6,11 @@ from __future__ import annotations
 import contextlib
 import functools
 import os
-import pathlib
 import re
 import shutil
 import sys
 
+from pathlib import Path
 from typing import IO, Any, Final, Iterator, Sequence
 
 import colorama
@@ -57,7 +57,7 @@ def smart_open(
     :type fmode: ``str`` or ``None``
     """
     if filename and filename != "-":
-        fh = open(filename, fmode)
+        fh = Path(filename).open(fmode)
     else:
         fh = sys.stdout
 
@@ -68,7 +68,7 @@ def smart_open(
             fh.close()
 
 
-def get_common_base(files: Sequence[str | pathlib.Path]) -> str:
+def get_common_base(files: Sequence[str | Path]) -> str:
     """Find the common parent base path for a list of files.
 
     For example, ``["/usr/src/app", "/usr/src/tests", "/usr/src/app2"]``
@@ -79,7 +79,7 @@ def get_common_base(files: Sequence[str | pathlib.Path]) -> str:
     :return: Common parent path.
     :rtype: str
     """
-    commonbase = pathlib.Path(os.path.commonprefix(files))
+    commonbase = Path(os.path.commonprefix(files))
     # commonprefix may return an invalid path, e.g. for "/usr/foobar"
     # and "/usr/foobaz", it will return "/usr/fooba", so we'll need to
     # find its parent directory if that's the case.

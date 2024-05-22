@@ -1,17 +1,18 @@
 # Copyright 2020-2024 Lynn Root
 """Functional tests for interrogate/coverage.py."""
 
-import os
 import sys
+
+from pathlib import Path
 
 import pytest
 
 from interrogate import config, coverage
 
 
-HERE = os.path.abspath(os.path.join(os.path.abspath(__file__), os.path.pardir))
-SAMPLE_DIR = os.path.join(HERE, "sample")
-FIXTURES = os.path.join(HERE, "fixtures")
+HERE = Path(__file__).parent
+SAMPLE_DIR = HERE / "sample"
+FIXTURES = HERE / "fixtures"
 IS_WINDOWS = sys.platform in ("cygwin", "win32")
 
 
@@ -26,14 +27,14 @@ def patch_term_width(monkeypatch):
     (
         (
             [
-                os.path.join(SAMPLE_DIR, "empty.py"),
+                SAMPLE_DIR / "empty.py",
             ],
             {},
             (1, 0, 1, "0.0"),
         ),
         (
             [
-                os.path.join(SAMPLE_DIR, "empty.py"),
+                SAMPLE_DIR / "empty.py",
             ],
             {"ignore_module": True},
             (0, 0, 0, "100.0"),
@@ -45,31 +46,31 @@ def patch_term_width(monkeypatch):
             {},
             (74, 38, 36, "51.4"),
         ),
-        ([os.path.join(SAMPLE_DIR, "partial.py")], {}, (29, 10, 19, "34.5")),
+        ([SAMPLE_DIR / "partial.py"], {}, (29, 10, 19, "34.5")),
         (
             [
-                os.path.join(SAMPLE_DIR, "full.py"),
+                SAMPLE_DIR / "full.py",
             ],
             {"ignore_nested_functions": True},
             (28, 26, 2, "92.9"),
         ),
         (
             [
-                os.path.join(SAMPLE_DIR, "partial.py"),
+                SAMPLE_DIR / "partial.py",
             ],
             {"ignore_nested_functions": True},
             (27, 9, 18, "33.3"),
         ),
         (
             [
-                os.path.join(SAMPLE_DIR, "full.py"),
+                SAMPLE_DIR / "full.py",
             ],
             {"ignore_overloaded_functions": True},
             (25, 23, 2, "92.0"),
         ),
         (
             [
-                os.path.join(SAMPLE_DIR, "partial.py"),
+                SAMPLE_DIR / "partial.py",
             ],
             {"ignore_overloaded_functions": True},
             (25, 10, 15, "40.0"),
@@ -91,7 +92,7 @@ def test_coverage_simple(paths, conf, exp_results, mocker):
 
 def test_coverage_errors(capsys):
     """Exit when no Python files are found."""
-    path = os.path.join(SAMPLE_DIR, "ignoreme.txt")
+    path = SAMPLE_DIR / "ignoreme.txt"
     interrogate_coverage = coverage.InterrogateCoverage(paths=[path])
 
     with pytest.raises(SystemExit, match="1"):
@@ -132,11 +133,10 @@ def test_print_results(level, exp_fixture_file, capsys, monkeypatch):
     )
 
     captured = capsys.readouterr()
-    expected_fixture = os.path.join(FIXTURES, exp_fixture_file)
+    expected_fixture = FIXTURES / exp_fixture_file
     if IS_WINDOWS:
-        expected_fixture = os.path.join(FIXTURES, "windows", exp_fixture_file)
-    with open(expected_fixture) as f:
-        expected_out = f.read()
+        expected_fixture = FIXTURES / "windows" / exp_fixture_file
+    expected_out = expected_fixture.read_text()
 
     assert expected_out in captured.out
     assert "omitted due to complete coverage" not in captured.out
@@ -166,11 +166,10 @@ def test_print_results_omit_covered(
     )
 
     captured = capsys.readouterr()
-    expected_fixture = os.path.join(FIXTURES, exp_fixture_file)
+    expected_fixture = FIXTURES / exp_fixture_file
     if IS_WINDOWS:
-        expected_fixture = os.path.join(FIXTURES, "windows", exp_fixture_file)
-    with open(expected_fixture) as f:
-        expected_out = f.read()
+        expected_fixture = FIXTURES / "windows" / exp_fixture_file
+    expected_out = expected_fixture.read_text()
 
     assert expected_out in captured.out
 
@@ -180,7 +179,7 @@ def test_print_results_omit_none(level, capsys, monkeypatch):
     """Output of test results by verbosity, no fully covered files."""
     interrogate_config = config.InterrogateConfig(omit_covered_files=True)
     interrogate_coverage = coverage.InterrogateCoverage(
-        paths=[os.path.join(SAMPLE_DIR, "child_sample")],
+        paths=[SAMPLE_DIR / "child_sample"],
         conf=interrogate_config,
     )
     results = interrogate_coverage.get_coverage()
@@ -198,7 +197,7 @@ def test_print_results_omit_all_summary(capsys, monkeypatch):
         omit_covered_files=True, docstring_style="google"
     )
     interrogate_coverage = coverage.InterrogateCoverage(
-        paths=[os.path.join(SAMPLE_DIR, "full.py")], conf=interrogate_config
+        paths=[SAMPLE_DIR / "full.py"], conf=interrogate_config
     )
     results = interrogate_coverage.get_coverage()
     interrogate_coverage.print_results(
@@ -207,11 +206,10 @@ def test_print_results_omit_all_summary(capsys, monkeypatch):
 
     captured = capsys.readouterr()
     exp_fixture_file = "expected_summary_skip_covered_all.txt"
-    expected_fixture = os.path.join(FIXTURES, exp_fixture_file)
+    expected_fixture = FIXTURES / exp_fixture_file
     if IS_WINDOWS:
-        expected_fixture = os.path.join(FIXTURES, "windows", exp_fixture_file)
-    with open(expected_fixture) as f:
-        expected_out = f.read()
+        expected_fixture = FIXTURES / "windows" / exp_fixture_file
+    expected_out = expected_fixture.read_text()
 
     assert expected_out in captured.out
 
@@ -222,7 +220,7 @@ def test_print_results_omit_all_detailed(capsys, monkeypatch):
         omit_covered_files=True, docstring_style="google"
     )
     interrogate_coverage = coverage.InterrogateCoverage(
-        paths=[os.path.join(SAMPLE_DIR, "full.py")], conf=interrogate_config
+        paths=[SAMPLE_DIR / "full.py"], conf=interrogate_config
     )
     results = interrogate_coverage.get_coverage()
     interrogate_coverage.print_results(
@@ -260,18 +258,17 @@ def test_print_results_ignore_module(
     )
 
     captured = capsys.readouterr()
-    expected_fixture = os.path.join(FIXTURES, exp_fixture_file)
+    expected_fixture = FIXTURES / exp_fixture_file
     if IS_WINDOWS:
-        expected_fixture = os.path.join(FIXTURES, "windows", exp_fixture_file)
-    with open(expected_fixture) as f:
-        expected_out = f.read()
+        expected_fixture = FIXTURES / "windows" / exp_fixture_file
+    expected_out = expected_fixture.read_text()
 
     assert expected_out in captured.out
 
 
 def test_print_results_single_file(capsys, monkeypatch):
     """Results for a single file should still list the filename."""
-    single_file = os.path.join(SAMPLE_DIR, "full.py")
+    single_file = SAMPLE_DIR / "full.py"
     conf = {"docstring_style": "google"}
     conf = config.InterrogateConfig(**conf)
     interrogate_coverage = coverage.InterrogateCoverage(
@@ -283,17 +280,14 @@ def test_print_results_single_file(capsys, monkeypatch):
     )
 
     captured = capsys.readouterr()
-    expected_fixture = os.path.join(
-        FIXTURES, "expected_detailed_single_file.txt"
-    )
+    expected_fixture = FIXTURES / "expected_detailed_single_file.txt"
 
     if IS_WINDOWS:
-        expected_fixture = os.path.join(
-            FIXTURES, "windows", "expected_detailed_single_file.txt"
+        expected_fixture = (
+            FIXTURES / "windows" / "expected_detailed_single_file.txt"
         )
 
-    with open(expected_fixture) as f:
-        expected_out = f.read()
+    expected_out = expected_fixture.read_text()
 
     assert expected_out in captured.out
     # I don't want to deal with path mocking out just to get tests to run

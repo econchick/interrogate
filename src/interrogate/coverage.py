@@ -5,17 +5,22 @@ from __future__ import annotations
 
 import ast
 import decimal
-import fnmatch
 import os
 import sys
 
-from typing import Final, Iterator
+from pathlib import Path
+from typing import TYPE_CHECKING, Final, Iterator
 
 import attr
 import click
 import tabulate
 
 from interrogate import config, utils, visit
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+    from os import PathLike
 
 
 tabulate.PRESERVE_WHITESPACE = True
@@ -61,7 +66,7 @@ class InterrogateFileResult(BaseInterrogateResult):
     :param list[visit.CovNode] nodes: visited AST nodes.
     """
 
-    filename: str = attr.ib(default=None)
+    filename: Path = attr.ib(default=None)
     ignore_module: bool = attr.ib(default=False)
     nodes: list[visit.CovNode] = attr.ib(repr=False, default=None)
 
@@ -119,16 +124,16 @@ class InterrogateCoverage:
 
     def __init__(
         self,
-        paths: list[str],
+        paths: Iterable[PathLike[str] | str],
         conf: config.InterrogateConfig | None = None,
         excluded: tuple[str] | None = None,
         extensions: tuple[str] | None = None,
     ):
-        self.paths = paths
-        self.extensions = set(extensions or set())
+        self.paths = list(map(Path, paths))
+        self.extensions = {f".{ext.lstrip('.')}" for ext in extensions or ()}
         self.extensions.add(".py")
         self.config = conf or config.InterrogateConfig()
-        self.excluded = excluded or ()
+        self.excluded = tuple(map(str, excluded or ()))
         self.common_base = ""
         self._add_common_exclude()
         self.skipped_file_count = 0
@@ -137,31 +142,30 @@ class InterrogateCoverage:
     def _add_common_exclude(self) -> None:
         """Ignore common directories by default"""
         for path in self.paths:
-            self.excluded = self.excluded + tuple(  # type: ignore
-                os.path.join(path, i) for i in self.COMMON_EXCLUDE
+            self.excluded = self.excluded + tuple(
+                str(path / i) for i in self.COMMON_EXCLUDE
             )
 
-    def _filter_files(self, files: list[str]) -> Iterator[str]:
+    def _filter_files(self, files: list[Path]) -> Iterator[Path]:
         """Filter files that are explicitly excluded."""
         for f in files:
-            has_valid_ext = any([f.endswith(ext) for ext in self.extensions])
+            has_valid_ext = any([f.suffix == ext for ext in self.extensions])
             if not has_valid_ext:
                 continue
             if self.config.ignore_init_module:
-                basename = os.path.basename(f)
-                if basename == "__init__.py":
+                if f.name == "__init__.py":
                     continue
-            if any(fnmatch.fnmatch(f, exc + "*") for exc in self.excluded):
+            if any(f.match(exc + "*") for exc in self.excluded):
                 continue
             yield f
 
-    def get_filenames_from_paths(self) -> list[str]:
+    def get_filenames_from_paths(self) -> list[Path]:
         """Find all files to measure for docstring coverage."""
         filenames = []
         for path in self.paths:
-            if os.path.isfile(path):
+            if path.is_file():
                 has_valid_ext = any(
-                    [path.endswith(ext) for ext in self.VALID_EXT]
+                    [path.suffix == ext for ext in self.VALID_EXT]
                 )
                 if not has_valid_ext:
                     msg = (
@@ -174,11 +178,11 @@ class InterrogateCoverage:
                 filenames.append(path)
                 continue
             for root, dirs, fs in os.walk(path):
-                full_paths = [os.path.join(root, f) for f in fs]
+                full_paths = [Path(root) / f for f in fs]
                 filenames.extend(self._filter_files(full_paths))
 
         if not filenames:
-            p = ", ".join(self.paths)
+            p = ", ".join(map(str, self.paths))
             msg = (
                 f"E: No Python or Python-like files found to interrogate in "
                 f"'{p}'."
@@ -244,14 +248,15 @@ class InterrogateCoverage:
                     setattr(node.parent, "covered", True)
 
     def _get_file_coverage(
-        self, filename: str
+        self, filename: Path
     ) -> InterrogateFileResult | None:
         """Get coverage results for a particular file."""
-        with open(filename, encoding="utf-8") as f:
-            source_tree = f.read()
+        source_tree = filename.read_text(encoding="utf-8")
 
         parsed_tree = ast.parse(source_tree)
-        visitor = visit.CoverageVisitor(filename=filename, config=self.config)
+        visitor = visit.CoverageVisitor(
+            filename=str(filename), config=self.config
+        )
         visitor.visit(parsed_tree)
 
         filtered_nodes = self._filter_nodes(visitor.nodes)
@@ -276,7 +281,7 @@ class InterrogateCoverage:
         results.combine()
         return results
 
-    def _get_coverage(self, filenames: list[str]) -> InterrogateResults:
+    def _get_coverage(self, filenames: list[Path]) -> InterrogateResults:
         """Get coverage results."""
         results = InterrogateResults()
         file_results = []
@@ -302,27 +307,27 @@ class InterrogateCoverage:
         filenames = self.get_filenames_from_paths()
         return self._get_coverage(filenames)
 
-    def _get_filename(self, filename: str) -> str:
+    def _get_filename(self, filename: Path) -> str:
         """Get filename for output information.
 
         If only one file is being interrogated, then ``self.common_base``
         and ``filename`` will be the same. Therefore, take the file
-        ``os.path.basename`` as the return ``filename``.
+        ``Path.name`` as the return ``filename``.
         """
-        if filename == self.common_base:
-            return os.path.basename(filename)
-        return filename[len(self.common_base) + 1 :]
+        if str(filename) == self.common_base:
+            return filename.name
+        return str(filename)[len(self.common_base) + 1 :]
 
     def _get_detailed_row(
-        self, node: visit.CovNode, filename: str
+        self, node: visit.CovNode, filename: Path
     ) -> list[str]:
         """Generate a row of data for the detailed view."""
-        filename = self._get_filename(filename)
+        filename_ = self._get_filename(filename)
 
         if node.node_type == "Module":
             if self.config.ignore_module:
-                return [filename, ""]
-            name = f"{filename} (module)"
+                return [filename_, ""]
+            name = f"{filename_} (module)"
         else:
             name = node.path.split(":")[-1]
             name = f"{name} (L{node.lineno})"
@@ -459,21 +464,36 @@ class InterrogateCoverage:
         all_filenames_map = {r.filename: r for r in results.file_results}
         all_dirs = sorted(
             {
-                os.path.dirname(r.filename)
+                r.filename.parent
                 for r in results.file_results
-                if os.path.dirname(r.filename) != ""
+                if r.filename.parent
             }
         )
 
-        sorted_results = []
+        # cnt = 0
+
+        # def log(obj: object) -> None:
+        #     nonlocal cnt
+        #     cnt += 1
+        #     pth = Path.home() / "dev/download/interrogate/log.txt"
+        #     with pth.open("a") as f:
+        #         f.write(f"{cnt} {obj!r}\n")
+
+        # log(all_filenames_map)  # 1
+        # log(all_filenames_map_paths)  # 2
+        # log(all_dirs)  # 3
+        # log(all_dirs_paths)  # 4
+
+        sorted_results: list[Path] = []
         while all_dirs:
             current_dir = all_dirs.pop(0)
-            files = []
-            for p in os.listdir(current_dir):
-                path = os.path.join(current_dir, p)
-                if path in all_filenames_map.keys():
-                    files.append(path)
-            files = sorted(files)
+            files = sorted(
+                [
+                    path
+                    for path in current_dir.iterdir()
+                    if path in all_filenames_map
+                ]
+            )
             sorted_results.extend(files)
 
         sorted_res = []
@@ -484,12 +504,12 @@ class InterrogateCoverage:
 
     def _get_header_base(self) -> str:
         """Get common base directory for header of verbose output."""
-        base = self.common_base
-        if os.path.isfile(base):
-            base = os.path.dirname(base)
+        base = Path(self.common_base)
+        if base.is_file():
+            base = base.parent
         if sys.platform in ("cygwin", "win32"):  # pragma: no cover
-            return base + "\\"
-        return base + "/"
+            return f"{base}\\"
+        return f"{base}/"
 
     def _print_omitted_file_count(self, results: InterrogateResults) -> None:
         """Print # of files omitted due to 100% coverage and --omit-covered.
