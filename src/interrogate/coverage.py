@@ -7,6 +7,7 @@ import ast
 import decimal
 import fnmatch
 import os
+from pathlib import Path
 import sys
 
 from typing import Final, Iterator
@@ -119,7 +120,7 @@ class InterrogateCoverage:
 
     def __init__(
         self,
-        paths: list[str],
+        paths: list[Path],
         conf: config.InterrogateConfig | None = None,
         excluded: tuple[str] | None = None,
         extensions: tuple[str] | None = None,

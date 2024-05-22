@@ -1,8 +1,8 @@
 # Copyright 2020-2024 Lynn Root
 """Functional tests for the CLI and implicitly interrogate/visit.py."""
 
-import os
 import sys
+from pathlib import Path
 
 import pytest
 
@@ -11,9 +11,9 @@ from click import testing
 from interrogate import cli, config
 
 
-HERE = os.path.abspath(os.path.join(os.path.abspath(__file__), os.path.pardir))
-SAMPLE_DIR = os.path.join(HERE, "sample")
-FIXTURES = os.path.join(HERE, "fixtures")
+HERE = Path(__file__).parent
+SAMPLE_DIR = HERE / "sample"
+FIXTURES = HERE / "fixtures"
 IS_WINDOWS = sys.platform in ("cygwin", "win32")
 
 
@@ -28,7 +28,7 @@ def runner(monkeypatch):
 
 def test_run_no_paths(runner, monkeypatch, tmpdir):
     """Assume current working directory if no paths are given."""
-    monkeypatch.setattr(os, "getcwd", lambda: SAMPLE_DIR)
+    monkeypatch.setattr(Path, "cwd", lambda: SAMPLE_DIR)
 
     result = runner.invoke(cli.main, [])
 
@@ -68,16 +68,16 @@ def test_run_no_paths(runner, monkeypatch, tmpdir):
         # whitelist regex
         (["-w", "^get$"], 50.0, 1),
         # exclude file
-        (["-e", os.path.join(SAMPLE_DIR, "partial.py")], 62.2, 1),
+        (["-e", SAMPLE_DIR / "partial.py"], 62.2, 1),
         # exclude file which doesn't exist
-        (["-e", os.path.join(SAMPLE_DIR, "does.not.exist")], 51.4, 1),
+        (["-e", SAMPLE_DIR / "does.not.exist"], 51.4, 1),
         # fail under
         (["-f", "40"], 51.4, 0),
     ),
 )
 def test_run_shortflags(flags, exp_result, exp_exit_code, runner):
     """Test CLI with single short flags"""
-    cli_inputs = flags + [SAMPLE_DIR]
+    cli_inputs = flags + [str(SAMPLE_DIR)]
     result = runner.invoke(cli.main, cli_inputs)
 
     exp_partial_output = f"actual: {exp_result:.1f}%"
@@ -102,14 +102,14 @@ def test_run_shortflags(flags, exp_result, exp_exit_code, runner):
         (["--ignore-regex", "^get$"], 51.4, 1),
         (["--ext", "pyi"], 63.1, 1),
         (["--whitelist-regex", "^get$"], 50.0, 1),
-        (["--exclude", os.path.join(SAMPLE_DIR, "partial.py")], 62.2, 1),
+        (["--exclude", SAMPLE_DIR / "partial.py"], 62.2, 1),
         (["--fail-under", "40"], 51.4, 0),
         (["--style", "google"], 54.1, 1),
     ),
 )
 def test_run_longflags(flags, exp_result, exp_exit_code, runner):
     """Test CLI with single long flags"""
-    cli_inputs = flags + [SAMPLE_DIR]
+    cli_inputs = flags + [str(SAMPLE_DIR)]
     result = runner.invoke(cli.main, cli_inputs)
 
     exp_partial_output = f"actual: {exp_result:.1f}%"
@@ -127,7 +127,7 @@ def test_run_longflags(flags, exp_result, exp_exit_code, runner):
 )
 def test_run_multiple_flags(flags, exp_result, exp_exit_code, runner):
     """Test CLI with a hodge-podge of flags"""
-    cli_inputs = flags + [SAMPLE_DIR]
+    cli_inputs = flags + [str(SAMPLE_DIR)]
     result = runner.invoke(cli.main, cli_inputs)
 
     exp_partial_output = f"actual: {exp_result:.1f}%"
@@ -138,11 +138,8 @@ def test_run_multiple_flags(flags, exp_result, exp_exit_code, runner):
 @pytest.mark.parametrize("quiet", (True, False))
 def test_generate_badge(quiet, runner, tmp_path):
     """Test expected SVG output when creating a status badge."""
-    expected_output_path = os.path.join(FIXTURES, "expected_badge.svg")
-    with open(expected_output_path) as f:
-        expected_output = f.read()
-
-    expected_output = expected_output.replace("\n", "")
+    expected_output_path = FIXTURES / "expected_badge.svg"
+    expected_output = expected_output_path.read_text().replace("\n", "")
 
     tmpdir = tmp_path / "testing"
     tmpdir.mkdir()
@@ -152,7 +149,7 @@ def test_generate_badge(quiet, runner, tmp_path):
         0,
         "--generate-badge",
         str(tmpdir),
-        SAMPLE_DIR,
+        str(SAMPLE_DIR),
     ]
     if quiet:
         cli_inputs.append("--quiet")
@@ -164,9 +161,7 @@ def test_generate_badge(quiet, runner, tmp_path):
     else:
         assert str(expected_path) in result.output
 
-    with open(str(expected_path)) as f:
-        actual_output = f.read()
-        actual_output = actual_output.replace("\n", "")
+    actual_output = expected_path.read_text().replace("\n", "")
 
     assert expected_output == actual_output
 

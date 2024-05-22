@@ -1,7 +1,7 @@
 # Copyright 2020-2024 Lynn Root
 """CLI entrypoint into `interrogate`."""
 
-import os
+from pathlib import Path
 import sys
 
 from typing import List, Optional, Pattern, Tuple, Union
@@ -218,6 +218,13 @@ from interrogate import coverage, utils
 @click.option(
     "-o",
     "--output",
+    type=click.Path(
+        exists=False,
+        file_okay=True,
+        dir_okay=True,
+        writable=True,
+        resolve_path=True,
+    ),
     default=None,
     metavar="FILE",
     help="Write output to a given FILE.  [default: stdout]",
@@ -313,7 +320,7 @@ from interrogate import coverage, utils
     help="Read configuration from `pyproject.toml` or `setup.cfg`.",
 )
 def main(
-    paths: Optional[List[str]],
+    paths: Optional[List[Path]],
     verbose: int,
     quiet: bool,
     fail_under: Union[int, float],
@@ -389,7 +396,7 @@ def main(
             ),
         )
     if not paths:
-        paths = [os.path.abspath(os.getcwd())]
+        paths = [Path.cwd()]
 
     # NOTE: this will need to be fixed if we want to start supporting
     #       --whitelist-regex on filenames. This otherwise assumes you
