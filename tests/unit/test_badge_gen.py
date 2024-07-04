@@ -25,7 +25,7 @@ IS_WINDOWS = sys.platform in ("cygwin", "win32")
 )
 def test_save_badge(
     out_format, out_file, exp_called_with, mocker, monkeypatch
-):
+) -> None:
     """Badge is saved in the expected location."""
     mock_cairosvg = mocker.Mock()
     monkeypatch.setattr(badge_gen, "cairosvg", mock_cairosvg)
@@ -47,7 +47,7 @@ def test_save_badge(
 
 
 @pytest.mark.skipif(not IS_WINDOWS, reason="windows-only tests")
-def test_save_badge_windows(mocker):
+def test_save_badge_windows(mocker) -> None:
     """Badge is saved in the expected location."""
     mock_open = mocker.mock_open()
     m = mocker.patch("interrogate.badge_gen.open", mock_open)
@@ -59,7 +59,7 @@ def test_save_badge_windows(mocker):
     m.assert_called_once_with(output, "w")
 
 
-def test_save_badge_no_cairo(monkeypatch):
+def test_save_badge_no_cairo(monkeypatch) -> None:
     """PNG can't be generated without extra dependencies installed."""
     monkeypatch.setattr("interrogate.badge_gen.cairosvg", None)
     badge_contents = "<svg>foo</svg>"
@@ -70,7 +70,7 @@ def test_save_badge_no_cairo(monkeypatch):
         )
 
 
-def test_get_badge():
+def test_get_badge() -> None:
     """SVG badge is templated as expected."""
     actual = badge_gen.get_badge(99.9, "#4c1")
     actual = actual.replace("\n", "").replace("\r", "")
@@ -93,14 +93,14 @@ def test_get_badge():
         ("99.png", None, None, True),
     ),
 )
-def test_should_generate(fixture, color, result, expected):
+def test_should_generate(fixture, color, result, expected) -> None:
     """Only return True if existing badge needs updating"""
     output = os.path.join(FIXTURES, "default-style", fixture)
     actual = badge_gen.should_generate_badge(output, color, result)
     assert actual is expected
 
 
-def test_should_generate_xml_error(mocker, monkeypatch):
+def test_should_generate_xml_error(mocker, monkeypatch) -> None:
     """Return True if parsing svg returns an error."""
     mock_minidom_parse = mocker.Mock()
     mock_minidom_parse.side_effect = Exception("fuuuu")
@@ -122,7 +122,7 @@ def test_should_generate_xml_error(mocker, monkeypatch):
         (-1, "#9f9f9f"),
     ),
 )
-def test_get_color(result, expected):
+def test_get_color(result, expected) -> None:
     """Expected color returned according to results."""
     assert expected == badge_gen.get_color(result)
 
@@ -166,7 +166,7 @@ def test_create(
     style,
     monkeypatch,
     tmpdir,
-):
+) -> None:
     """Status badges are created according to interrogation results."""
     monkeypatch.setattr(badge_gen.os.path, "isdir", lambda x: is_dir)
     output = tmpdir.mkdir("output")

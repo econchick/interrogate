@@ -31,7 +31,7 @@ from interrogate import config
         (("/usr/src/app", "/usr/src/test"), None, "/"),
     ),
 )
-def test_find_project_root(srcs, patch_func, expected, monkeypatch):
+def test_find_project_root(srcs, patch_func, expected, monkeypatch) -> None:
     """Return expected directory of project root."""
     with monkeypatch.context() as mp:
         expected = pathlib.Path(expected)
@@ -51,7 +51,7 @@ def test_find_project_root(srcs, patch_func, expected, monkeypatch):
         (False, None),
     ),
 )
-def test_find_project_config(is_file, expected, mocker, monkeypatch):
+def test_find_project_config(is_file, expected, mocker, monkeypatch) -> None:
     """Return absolute path if pyproject.toml or setup.cfg is detected."""
     with monkeypatch.context() as mp:
         mp.setattr(config.pathlib.Path, "is_file", lambda x: is_file)
@@ -61,7 +61,7 @@ def test_find_project_config(is_file, expected, mocker, monkeypatch):
         assert expected == actual
 
 
-def test_parse_pyproject_toml(tmpdir):
+def test_parse_pyproject_toml(tmpdir) -> None:
     """Return expected config data from a pyproject.toml file."""
     toml_data = (
         "[tool.foo]\n"
@@ -97,12 +97,12 @@ def test_parse_pyproject_toml(tmpdir):
         ),
     ),
 )
-def test_sanitize_list_values(value, exp_value):
+def test_sanitize_list_values(value, exp_value) -> None:
     """Return expected list from a string that should be a list."""
     assert exp_value == config.sanitize_list_values(value)
 
 
-def test_parse_setup_cfg(tmpdir):
+def test_parse_setup_cfg(tmpdir) -> None:
     """Return expected config data from a setup.cfg file."""
     cfg_data = (
         "[tool:foo]\n"
@@ -127,7 +127,7 @@ def test_parse_setup_cfg(tmpdir):
     assert expected == actual
 
 
-def test_parse_setup_cfg_raises(tmpdir):
+def test_parse_setup_cfg_raises(tmpdir) -> None:
     """Return nothing if no interrogate section was found."""
     cfg_data = "[tool.foo]\n" 'foo = "bar"\n'
 
@@ -138,7 +138,7 @@ def test_parse_setup_cfg_raises(tmpdir):
     assert actual is None
 
 
-def test_read_config_file_none(mocker, monkeypatch):
+def test_read_config_file_none(mocker, monkeypatch) -> None:
     """Return nothing if no pyproject.toml or setup.cfg is found."""
     monkeypatch.setattr(config, "find_project_config", lambda x: None)
     ctx = mocker.Mock()
@@ -199,7 +199,7 @@ def test_read_config_file_none(mocker, monkeypatch):
 )
 def test_read_config_file(
     value, ret_config, default_map, exp_ret, exp_defaults, mocker, monkeypatch
-):
+) -> None:
     """Parse config from a given pyproject.toml or setup.cfg file."""
     monkeypatch.setattr(config, "find_project_config", lambda x: value)
     monkeypatch.setattr(config, "parse_pyproject_toml", lambda x: ret_config)
@@ -211,7 +211,7 @@ def test_read_config_file(
     assert exp_defaults == ctx.default_map
 
 
-def test_read_config_file_raises(mocker, monkeypatch):
+def test_read_config_file_raises(mocker, monkeypatch) -> None:
     """Handle exceptions while reading pyproject.toml/setup.cfg, if any."""
     toml_error = tomllib.TOMLDecodeError("toml error")
     os_error = OSError("os error")

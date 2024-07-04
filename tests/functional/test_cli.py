@@ -18,7 +18,7 @@ IS_WINDOWS = sys.platform in ("cygwin", "win32")
 
 
 @pytest.fixture
-def runner(monkeypatch):
+def runner(monkeypatch) -> testing.CliRunner:
     """Click fixture runner"""
     # don't let the tests accidentally bring in the project's own
     # pyproject.toml
@@ -26,7 +26,7 @@ def runner(monkeypatch):
     return testing.CliRunner()
 
 
-def test_run_no_paths(runner, monkeypatch, tmpdir):
+def test_run_no_paths(runner, monkeypatch, tmpdir) -> None:
     """Assume current working directory if no paths are given."""
     monkeypatch.setattr(os, "getcwd", lambda: SAMPLE_DIR)
 
@@ -75,7 +75,7 @@ def test_run_no_paths(runner, monkeypatch, tmpdir):
         (["-f", "40"], 51.4, 0),
     ),
 )
-def test_run_shortflags(flags, exp_result, exp_exit_code, runner):
+def test_run_shortflags(flags, exp_result, exp_exit_code, runner) -> None:
     """Test CLI with single short flags"""
     cli_inputs = flags + [SAMPLE_DIR]
     result = runner.invoke(cli.main, cli_inputs)
@@ -107,7 +107,7 @@ def test_run_shortflags(flags, exp_result, exp_exit_code, runner):
         (["--style", "google"], 54.1, 1),
     ),
 )
-def test_run_longflags(flags, exp_result, exp_exit_code, runner):
+def test_run_longflags(flags, exp_result, exp_exit_code, runner) -> None:
     """Test CLI with single long flags"""
     cli_inputs = flags + [SAMPLE_DIR]
     result = runner.invoke(cli.main, cli_inputs)
@@ -125,7 +125,7 @@ def test_run_longflags(flags, exp_result, exp_exit_code, runner):
         (["-m", "-f", "45"], 51.4, 0),
     ),
 )
-def test_run_multiple_flags(flags, exp_result, exp_exit_code, runner):
+def test_run_multiple_flags(flags, exp_result, exp_exit_code, runner) -> None:
     """Test CLI with a hodge-podge of flags"""
     cli_inputs = flags + [SAMPLE_DIR]
     result = runner.invoke(cli.main, cli_inputs)
@@ -136,7 +136,7 @@ def test_run_multiple_flags(flags, exp_result, exp_exit_code, runner):
 
 
 @pytest.mark.parametrize("quiet", (True, False))
-def test_generate_badge(quiet, runner, tmp_path):
+def test_generate_badge(quiet, runner, tmp_path) -> None:
     """Test expected SVG output when creating a status badge."""
     expected_output_path = os.path.join(FIXTURES, "expected_badge.svg")
     with open(expected_output_path) as f:
@@ -171,7 +171,7 @@ def test_generate_badge(quiet, runner, tmp_path):
     assert expected_output == actual_output
 
 
-def test_incompatible_options_badge_format(runner):
+def test_incompatible_options_badge_format(runner) -> None:
     """Raise an error when mutually exclusive options are used together."""
     result = runner.invoke(cli.main, ["--badge-format", "svg"])
     assert 2 == result.exit_code
@@ -182,7 +182,7 @@ def test_incompatible_options_badge_format(runner):
     assert exp_error in result.output
 
 
-def test_incompatible_options_badge_style(runner):
+def test_incompatible_options_badge_style(runner) -> None:
     """Raise an error when mutually exclusive options are used together."""
     result = runner.invoke(cli.main, ["--badge-style", "plastic"])
     assert 2 == result.exit_code
