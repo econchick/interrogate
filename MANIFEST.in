@@ -20,3 +20,6 @@ prune docs/_build
 
 # Ignore github-related markdown files
 exclude *.md
+
+# Ignore lock files
+exclude *.lock

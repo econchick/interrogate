@@ -68,14 +68,12 @@ interrogate = "interrogate.cli:main"
 [tool.setuptools]
 package-dir = {"" = "src"}
 
-
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["interrogate*"]
 
 [tool.check-wheel-contents]
 toplevel = ["interrogate"]
-
 
 [tool.pytest.ini_options]
 addopts = ["-ra", "--strict-markers", "--strict-config"]
