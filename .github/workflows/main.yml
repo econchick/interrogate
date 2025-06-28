@@ -45,12 +45,9 @@ jobs:
       - name: "Install dependencies"
         run: |
           uv sync
+
       - name: Run tox targets for ${{ matrix.python-version }}
         run: uv run tox -f py$(echo ${{ matrix.python-version }} | tr -d .)
-
-      - name: Run mypy
-        run: uv run tox run -e mypy
-        if: matrix.python-version == '3.13'
 
       - name: Run mypy
         run: uv run tox run -e mypy
@@ -65,7 +62,7 @@ jobs:
         with:
           name: coverage-data
           path: ".coverage.*"
-          if-no-files-found: ignore
+          include-hidden-files: true
 
   coverage:
     runs-on: ubuntu-latest
@@ -101,6 +98,7 @@ jobs:
         with:
           name: html-report
           path: htmlcov
+          include-hidden-files: true
         if: ${{ failure() }}
 
   build-package:
