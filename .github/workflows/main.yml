@@ -14,7 +14,7 @@ on:
 
 env:
   FORCE_COLOR: "1"
-  PYTHON_LATEST: "3.11"
+  PYTHON_LATEST: "3.13"
 
 jobs:
   pre-commit:
@@ -34,7 +34,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
     steps:
       - uses: "actions/checkout@v3"
       - uses: "actions/setup-python@v4"
@@ -53,15 +53,15 @@ jobs:
 
       - name: Run mypy
         run: python -Im tox run -e mypy
-        if: matrix.python-version == '3.11'
+        if: matrix.python-version == '3.13'
 
       - name: Run mypy
         run: python -Im tox run -e mypy
-        if: matrix.python-version == '3.11'
+        if: matrix.python-version == '3.13'
 
       - name: Check MANIFEST.in
         run: python -Im tox run -e manifest
-        if: matrix.python-version == '3.11'
+        if: matrix.python-version == '3.13'
 
       - name: Upload coverage data
         uses: actions/upload-artifact@v3
@@ -147,7 +147,7 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           # Keep in sync with tox.ini/docs & .readthedocs.yaml
-          python-version: "3.11"
+          python-version: "3.13"
           cache: pip
       - run: python -Im pip install tox
 
