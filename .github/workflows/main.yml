@@ -21,12 +21,12 @@ jobs:
     name: "Pre-commit"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-      - name: Locally install interrogate
-        run: python -m pip install .
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
       - name: Run pre-commit
-        uses: pre-commit/action@v3.0.0
+        run: |
+          uvx pre-commit run --all-files
 
   tests:
     name: "Python ${{ matrix.python-version }} on Ubuntu"
@@ -36,35 +36,32 @@ jobs:
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
     steps:
-      - uses: "actions/checkout@v3"
-      - uses: "actions/setup-python@v4"
+      - uses: "actions/checkout@v4"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
-          python-version: "${{ matrix.python-version }}"
-          allow-prereleases: true
-          cache: pip
+          python-version: ${{ matrix.python-version }}
 
       - name: "Install dependencies"
         run: |
-          python -VV
-          python -Im site
-          python -Im pip install --upgrade tox
+          uv sync
       - name: Run tox targets for ${{ matrix.python-version }}
-        run: python -Im tox run -f py$(echo ${{ matrix.python-version }} | tr -d .)
+        run: uv run tox -f py$(echo ${{ matrix.python-version }} | tr -d .)
 
       - name: Run mypy
-        run: python -Im tox run -e mypy
+        run: uv run tox run -e mypy
         if: matrix.python-version == '3.13'
 
       - name: Run mypy
-        run: python -Im tox run -e mypy
+        run: uv run tox run -e mypy
         if: matrix.python-version == '3.13'
 
       - name: Check MANIFEST.in
-        run: python -Im tox run -e manifest
+        run: uv run tox run -e manifest
         if: matrix.python-version == '3.13'
 
       - name: Upload coverage data
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-data
           path: ".coverage.*"
@@ -75,32 +72,32 @@ jobs:
     needs: tests
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
           # Use latest Python, so it understands all syntax.
           python-version: ${{env.PYTHON_LATEST}}
-          cache: pip
-
-      - run: python -Im pip install --upgrade coverage[toml]
+      - name: Install dependencies
+        run: uv sync
 
       - name: Download coverage data
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: coverage-data
 
       - name: "Combine coverage and fail if it's <98%."
         run: |
-          python -Im coverage combine
+          uv run coverage combine
 
-          python -Im coverage html --skip-covered --skip-empty
+          uv run coverage html --skip-covered --skip-empty
 
           # Report and write to summary.
-          python -Im coverage report --format=markdown >> $GITHUB_STEP_SUMMARY
+          uv run coverage report --format=markdown >> $GITHUB_STEP_SUMMARY
           # Report again and fail if under 98%.
-          python -Im coverage report --fail-under=98
+          uv run coverage report --fail-under=98
       - name: Upload HTML report if check failed.
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: html-report
           path: htmlcov
@@ -111,11 +108,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - uses: hynek/build-and-inspect-python-package@v1
+      - uses: hynek/build-and-inspect-python-package@v2
 
   install-dev:
     name: "Verify Dev Env on ${{ matrix.os }}"
@@ -124,16 +120,15 @@ jobs:
         os: ["ubuntu-latest", "windows-latest", "macos-latest"]
     runs-on: "${{ matrix.os }}"
     steps:
-      - uses: "actions/checkout@v3"
-      - uses: "actions/setup-python@v4"
+      - uses: "actions/checkout@v4"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
           python-version: ${{env.PYTHON_LATEST}}
-      - name: "Install in dev mode"
-        run: "python -Im pip install -e .[dev]"
       - name: "Import package"
-        run: "python -Ic 'import interrogate; print(interrogate.__version__)'"
+        run: echo 'import interrogate; print(interrogate.__version__)' | uv run -
       - name: "Create a badge"
-        run: interrogate --config pyproject.toml --generate-badge . src tests
+        run: uv run interrogate --config pyproject.toml --generate-badge . src tests
         if: runner.os != 'Windows'
         env:
           # TODO: set for only macos
@@ -143,15 +138,13 @@ jobs:
     name: Check docs
     runs-on: ubuntu-latest
     steps:
-      - uses: "actions/checkout@v3"
-      - uses: actions/setup-python@v4
+      - uses: "actions/checkout@v4"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
-          # Keep in sync with tox.ini/docs & .readthedocs.yaml
-          python-version: "3.13"
-          cache: pip
-      - run: python -Im pip install tox
+          python-version: ${{env.PYTHON_LATEST}}
 
-      - run: python -Im tox run -e docs
+      - run: uv run tox run -e docs
 
   # Ensure everything required is passing for branch protection.
   required-checks-pass:
