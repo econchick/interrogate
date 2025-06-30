@@ -83,7 +83,7 @@ jobs:
 
       - name: "Combine coverage and fail if it's <98%."
         run: |
-          uv run coverage combine
+          uv run coverage combine --data-file="coverage-data-"
 
           uv run coverage html --skip-covered --skip-empty
 
