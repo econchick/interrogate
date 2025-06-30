@@ -80,10 +80,14 @@ jobs:
 
       - name: Download coverage data
         uses: actions/download-artifact@v4
+        with:
+          pattern: coverage-data-*
+          merge-multiple: true
+      - run: ls -R .
 
       - name: "Combine coverage and fail if it's <98%."
         run: |
-          uv run coverage combine --data-file="coverage-data-"
+          uv run coverage combine
 
           uv run coverage html --skip-covered --skip-empty
 
