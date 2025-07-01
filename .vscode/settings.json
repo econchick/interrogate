@@ -1,0 +1,9 @@
+{
+    "python.testing.pytestArgs": [
+        "tests",
+        "tests/functional",
+        "tests/unit",
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+}
