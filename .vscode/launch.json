@@ -22,6 +22,19 @@
             ],
             "console": "integratedTerminal",
             "justMyCode": true
+        },
+        {
+            "name": "Functional test",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/.venv/bin/pytest",
+            "args": [
+                "tests/functional",
+                "--maxfail=1",
+                "--disable-warnings"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
         }
     ]
 }
