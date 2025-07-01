@@ -15,7 +15,7 @@ from xml.dom import minidom
 
 try:
     import cairosvg
-except ImportError:  # pragma: no cover
+except (ImportError, OSError):  # pragma: no cover
     cairosvg = None
 
 from interrogate.coverage import InterrogateResults
