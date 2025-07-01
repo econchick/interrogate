@@ -112,6 +112,29 @@ def test_coverage_errors(capsys):
     )
 
 
+def test_coverage_syntax_error(tmp_path, capsys):
+    """Test handling of files with syntax errors."""
+    # Create a temporary Python file with a syntax error
+    syntax_error_file = tmp_path / "syntax_error.py"
+    with open(syntax_error_file, "w") as f:
+        f.write('print("Hello, World!"')
+
+    # Run interrogate on the file with the syntax error
+    interrogate_coverage = coverage.InterrogateCoverage(
+        paths=[str(syntax_error_file)]
+    )
+
+    # with pytest.raises(SystemExit, match="0"):
+    results = interrogate_coverage.get_coverage()
+
+    # Check that the file was skipped due to syntax error
+    captured = capsys.readouterr()
+    assert "Failed to parse" in captured.err
+
+    # Results should still be returned, but the file with errors is skipped
+    assert results.total == 0  # No files were successfully parsed
+
+
 @pytest.mark.parametrize(
     "level,exp_fixture_file",
     (
