@@ -15,7 +15,7 @@ from xml.dom import minidom
 
 try:
     import cairosvg
-except ImportError:  # pragma: no cover
+except (ImportError, OSError):  # pragma: no cover
     cairosvg = None
 
 from interrogate.coverage import InterrogateResults
@@ -235,11 +235,14 @@ def should_generate_badge(output: str, color: str, result: float) -> bool:
         return True
 
     texts = badge.getElementsByTagName("text")
-    current_results = [
-        t.childNodes[0].data
-        for t in texts
-        if t.hasAttribute("data-interrogate")
-    ]
+    current_results = []
+    for t in texts:
+        if (
+            t.hasAttribute("data-interrogate")
+            and t.childNodes
+            and hasattr(t.childNodes[0], "data")
+        ):
+            current_results.append(t.childNodes[0].data)
     formatted_result = f"{result:.1f}%"
     if formatted_result in current_results:
         return False

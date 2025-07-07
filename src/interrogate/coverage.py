@@ -250,7 +250,12 @@ class InterrogateCoverage:
         with open(filename, encoding="utf-8") as f:
             source_tree = f.read()
 
-        parsed_tree = ast.parse(source_tree)
+        try:
+            parsed_tree = ast.parse(source_tree)
+        except SyntaxError as e:
+            click.echo(f"Failed to parse {filename}: {str(e)}", err=True)
+            return None
+
         visitor = visit.CoverageVisitor(filename=filename, config=self.config)
         visitor.visit(parsed_tree)
 

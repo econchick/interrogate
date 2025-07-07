@@ -1,10 +1,80 @@
 [build-system]
-requires = ["setuptools>=40.6.0"]
-build-backend = "setuptools.build_meta"
+requires = ["uv_build>=0.7.19,<0.8.0"]
+build-backend = "uv_build"
+
+[project]
+name = "interrogate"
+version = "1.7.0"
+description = "Interrogate a codebase for docstring coverage."
+readme = "README.rst"
+authors = [
+    {name = "Lynn Root", email = "lynn@lynnroot.com"}
+]
+license = {text = "MIT"}
+requires-python = ">=3.8"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Documentation",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Quality Assurance",
+]
+keywords = ["documentation", "coverage", "quality"]
+dependencies = [
+    "attrs",
+    "click>=7.1",
+    "colorama",
+    "py",
+    "tabulate",
+    "tomli; python_version < '3.11'",
+]
+
+[project.urls]
+Documentation = "https://interrogate.readthedocs.io"
+"Bug Tracker" = "https://github.com/econchick/interrogate/issues"
+"Source Code" = "https://github.com/econchick/interrogate"
+
+[dependency-groups]
+png = ["cairosvg"]
+docs = ["sphinx", "sphinx-autobuild"]
+tests = ["pytest", "pytest-cov", "pytest-mock", "coverage[toml]"]
+typing = ["mypy", "types-tabulate"]
+dev = [
+    "cairosvg",
+    "sphinx",
+    "sphinx-autobuild",
+    "pytest",
+    "pytest-cov",
+    "pytest-mock",
+    "coverage[toml]",
+    "mypy",
+    "types-tabulate",
+    "wheel",
+    "pre-commit",
+    "tox",
+]
+
+[project.scripts]
+interrogate = "interrogate.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["interrogate*"]
 
 [tool.check-wheel-contents]
 toplevel = ["interrogate"]
-
 
 [tool.pytest.ini_options]
 addopts = ["-ra", "--strict-markers", "--strict-config"]

@@ -75,58 +75,59 @@ Project-related documentation is written in [restructuredtext](https://docutils.
 
 ## Local Development Environment
 
-You can (and should) run our test suite using [tox](https://tox.readthedocs.io/). However, you’ll probably want a more traditional environment as well. We highly recommend to develop using the latest Python 3 release because `interrogate` tries to take advantage of modern features whenever possible.
-
-First create a [virtual environment](https://virtualenv.pypa.io/). It’s out of scope for this document to list all the ways to manage virtual environments in Python, but if you don’t already have a pet way, take some time to look at tools like [pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv), [pew](https://github.com/berdario/pew), [virtualfish](https://virtualfish.readthedocs.io/), [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/), and [pyenv-virtualenvwrapper](https://github.com/pyenv/pyenv-virtualenvwrapper).
+Download and install [uv](https://docs.astral.sh/uv/getting-started/installation/), which is a tool that helps you manage your virtual environments and run commands in them.
 
 Next, get an up to date checkout of the `interrogate` repository:
 
 ```console
-$ git clone git@github.com:econchick/interrogate.git
+git clone git@github.com:econchick/interrogate.git
 ```
 
 or if you want to use git via `https`:
 
 ```console
-$ git clone https://github.com/econchick/interrogate.git
+git clone https://github.com/econchick/interrogate.git
 ```
 
 Change into the newly created directory and **after activating your virtual environment** install an editable version of `interrogate` along with its tests and docs requirements:
 
 ```console
-(env) $ cd interrogate
-(env) $ pip install -e '.[dev]'
+cd interrogate
+uv sync
 ```
 
 At this point,
 
 ```console
-(env) $ python -m pytest
+uv run pytest
 ```
 
 should work and pass, as should:
 
 ```console
-(env) $ cd docs
-(env) $ make livehtml
+cd docs
+make livehtml
 ```
 
 The built documentation can then be found in [`localhost:8888`](http://localhost:8888).
 
-To avoid committing code that violates our style guide, we advise you to install [pre-commit](https://pre-commit.com/)[^pre] hooks:
+To avoid committing code that violates our style guide, we advise you to install [pre-commit](https://pre-commit.com/) hooks:
 
 ```console
-(env) $ pre-commit install
+uvx pre-commit install
 ```
 
 You can also run them anytime (as our `tox` does, but always run `tox` outside of a virtual environment):
 
 ```console
-(env) $ pre-commit run --all-files
+uvx pre-commit run --all-files
 ```
 
-[^pre]: pre-commit should have been installed into your virtualenv automatically when you ran `pip install -e '.[dev]'` above. If pre-commit is missing, it may be that you need to re-run `pip install -e '.[dev]'`.
+To run tox, you can use:
 
+```console
+uv run tox
+```
 
 ## Code of Conduct
 
