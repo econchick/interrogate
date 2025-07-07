@@ -1,12 +1,12 @@
 [build-system]
-requires = ["setuptools>=75.3"]
-build-backend = "setuptools.build_meta"
+requires = ["uv_build>=0.7.19,<0.8.0"]
+build-backend = "uv_build"
 
 [project]
 name = "interrogate"
 version = "1.7.0"
 description = "Interrogate a codebase for docstring coverage."
-readme = {file = "README.rst", content-type = "text/x-rst"}
+readme = "README.rst"
 authors = [
     {name = "Lynn Root", email = "lynn@lynnroot.com"}
 ]
