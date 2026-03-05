@@ -72,7 +72,7 @@ INSTALL_REQUIRES = [
     "click>=7.1",
     "colorama",
     "py",
-    "tabulate",
+    "tabulate>=0.10.0",
     "tomli; python_version < '3.11'",
 ]
 EXTRAS_REQUIRE = {
