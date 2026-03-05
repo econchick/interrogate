@@ -18,9 +18,6 @@ import tabulate
 from interrogate import config, utils, visit
 
 
-tabulate.PRESERVE_WHITESPACE = True
-
-
 @attr.s
 class BaseInterrogateResult:
     """Base results class.
@@ -382,6 +379,7 @@ class InterrogateCoverage:
                 table_type="detailed"
             ),
             colalign=["left", "right"],
+            preserve_whitespace=True,
         )
         self.output_formatter.tw.sep(
             "-",
@@ -450,6 +448,7 @@ class InterrogateCoverage:
                 table_type="summary"
             ),
             colalign=("left", "right", "right", "right", "right"),
+            preserve_whitespace=True,
         )
         self.output_formatter.tw.line(to_print)
 
@@ -519,6 +518,7 @@ class InterrogateCoverage:
                 table_type="summary"
             ),
             colalign=("center",),
+            preserve_whitespace=True,
         )
         self.output_formatter.tw.line(to_print)
 
