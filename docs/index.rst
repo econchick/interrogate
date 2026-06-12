@@ -100,7 +100,7 @@ Command Line Options
 
 .. option:: -w, --whitelist-regex STR
 
-    Regex identifying class, method, and function names to include. Multiple ``-r/--ignore-regex`` invocations supported.
+    Regex identifying class, method, and function names to include. Multiple ``-w/--whitelist-regex`` invocations supported.
 
 .. option:: --style [sphinx|google]
 
