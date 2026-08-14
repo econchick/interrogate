@@ -155,14 +155,50 @@ class InterrogateCoverage:
                 continue
             yield f
 
+    def _is_python_shebang(self, path: str) -> bool:
+        """Detect an extension-less file that declares a Python interpreter.
+
+        Only files without any extension are inspected, so that e.g.
+        ``script.sh`` is never picked up because of its contents.
+
+        :param str path: Path of the file to inspect.
+        :rtype: bool
+
+        .. versionadded:: 1.8.0
+        """
+        if os.path.splitext(path)[1]:
+            return False
+        try:
+            with open(path, "rb") as f:
+                first_line = f.readline(256)
+        except OSError:  # pragma: no cover
+            return False
+        return first_line.startswith(b"#!") and b"python" in first_line
+
+    def _valid_explicit_ext(self) -> set[str]:
+        """Return the extensions accepted for an explicitly-named file.
+
+        ``--ext`` values are honoured here as well as during a directory
+        walk.
+
+        :rtype: set(str)
+
+        .. versionadded:: 1.8.0
+        """
+        extra = {
+            ext if ext.startswith(".") else "." + ext
+            for ext in self.extensions
+        }
+        return set(self.VALID_EXT) | extra
+
     def get_filenames_from_paths(self) -> list[str]:
         """Find all files to measure for docstring coverage."""
         filenames = []
         for path in self.paths:
             if os.path.isfile(path):
                 has_valid_ext = any(
-                    [path.endswith(ext) for ext in self.VALID_EXT]
-                )
+                    [path.endswith(ext) for ext in self._valid_explicit_ext()]
+                ) or self._is_python_shebang(path)
                 if not has_valid_ext:
                     msg = (
                         f"E: Invalid file '{path}'. Unable to interrogate "
