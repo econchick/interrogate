@@ -9,6 +9,11 @@ Added
 
 * Finally added type hints
 
+Fixed
+^^^^^
+
+* ``--fail-under=100`` no longer passes when docstrings are missing and the rounded coverage reaches 100% (`#186 <https://github.com/econchick/interrogate/issues/186>`_).
+
 .. short-log
 
 1.7.0 (2024-04-07)
