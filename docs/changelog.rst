@@ -9,6 +9,11 @@ Added
 
 * Finally added type hints
 
+Fixed
+^^^^^
+
+* An explicitly-named file is now accepted when its extension was given with ``--ext``, or when it has no extension but starts with a Python shebang (`#104 <https://github.com/econchick/interrogate/issues/104>`_).
+
 .. short-log
 
 1.7.0 (2024-04-07)
