@@ -292,7 +292,15 @@ class InterrogateCoverage:
         fail_under_dec = decimal.Decimal(fail_under_str)
         round_to = -fail_under_dec.as_tuple().exponent  # type: ignore
 
-        if self.config.fail_under > round(results.perc_covered, round_to):
+        perc_covered = round(results.perc_covered, round_to)
+        # Rounding must never turn incomplete coverage into a perfect
+        # score: with e.g. one missing docstring out of 2,000 nodes,
+        # 99.95% rounds up to 100.0 and ``--fail-under=100`` would
+        # wrongly pass. See issue #186.
+        if results.missing > 0 and perc_covered >= 100:
+            perc_covered = results.perc_covered
+
+        if self.config.fail_under > perc_covered:
             results.ret_code = 1
 
         return results
