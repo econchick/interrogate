@@ -89,6 +89,25 @@ def test_coverage_simple(paths, conf, exp_results, mocker):
     assert exp_results[3] == f"{results.perc_covered:.1f}"
 
 
+def test_nodocqa_ignores_definition(tmp_path):
+    """Ignore a definition marked with ``#nodocqa``."""
+    filename = tmp_path / "sample.py"
+    filename.write_text(
+        "def ignored():  #nodocqa\n"
+        "    pass\n"
+        "\n"
+        "def included():\n"
+        "    pass\n",
+        encoding="utf-8",
+    )
+
+    interrogate_coverage = coverage.InterrogateCoverage(paths=[str(filename)])
+
+    results = interrogate_coverage.get_coverage()
+
+    assert (2, 0, 2) == (results.total, results.covered, results.missing)
+
+
 def test_coverage_errors(capsys):
     """Exit when no Python files are found."""
     path = os.path.join(SAMPLE_DIR, "ignoreme.txt")
