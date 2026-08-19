@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import ast
+import io
 import os
+import tokenize
 
 from typing import Union
 
@@ -59,6 +61,14 @@ class CoverageVisitor(ast.NodeVisitor):
         self.config = config
         self.stack: list[CovNode] = []
         self.nodes: list[CovNode] = []
+        with open(filename, encoding="utf-8") as source_file:
+            source = source_file.read()
+        self._nodocqa_lines = {
+            token.start[0]
+            for token in tokenize.generate_tokens(io.StringIO(source).readline)
+            if token.type == tokenize.COMMENT
+            and token.string.strip() == "#nodocqa"
+        }
 
     @staticmethod
     def _has_doc(node: DocumentableNode) -> bool:
@@ -153,6 +163,8 @@ class CoverageVisitor(ast.NodeVisitor):
         is_private = self._is_private(node)
         is_semiprivate = self._is_semiprivate(node)
 
+        if node.lineno in self._nodocqa_lines:
+            return True
         if self.config.ignore_private and is_private:
             return True
         if self.config.ignore_semiprivate and is_semiprivate:
