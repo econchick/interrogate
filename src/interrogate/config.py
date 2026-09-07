@@ -2,6 +2,7 @@
 """
 Configuration-related helpers.
 """
+
 # Adapted from Black https://github.com/psf/black/blob/master/black.py.
 
 from __future__ import annotations
