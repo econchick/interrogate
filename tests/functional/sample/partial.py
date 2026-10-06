@@ -1,5 +1,6 @@
 # Copyright 2020-2024 Lynn Root
 """Sample module-level docs"""
+
 import typing
 
 from typing import overload
