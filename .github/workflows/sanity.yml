@@ -23,8 +23,8 @@ jobs:
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
     steps:
-      - uses: "actions/checkout@v3"
-      - uses: "actions/setup-python@v4"
+      - uses: "actions/checkout@v7"
+      - uses: "actions/setup-python@v7"
         with:
           python-version: "${{ matrix.python-version }}"
           allow-prereleases: true
@@ -44,8 +44,8 @@ jobs:
     name: "Build & Verify Package on Ubuntu"
     runs-on: "ubuntu-latest"
     steps:
-      - uses: "actions/checkout@v3"
-      - uses: "actions/setup-python@v4"
+      - uses: "actions/checkout@v7"
+      - uses: "actions/setup-python@v7"
         with:
           python-version: ${{env.PYTHON_LATEST}}
       - run: python -m pip install build twine check-wheel-contents
@@ -59,8 +59,8 @@ jobs:
     name: "Verify Dev Env on Ubuntu"
     runs-on: "ubuntu-latest"
     steps:
-      - uses: "actions/checkout@v3"
-      - uses: "actions/setup-python@v4"
+      - uses: "actions/checkout@v7"
+      - uses: "actions/setup-python@v7"
         with:
           python-version: ${{env.PYTHON_LATEST}}
       - name: "Install in dev mode"
