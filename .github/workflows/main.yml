@@ -21,8 +21,8 @@ jobs:
     name: "Pre-commit"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
       - name: Locally install interrogate
         run: python -m pip install .
       - name: Run pre-commit
@@ -36,8 +36,8 @@ jobs:
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
     steps:
-      - uses: "actions/checkout@v3"
-      - uses: "actions/setup-python@v4"
+      - uses: "actions/checkout@v7"
+      - uses: "actions/setup-python@v7"
         with:
           python-version: "${{ matrix.python-version }}"
           allow-prereleases: true
@@ -64,7 +64,7 @@ jobs:
         if: matrix.python-version == '3.11'
 
       - name: Upload coverage data
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v7
         with:
           name: coverage-data
           path: ".coverage.*"
@@ -75,8 +75,8 @@ jobs:
     needs: tests
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           # Use latest Python, so it understands all syntax.
           python-version: ${{env.PYTHON_LATEST}}
@@ -85,7 +85,7 @@ jobs:
       - run: python -Im pip install --upgrade coverage[toml]
 
       - name: Download coverage data
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v8
         with:
           name: coverage-data
 
@@ -100,7 +100,7 @@ jobs:
           # Report again and fail if under 98%.
           python -Im coverage report --fail-under=98
       - name: Upload HTML report if check failed.
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v7
         with:
           name: html-report
           path: htmlcov
@@ -111,7 +111,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -124,8 +124,8 @@ jobs:
         os: ["ubuntu-latest", "windows-latest", "macos-latest"]
     runs-on: "${{ matrix.os }}"
     steps:
-      - uses: "actions/checkout@v3"
-      - uses: "actions/setup-python@v4"
+      - uses: "actions/checkout@v7"
+      - uses: "actions/setup-python@v7"
         with:
           python-version: ${{env.PYTHON_LATEST}}
       - name: "Install in dev mode"
@@ -143,8 +143,8 @@ jobs:
     name: Check docs
     runs-on: ubuntu-latest
     steps:
-      - uses: "actions/checkout@v3"
-      - uses: actions/setup-python@v4
+      - uses: "actions/checkout@v7"
+      - uses: actions/setup-python@v7
         with:
           # Keep in sync with tox.ini/docs & .readthedocs.yaml
           python-version: "3.11"
