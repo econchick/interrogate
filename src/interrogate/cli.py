@@ -10,9 +10,8 @@ import click
 import colorama
 
 from interrogate import __version__ as version
-from interrogate import badge_gen
+from interrogate import badge_gen, coverage, utils
 from interrogate import config as int_config
-from interrogate import coverage, utils
 
 
 @click.command()
