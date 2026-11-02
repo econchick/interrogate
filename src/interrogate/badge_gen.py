@@ -3,6 +3,7 @@
 
 Inspired by `coverage-badge <https://github.com/dbrgn/coverage-badge>`_.
 """
+
 from __future__ import annotations
 
 import os

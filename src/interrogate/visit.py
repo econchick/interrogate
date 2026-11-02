@@ -1,5 +1,6 @@
 # Copyright 2020-2024 Lynn Root
 """AST traversal for finding docstrings."""
+
 from __future__ import annotations
 
 import ast
