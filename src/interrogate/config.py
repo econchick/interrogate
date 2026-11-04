@@ -31,6 +31,9 @@ class InterrogateConfig:
     """Configuration related to interrogating a given codebase.
 
     :param bool color: Highlight verbose output with color.
+    :param bool consider_inherited_docstrings: Consider classes and
+        methods that inherit a docstring from a parent class (within
+        the same file) as covered.
     :param str docstring_style: Style of docstrings to follow. Choices:
         "sphinx" (default), "google".
     :param fail_under: Fail when coverage % is less than a given amount.
@@ -59,6 +62,7 @@ class InterrogateConfig:
     VALID_STYLES = ("sphinx", "google")
 
     color: bool = attr.ib(default=False)
+    consider_inherited_docstrings: bool = attr.ib(default=False)
     docstring_style: str = attr.ib(default="sphinx")
     fail_under: float = attr.ib(default=80.0)
     ignore_regex: list[re.Pattern[str]] | None = attr.ib(default=None)

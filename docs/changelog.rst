@@ -8,6 +8,7 @@ Added
 ^^^^^
 
 * Finally added type hints
+* Support for accepting inherited docstrings with new ``--consider-inherited-docstrings`` flag (`#12 <https://github.com/econchick/interrogate/issues/12>`_).
 
 .. short-log
 

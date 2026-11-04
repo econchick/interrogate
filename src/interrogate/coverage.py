@@ -254,6 +254,9 @@ class InterrogateCoverage:
         visitor = visit.CoverageVisitor(filename=filename, config=self.config)
         visitor.visit(parsed_tree)
 
+        if self.config.consider_inherited_docstrings:
+            visitor.apply_inherited_docstrings()
+
         filtered_nodes = self._filter_nodes(visitor.nodes)
         if len(filtered_nodes) == 0:
             return None

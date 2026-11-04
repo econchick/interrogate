@@ -306,6 +306,43 @@ def test_print_results_single_file(capsys, monkeypatch):
         assert "tests\\functional\\sample\\full.py" not in captured.out
 
 
+def test_coverage_inherited_docstrings():
+    """Inherited docstrings count only when the option is enabled."""
+    path = os.path.join(HERE, "sample_inherited.py")
+
+    interrogate_config = config.InterrogateConfig()
+    interrogate_coverage = coverage.InterrogateCoverage(
+        paths=[path], conf=interrogate_config
+    )
+    results = interrogate_coverage.get_coverage()
+    assert 11 == results.total
+    assert 4 == results.covered
+    assert 7 == results.missing
+
+    interrogate_config = config.InterrogateConfig(
+        consider_inherited_docstrings=True
+    )
+    interrogate_coverage = coverage.InterrogateCoverage(
+        paths=[path], conf=interrogate_config
+    )
+    results = interrogate_coverage.get_coverage()
+    assert 11 == results.total
+    assert 9 == results.covered
+    assert 2 == results.missing
+
+    nodes = {
+        node.path.split(":")[-1]: node.covered
+        for node in results.file_results[0].nodes
+    }
+    assert nodes["SpecialFoo"]
+    assert nodes["SpecialFoo.do_it"]
+    assert nodes["SpecialFoo.do_it_async"]
+    assert nodes["ExtraSpecialFoo"]
+    assert nodes["ExtraSpecialFoo.do_it"]
+    assert not nodes["Undocumented"]
+    assert not nodes["Undocumented.do_it"]
+
+
 @pytest.mark.parametrize(
     "fail_under,perc_covered,exp_ret",
     [
