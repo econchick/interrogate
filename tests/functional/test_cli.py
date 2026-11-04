@@ -191,3 +191,18 @@ def test_incompatible_options_badge_style(runner):
         "with the `-g/--generate-badge option."
     )
     assert exp_error in result.output
+
+
+def test_show_file_links(runner):
+    """Detailed output shows `path:line` locations with the flag on."""
+    result = runner.invoke(
+        cli.main,
+        [
+            "-vv",
+            "--show-file-links",
+            os.path.join(SAMPLE_DIR, "partial.py"),
+        ],
+    )
+
+    assert "partial.py:8" in result.output
+    assert "(L8)" not in result.output

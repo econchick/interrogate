@@ -126,6 +126,15 @@ Command Line Options
     Omit reporting files that have 100% documentation coverage.
     This option is ignored if verbosity is not set.  [default: ``False``]
 
+.. option:: --show-file-links
+
+    In the detailed view, show each class, method, and function's location
+    as a ``path:line`` reference on its own row, instead of a ``(L<line>)``
+    suffix on its name. The ``path:line`` format is recognized as a clickable
+    link by IDEs such as VS Code, making it easier to jump to an item's
+    definition. This option is ignored if verbosity is not set.
+    [default: ``False``]
+
 .. option:: -g, --generate-badge PATH
 
     Generate a `shields.io <https://shields.io/>`_ status badge (an SVG image) in at a given file
