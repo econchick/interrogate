@@ -241,6 +241,17 @@ from interrogate import coverage, utils
     ),
 )
 @click.option(
+    "--consider-inherited-docstrings",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help=(
+        "Consider classes and methods that inherit a docstring from a "
+        "parent class defined in the same file as covered, mirroring "
+        "``inspect.getdoc`` semantics."
+    ),
+)
+@click.option(
     "-g",
     "--generate-badge",
     type=click.Path(
@@ -336,6 +347,7 @@ def main(
     output: Optional[str],
     color: bool,
     omit_covered_files: bool,
+    consider_inherited_docstrings: bool,
     generate_badge: Optional[str],
     badge_format: Optional[str],
     badge_style: Optional[str],
@@ -364,6 +376,7 @@ def main(
     .. versionadded:: 1.6.0 ``--ignore-overloaded-functions``
     .. verisonadded:: 1.7.0 ``--ext``
     .. versionadded:: 1.7.0 ``--style=sphinx|google``
+    .. versionadded:: 1.8.0 ``--consider-inherited-docstrings``
 
     .. versionchanged:: 1.3.1 only generate badge if results change from
         an existing badge.
@@ -401,6 +414,7 @@ def main(
 
     conf = int_config.InterrogateConfig(
         color=color,
+        consider_inherited_docstrings=consider_inherited_docstrings,
         docstring_style=style,
         fail_under=fail_under,
         ignore_regex=ignore_regex,

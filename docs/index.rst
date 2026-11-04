@@ -126,6 +126,12 @@ Command Line Options
     Omit reporting files that have 100% documentation coverage.
     This option is ignored if verbosity is not set.  [default: ``False``]
 
+.. option:: --consider-inherited-docstrings
+
+    Consider classes and methods that inherit a docstring from a
+    parent class defined in the same file as covered, mirroring
+    ``inspect.getdoc`` semantics.  [default: ``False``]
+
 .. option:: -g, --generate-badge PATH
 
     Generate a `shields.io <https://shields.io/>`_ status badge (an SVG image) in at a given file

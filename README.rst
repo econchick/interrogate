@@ -400,6 +400,7 @@ Configure within your ``pyproject.toml`` (``interrogate`` will automatically det
     whitelist-regex = []
     color = true
     omit-covered-files = false
+    consider-inherited-docstrings = false
     # output file logation
     generate-badge = "."
     badge-format = "svg"
@@ -439,6 +440,7 @@ Or configure within your ``setup.cfg`` (``interrogate`` will automatically detec
     whitelist-regex =
     color = true
     omit-covered-files = false
+    consider-inherited-docstrings = false
     ; output file logation
     generate-badge = .
     badge-format = svg
@@ -591,6 +593,13 @@ To view all options available, run ``interrogate --help``:
       --omit-covered-files            Omit reporting files that have 100%
                                       documentation coverage. This option is
                                       ignored if verbosity is not set.  [default:
+                                      False]
+
+      --consider-inherited-docstrings
+                                      Consider classes and methods that inherit
+                                      a docstring from a parent class defined in
+                                      the same file as covered, mirroring
+                                      ``inspect.getdoc`` semantics.  [default:
                                       False]
 
       -g, --generate-badge PATH       Generate a 'shields.io' status badge (an SVG

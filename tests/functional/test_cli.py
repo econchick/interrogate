@@ -135,6 +135,22 @@ def test_run_multiple_flags(flags, exp_result, exp_exit_code, runner):
     assert exp_exit_code == result.exit_code
 
 
+def test_run_consider_inherited_docstrings(runner):
+    """Classes/methods inheriting docstrings count as covered."""
+    path = os.path.join(HERE, "sample_inherited.py")
+
+    result = runner.invoke(cli.main, [path])
+    assert "actual: 36.4%" in result.output
+    assert 1 == result.exit_code
+
+    result = runner.invoke(
+        cli.main,
+        ["--consider-inherited-docstrings", path],
+    )
+    assert "actual: 81.8%" in result.output
+    assert 0 == result.exit_code
+
+
 @pytest.mark.parametrize("quiet", (True, False))
 def test_generate_badge(quiet, runner, tmp_path):
     """Test expected SVG output when creating a status badge."""
