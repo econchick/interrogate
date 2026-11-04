@@ -325,12 +325,26 @@ class InterrogateCoverage:
             name = f"{filename} (module)"
         else:
             name = node.path.split(":")[-1]
-            name = f"{name} (L{node.lineno})"
+            if not self.config.show_file_links:
+                name = f"{name} (L{node.lineno})"
 
         padding = "  " * node.level
         name = f"{padding}{name}"
         status = "MISSED" if not node.covered else "COVERED"
         return [name, status]
+
+    def _get_location_row(
+        self, node: visit.CovNode, filename: str
+    ) -> list[str]:
+        """Generate a ``path:line`` location row for the detailed view.
+
+        The location is shown on its own row, indented one level deeper
+        than the node it belongs to, so that IDEs like VS Code can
+        recognize it as a clickable link to the node's definition.
+        """
+        filename = self._get_filename(filename)
+        padding = "  " * (node.level + 1)
+        return [f"{padding}{filename}:{node.lineno}", ""]
 
     def _create_detailed_table(
         self, combined_results: InterrogateResults
@@ -365,6 +379,10 @@ class InterrogateCoverage:
                 verbose_tbl.append(
                     self._get_detailed_row(n, file_result.filename)
                 )
+                if self.config.show_file_links and n.node_type != "Module":
+                    verbose_tbl.append(
+                        self._get_location_row(n, file_result.filename)
+                    )
             verbose_tbl.append(self.output_formatter.TABLE_SEPARATOR)
         return verbose_tbl
 

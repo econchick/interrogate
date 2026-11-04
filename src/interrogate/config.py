@@ -54,6 +54,9 @@ class InterrogateConfig:
         documentation coverage.
     :param bool ignore_overloaded_functions: Ignore `@typing.overload`-decorated
         functions.
+    :param bool show_file_links: Show a ``path:line`` location row for
+        each class, method, and function in the detailed view, instead
+        of a ``(L<line>)`` suffix on its name.
     """
 
     VALID_STYLES = ("sphinx", "google")
@@ -75,6 +78,7 @@ class InterrogateConfig:
     ignore_overloaded_functions: bool = attr.ib(default=False)
     include_regex: list[re.Pattern[str]] | None = attr.ib(default=None)
     omit_covered_files: bool = attr.ib(default=False)
+    show_file_links: bool = attr.ib(default=False)
 
     @docstring_style.validator
     def _check_style(self, attribute: str, value: str) -> None:
