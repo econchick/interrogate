@@ -5,7 +5,7 @@ from __future__ import annotations
 import ast
 import os
 
-from typing import Union
+from typing import Iterator, Union
 
 import attr
 
@@ -59,6 +59,7 @@ class CoverageVisitor(ast.NodeVisitor):
         self.config = config
         self.stack: list[CovNode] = []
         self.nodes: list[CovNode] = []
+        self.class_bases: dict[CovNode, list[str]] = {}
 
     @staticmethod
     def _has_doc(node: DocumentableNode) -> bool:
@@ -67,6 +68,87 @@ class CoverageVisitor(ast.NodeVisitor):
             ast.get_docstring(node) is not None
             and ast.get_docstring(node).strip() != ""  # type: ignore
         )
+
+    @staticmethod
+    def _get_base_name(node: ast.expr) -> str | None:
+        """Return the class name a base class expression refers to.
+
+        Handles plain names (``Foo``), attribute access
+        (``module.Foo``), subscripts (``Foo[int]``), and calls
+        (``factory()``), returning the final component of the name.
+        """
+        if isinstance(node, ast.Name):
+            return node.id
+        if isinstance(node, ast.Attribute):
+            return node.attr
+        if isinstance(node, ast.Subscript):
+            return CoverageVisitor._get_base_name(node.value)
+        if isinstance(node, ast.Call):
+            return CoverageVisitor._get_base_name(node.func)
+        return None
+
+    def _get_ancestors(
+        self,
+        class_node: CovNode,
+        classes_by_name: dict[str, list[CovNode]],
+    ) -> Iterator[CovNode]:
+        """Yield ancestor classes of a class, resolved within this file.
+
+        Base classes are matched by name against the classes defined
+        in the file being visited, in breadth-first order, so
+        inheritance cycles cannot loop forever.
+        """
+        seen = {class_node}
+        queue = [class_node]
+        while queue:
+            current = queue.pop(0)
+            for base_name in self.class_bases.get(current, []):
+                for candidate in classes_by_name.get(base_name, []):
+                    if candidate not in seen:
+                        seen.add(candidate)
+                        queue.append(candidate)
+                        yield candidate
+
+    def apply_inherited_docstrings(self) -> None:
+        """Mark nodes covered if they inherit a docstring.
+
+        Mirrors ``inspect.getdoc`` semantics: a class without a
+        docstring inherits one from an ancestor class, and a method
+        that overrides an ancestor's method inherits that method's
+        docstring. Only classes defined in the file being visited
+        can be resolved.
+        """
+        classes_by_name: dict[str, list[CovNode]] = {}
+        children: dict[CovNode, list[CovNode]] = {}
+        for node in self.nodes:
+            if node.node_type == "ClassDef":
+                classes_by_name.setdefault(node.name, []).append(node)
+            if node.parent is not None:
+                children.setdefault(node.parent, []).append(node)
+
+        for node in self.nodes:
+            if node.covered:
+                continue
+            if node.node_type == "ClassDef":
+                ancestors = self._get_ancestors(node, classes_by_name)
+                if any(ancestor.covered for ancestor in ancestors):
+                    node.covered = True
+            elif node.node_type in ("FunctionDef", "AsyncFunctionDef"):
+                parent = node.parent
+                if parent is None or parent.node_type != "ClassDef":
+                    continue
+                ancestors = self._get_ancestors(parent, classes_by_name)
+                for ancestor in ancestors:
+                    inherited = any(
+                        child.name == node.name
+                        and child.node_type
+                        in ("FunctionDef", "AsyncFunctionDef")
+                        and child.covered
+                        for child in children.get(ancestor, [])
+                    )
+                    if inherited:
+                        node.covered = True
+                        break
 
     def _visit_helper(self, node: DocumentableNode) -> None:
         """Recursively visit AST node for docstrings."""
@@ -102,6 +184,13 @@ class CoverageVisitor(ast.NodeVisitor):
             is_nested_cls=self._is_nested_cls(parent, node_type),
             parent=parent,
         )
+        if isinstance(node, ast.ClassDef):
+            self.class_bases[cov_node] = [
+                base_name
+                for base in node.bases
+                if (base_name := self._get_base_name(base)) is not None
+            ]
+
         self.stack.append(cov_node)
         self.nodes.append(cov_node)
 
