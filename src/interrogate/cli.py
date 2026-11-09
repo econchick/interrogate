@@ -241,6 +241,20 @@ from interrogate import coverage, utils
     ),
 )
 @click.option(
+    "--show-file-links",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help=(
+        "In the detailed view, show each class, method, and function's "
+        "location as a `path:line` reference on its own row, instead of "
+        "a `(L<line>)` suffix on its name. The `path:line` format is "
+        "recognized as a clickable link by IDEs such as VS Code, making "
+        "it easier to jump to an item's definition. This option is "
+        "ignored if verbosity is not set."
+    ),
+)
+@click.option(
     "-g",
     "--generate-badge",
     type=click.Path(
@@ -336,6 +350,7 @@ def main(
     output: Optional[str],
     color: bool,
     omit_covered_files: bool,
+    show_file_links: bool,
     generate_badge: Optional[str],
     badge_format: Optional[str],
     badge_style: Optional[str],
@@ -361,6 +376,7 @@ def main(
     .. versionadded:: 1.4.0 ``--ignore-setters``
     .. versionadded:: 1.5.0 ``--omit-covered-files``
     .. versionadded:: 1.5.0 ``--badge-style``
+    .. versionadded:: 1.8.0 ``--show-file-links``
     .. versionadded:: 1.6.0 ``--ignore-overloaded-functions``
     .. verisonadded:: 1.7.0 ``--ext``
     .. versionadded:: 1.7.0 ``--style=sphinx|google``
@@ -417,6 +433,7 @@ def main(
         ignore_property_decorators=ignore_property_decorators,
         include_regex=whitelist_regex,
         omit_covered_files=omit_covered_files,
+        show_file_links=show_file_links,
     )
     interrogate_coverage = coverage.InterrogateCoverage(
         paths=paths,

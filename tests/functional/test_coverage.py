@@ -333,3 +333,62 @@ def test_pass_when_fail_under_exact(
     )
     results = interrogate_coverage.get_coverage()
     assert exp_ret == results.ret_code
+
+
+def test_detailed_table_show_file_links():
+    """Detailed rows get `path:line` location rows with the flag on.
+
+    See issue `#22 <https://github.com/econchick/interrogate/issues/22>`_.
+    """
+    interrogate_config = config.InterrogateConfig(show_file_links=True)
+    interrogate_coverage = coverage.InterrogateCoverage(
+        paths=[os.path.join(SAMPLE_DIR, "partial.py")],
+        conf=interrogate_config,
+    )
+    interrogate_coverage.output_formatter = coverage.utils.OutputFormatter(
+        config=interrogate_config,
+    )
+    results = interrogate_coverage.get_coverage()
+    table = interrogate_coverage._create_detailed_table(results)
+
+    # the module row has no location row of its own
+    assert ["partial.py (module)", "COVERED"] == table[2]
+    # class & method rows lose the `(L<line>)` suffix ...
+    assert ["  Foo", "COVERED"] == table[3]
+    assert ["    Foo.__init__", "COVERED"] == table[5]
+    # ... and are each followed by a `path:line` location row
+    assert ["    partial.py:8", ""] == table[4]
+    assert ["      partial.py:11", ""] == table[6]
+
+
+def test_print_results_show_file_links(capsys):
+    """Printed detailed output uses `path:line` locations with flag on."""
+    interrogate_config = config.InterrogateConfig(show_file_links=True)
+    interrogate_coverage = coverage.InterrogateCoverage(
+        paths=[os.path.join(SAMPLE_DIR, "partial.py")],
+        conf=interrogate_config,
+    )
+    results = interrogate_coverage.get_coverage()
+    interrogate_coverage.print_results(
+        results=results, output=None, verbosity=2
+    )
+
+    captured = capsys.readouterr()
+    assert "partial.py:8" in captured.out
+    assert "partial.py:11" in captured.out
+    assert "(L8)" not in captured.out
+
+
+def test_print_results_file_links_off_by_default(capsys):
+    """Printed detailed output keeps `(L<line>)` suffixes by default."""
+    interrogate_coverage = coverage.InterrogateCoverage(
+        paths=[os.path.join(SAMPLE_DIR, "partial.py")],
+    )
+    results = interrogate_coverage.get_coverage()
+    interrogate_coverage.print_results(
+        results=results, output=None, verbosity=2
+    )
+
+    captured = capsys.readouterr()
+    assert "(L8)" in captured.out
+    assert "partial.py:8" not in captured.out

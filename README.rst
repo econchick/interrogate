@@ -400,6 +400,7 @@ Configure within your ``pyproject.toml`` (``interrogate`` will automatically det
     whitelist-regex = []
     color = true
     omit-covered-files = false
+    show-file-links = false
     # output file logation
     generate-badge = "."
     badge-format = "svg"
@@ -439,6 +440,7 @@ Or configure within your ``setup.cfg`` (``interrogate`` will automatically detec
     whitelist-regex =
     color = true
     omit-covered-files = false
+    show-file-links = false
     ; output file logation
     generate-badge = .
     badge-format = svg
@@ -590,6 +592,17 @@ To view all options available, run ``interrogate --help``:
 
       --omit-covered-files            Omit reporting files that have 100%
                                       documentation coverage. This option is
+                                      ignored if verbosity is not set.  [default:
+                                      False]
+
+      --show-file-links               In the detailed view, show each class,
+                                      method, and function's location as a
+                                      `path:line` reference on its own row,
+                                      instead of a `(L<line>)` suffix on its
+                                      name. The `path:line` format is
+                                      recognized as a clickable link by IDEs
+                                      such as VS Code, making it easier to jump
+                                      to an item's definition. This option is
                                       ignored if verbosity is not set.  [default:
                                       False]
 

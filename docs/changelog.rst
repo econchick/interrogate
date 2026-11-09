@@ -8,6 +8,7 @@ Added
 ^^^^^
 
 * Finally added type hints
+* Support for showing clickable ``path:line`` locations in the detailed view with new ``--show-file-links`` flag (`#22 <https://github.com/econchick/interrogate/issues/22>`_).
 
 .. short-log
 
