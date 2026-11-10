@@ -191,3 +191,12 @@ def test_incompatible_options_badge_style(runner):
         "with the `-g/--generate-badge option."
     )
     assert exp_error in result.output
+
+
+@pytest.mark.parametrize("bad_value", ["nan", "inf", "-inf"])
+def test_fail_under_non_finite(runner, bad_value):
+    """Non-finite --fail-under values fail with a usage error, not a traceback."""
+    result = runner.invoke(cli.main, ["-f", bad_value, SAMPLE_DIR])
+    assert 2 == result.exit_code
+    assert "must be a finite number" in result.output
+    assert not isinstance(result.exception, TypeError)
