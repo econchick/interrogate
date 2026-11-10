@@ -1,6 +1,7 @@
 # Copyright 2020-2024 Lynn Root
 """CLI entrypoint into `interrogate`."""
 
+import math
 import os
 import sys
 
@@ -13,6 +14,20 @@ from interrogate import __version__ as version
 from interrogate import badge_gen
 from interrogate import config as int_config
 from interrogate import coverage, utils
+
+
+def _validate_fail_under(
+    ctx: click.Context, param: click.Parameter, value: float
+) -> float:
+    """Reject non-finite `--fail-under` values.
+
+    `nan`/`inf` parse as floats but crash the coverage math (`decimal`
+    cannot round to a NaN/Infinity exponent), so fail with a usage error
+    instead of a traceback.
+    """
+    if not math.isfinite(value):
+        raise click.BadParameter(f"must be a finite number, got {value}.")
+    return value
 
 
 @click.command()
@@ -46,6 +61,7 @@ from interrogate import coverage, utils
     metavar="INT | FLOAT",
     default=80.0,
     show_default=True,
+    callback=_validate_fail_under,
     help="Fail when coverage % is less than a given amount.",
 )
 @click.option(
